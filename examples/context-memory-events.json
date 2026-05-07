@@ -1,0 +1,22 @@
+[
+  {
+    "id": "mem-0001",
+    "source": "conversation",
+    "sourceRef": "demo-thread-001",
+    "stateId": "S64-100010",
+    "tensions": ["beginning", "uncertainty", "friction"],
+    "confidence": 0.72,
+    "createdAt": "2026-05-07T08:00:00.000Z",
+    "note": "User describes a project that has strong potential but lacks a stable initial structure."
+  },
+  {
+    "id": "mem-0002",
+    "source": "task",
+    "sourceRef": "demo-thread-001",
+    "stateId": "S64-110010",
+    "tensions": ["structuring", "direction", "pressure"],
+    "confidence": 0.68,
+    "createdAt": "2026-05-07T09:00:00.000Z",
+    "note": "The context moves from undefined beginning toward deliberate structuring."
+  }
+]

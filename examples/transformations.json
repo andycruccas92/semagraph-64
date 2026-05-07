@@ -1,0 +1,20 @@
+[
+  {
+    "sourceStateId": "S64-000000",
+    "movingLinePositions": [1],
+    "targetStateId": "S64-100000",
+    "meaning": "Latent field receives first activation at the base."
+  },
+  {
+    "sourceStateId": "S64-111111",
+    "movingLinePositions": [6],
+    "targetStateId": "S64-111110",
+    "meaning": "Full continuity opens a gap at the external/top layer."
+  },
+  {
+    "sourceStateId": "S64-100010",
+    "movingLinePositions": [3, 5],
+    "targetStateId": "S64-101000",
+    "meaning": "Internal movement and external tension reorganize the composite state."
+  }
+]
