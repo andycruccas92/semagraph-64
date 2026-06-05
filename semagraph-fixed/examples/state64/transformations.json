@@ -1,0 +1,6 @@
+{
+  "sourceStateId": "S64-000000",
+  "changedPositions": [1, 6],
+  "mutationMask": "M64-100001",
+  "targetStateId": "S64-100001"
+}

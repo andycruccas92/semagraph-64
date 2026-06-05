@@ -1,0 +1,41 @@
+{
+  "id": "pressure-cohesion-demo",
+  "label": "Minimal parameter-driven transition model",
+  "parameters": [
+    { "key": "pressure", "label": "Pressure", "kind": "number", "min": 0, "max": 1 },
+    { "key": "cohesion", "label": "Cohesion", "kind": "number", "min": 0, "max": 1 },
+    { "key": "constraint", "label": "External constraint active", "kind": "boolean" }
+  ],
+  "states": [
+    {
+      "id": "fragmentation-risk",
+      "label": "Fragmentation risk",
+      "priority": 30,
+      "predicates": { "all": [{ "parameterKey": "pressure", "operator": "gte", "value": 0.65 }, { "parameterKey": "cohesion", "operator": "lt", "value": 0.4 }] }
+    },
+    {
+      "id": "strained",
+      "label": "Strained",
+      "priority": 20,
+      "predicates": { "all": [{ "parameterKey": "pressure", "operator": "gte", "value": 0.35 }] }
+    },
+    {
+      "id": "stable",
+      "label": "Stable",
+      "priority": 10,
+      "predicates": { "all": [{ "parameterKey": "pressure", "operator": "lt", "value": 0.35 }, { "parameterKey": "cohesion", "operator": "gte", "value": 0.5 }] }
+    }
+  ],
+  "transitionRules": [
+    {
+      "id": "external-constraint-pressure",
+      "label": "External constraint increases pressure and erodes cohesion",
+      "sourceStateIds": ["stable"],
+      "targetStateId": "fragmentation-risk",
+      "guards": { "all": [{ "parameterKey": "constraint", "operator": "eq", "value": true }] },
+      "effects": [{ "parameterKey": "pressure", "value": 0.78 }, { "parameterKey": "cohesion", "value": 0.28 }],
+      "allowedAuthorities": ["observed", "simulated"],
+      "eventType": "external_constraint_introduced"
+    }
+  ]
+}

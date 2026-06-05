@@ -1,0 +1,10 @@
+{
+  "observations": [
+    { "key": "pressure", "value": 0.72, "operator": "gte", "threshold": 0.6, "unit": "ratio", "source": "sensor-A" },
+    { "key": "cohesion", "value": 0.41, "operator": "gte", "threshold": 0.5, "unit": "ratio", "source": "sensor-B" },
+    { "key": "constraint_active", "value": true, "operator": "eq", "threshold": true, "source": "rule-feed" },
+    { "key": "expansion", "value": "expanding", "operator": "eq", "threshold": "expanding", "source": "parameter-feed" },
+    { "key": "visibility", "value": 0.32, "operator": "gte", "threshold": 0.5, "unit": "ratio", "source": "sensor-C" },
+    { "key": "reversibility", "value": true, "operator": "eq", "threshold": true, "source": "rule-feed" }
+  ]
+}

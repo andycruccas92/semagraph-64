@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://semagraph.dev/schemas/policy-rule.schema.json",
+  "title": "SemaGraph Policy Rule",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["id", "label", "appliesToRegimeClasses", "policyText"],
+  "properties": {
+    "id": { "type": "string", "minLength": 1 },
+    "label": { "type": "string", "minLength": 1 },
+    "description": { "type": "string" },
+    "appliesToRegimeClasses": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "enum": ["no_change", "local_adjustment", "partial_reconfiguration", "regime_shift", "structural_inversion", "unclassified"]
+      }
+    },
+    "sourceStateIds": { "type": "array", "items": { "type": "string" } },
+    "targetStateIds": { "type": "array", "items": { "type": "string" } },
+    "transitionRuleIds": { "type": "array", "items": { "type": "string" } },
+    "allowedAuthorities": {
+      "type": "array",
+      "items": { "enum": ["rule_allowed", "observed", "triggered", "simulated", "inferred", "validated"] }
+    },
+    "priority": { "type": "number" },
+    "policyText": { "type": "string", "minLength": 1 },
+    "tags": { "type": "array", "items": { "type": "string" } }
+  }
+}

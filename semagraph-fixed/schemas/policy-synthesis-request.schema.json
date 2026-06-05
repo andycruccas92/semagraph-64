@@ -1,0 +1,16 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://semagraph.local/schemas/policy-synthesis-request.schema.json",
+  "title": "Policy Synthesis Request",
+  "type": "object",
+  "required": ["id", "origin", "signature", "requestedAt"],
+  "properties": {
+    "id": { "type": "string", "minLength": 1 },
+    "origin": { "enum": ["llm", "human", "system"] },
+    "signature": { "type": "string", "minLength": 1 },
+    "requestedAt": { "type": "string", "minLength": 1 },
+    "constraints": { "type": "array", "items": { "type": "string", "minLength": 1 } },
+    "contextRefs": { "type": "array", "items": { "type": "string", "minLength": 1 } }
+  },
+  "additionalProperties": false
+}

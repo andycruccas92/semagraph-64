@@ -1,0 +1,7 @@
+{
+  "id": "policy-request-1",
+  "origin": "llm",
+  "signature": "C64:S64-000000>S64-101010|M:M64-100000.M64-001000.M64-000010|N:M64-101010",
+  "requestedAt": "2026-06-05T00:00:00Z",
+  "constraints": ["Do not alter the computed signature."]
+}

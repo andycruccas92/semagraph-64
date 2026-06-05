@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://semagraph.dev/schemas/regime-classification.schema.json",
+  "title": "SemaGraph Regime Classification",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "transitionRuleId",
+    "sourceStateId",
+    "targetStateId",
+    "accepted",
+    "changedParameterKeys",
+    "changeMagnitude",
+    "stateChanged",
+    "regimeClass",
+    "rationale"
+  ],
+  "properties": {
+    "transitionRuleId": { "type": "string" },
+    "sourceStateId": { "type": ["string", "null"] },
+    "targetStateId": { "type": ["string", "null"] },
+    "accepted": { "type": "boolean" },
+    "changedParameterKeys": { "type": "array", "items": { "type": "string" } },
+    "changeMagnitude": { "type": "number" },
+    "stateChanged": { "type": "boolean" },
+    "regimeClass": {
+      "enum": ["no_change", "local_adjustment", "partial_reconfiguration", "regime_shift", "structural_inversion", "unclassified"]
+    },
+    "rationale": { "type": "string" }
+  }
+}

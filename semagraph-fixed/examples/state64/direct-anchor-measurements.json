@@ -1,0 +1,13 @@
+{
+  "definitionId": "demo-direct-anchor",
+  "anchorRuleVersion": "anchor-v1",
+  "measurements": [
+    { "key": "pressure", "value": 0.7, "unit": "ratio", "source": "sensor-A" },
+    { "key": "cohesion", "value": 0.4, "unit": "ratio", "source": "sensor-A" },
+    { "key": "constraint", "value": true, "source": "rule-engine" },
+    { "key": "direction", "value": "expanding", "source": "parameter-feed" },
+    { "key": "visibility", "value": 0.3, "unit": "ratio", "source": "sensor-B" },
+    { "key": "reversible", "value": true, "source": "rule-engine" }
+  ],
+  "expectedStateId": "S64-101101"
+}

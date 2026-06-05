@@ -1,0 +1,270 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[italian]{babel}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{geometry}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{hyperref}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{longtable}
+
+\geometry{margin=2.5cm}
+\hypersetup{colorlinks=true, linkcolor=black, urlcolor=blue, citecolor=black}
+
+\lstdefinestyle{code}{
+  basicstyle=\ttfamily\small,
+  breaklines=true,
+  frame=single,
+  columns=fullflexible,
+  backgroundcolor=\color{gray!5}
+}
+\lstset{style=code}
+
+\title{SemaGraph v0.6\\
+\large Kernel deterministico per ancoraggio di stati osservati e compressione di catene di transizione in $Q_6$}
+\author{Bozza tecnica per sviluppo e validazione}
+\date{Giugno 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+SemaGraph v0.6 propone un kernel deterministico per rappresentare cambiamenti osservati come catene finite di transizioni in uno spazio booleano a sei dimensioni, indicato come $Q_6$. Ogni stato è codificato da una parola binaria di sei bit; ogni transizione diretta tra due stati è rappresentata da una maschera XOR; ogni catena di trasformazione è comprimibile in una firma operativa costituita da stato sorgente, stato target, maschere ordinate, mutazione netta e distanza cumulativa. Il sistema non usa modelli linguistici per inferire stati o parametri: l'ancoraggio iniziale deriva da osservazioni fisiche, sensori, soglie o parametrizzazioni dichiarate. I modelli linguistici possono intervenire soltanto a valle, per sintetizzare policy o spiegazioni su firme già calcolate. L'obiettivo è ridurre inferenza ricorrente, drift interpretativo e costo computazionale nella lettura di traiettorie dinamiche, mantenendo tracciabilità verso i dati osservati.
+\end{abstract}
+
+\section{Premessa}
+Molti sistemi complessi producono sequenze di stati più che singoli stati isolati. Processi organizzativi, modelli finanziari, fenomeni biologici, eventi fisici discretizzati e simulazioni stocastiche possono essere osservati come traiettorie: una configurazione iniziale cambia, attraversa regimi intermedi e raggiunge una configurazione finale. Il problema non è soltanto classificare lo stato corrente, ma rappresentare come il sistema vi è arrivato.
+
+SemaGraph v0.6 nasce per formalizzare questo passaggio. Il kernel non pretende di sostituire modelli fisici, chimici, biologici, statistici o linguistici. Esso opera come layer di compressione transizionale: prende stati già osservati o parametrizzati, calcola transizioni deterministiche, comprime catene e genera firme confrontabili.
+
+La tesi principale è la seguente: se gli stati sono ancorati deterministicamente a osservazioni o parametri noti, allora la catena di trasformazione può essere rappresentata come sequenza di transizioni finite, replayable e comprimibili. L'inferenza viene confinata fuori dal nucleo transizionale.
+
+\section{Modello formale}
+\subsection{Spazio degli stati}
+Sia $B = \{0,1\}$. Lo spazio State64 è definito come:
+\begin{equation}
+Q_6 = B^6.
+\end{equation}
+Ogni stato $s \in Q_6$ è una tupla ordinata di sei bit:
+\begin{equation}
+s = (b_1,b_2,b_3,b_4,b_5,b_6), \quad b_i \in \{0,1\}.
+\end{equation}
+Lo spazio contiene esattamente:
+\begin{equation}
+|Q_6| = 2^6 = 64
+\end{equation}
+stati possibili. In implementazione, ogni stato può essere rappresentato come intero unsigned a 8 bit usando soltanto i sei bit meno significativi o come stringa canonica di sei caratteri binari.
+
+\subsection{Transizione elementare}
+Date due configurazioni $s,t \in Q_6$, la transizione diretta da $s$ a $t$ è definita dalla maschera:
+\begin{equation}
+m = s \oplus t,
+\end{equation}
+dove $\oplus$ indica XOR bit-a-bit. La maschera $m$ specifica quali posizioni cambiano. Se $m_i = 1$, il bit $i$ è mutato; se $m_i = 0$, il bit $i$ è conservato.
+
+La distanza di trasformazione è la distanza di Hamming:
+\begin{equation}
+d(s,t) = \sum_{i=1}^{6} |s_i - t_i| = \operatorname{popcount}(s \oplus t).
+\end{equation}
+Questa misura non interpreta il cambiamento: misura quante coordinate dello stato sono mutate.
+
+\subsection{Matrice completa delle transizioni}
+Poiché $Q_6$ contiene 64 stati, il numero di coppie ordinate stato-stato è:
+\begin{equation}
+64 \times 64 = 4096.
+\end{equation}
+Queste 4096 coppie costituiscono la base completa delle transizioni dirette, inclusa l'identità $s \rightarrow s$. Le transizioni trasformative non identitarie sono:
+\begin{equation}
+64 \times 63 = 4032.
+\end{equation}
+L'indice computazionale di una transizione può essere definito come:
+\begin{equation}
+I(s,t) = 64 \cdot \operatorname{idx}(s) + \operatorname{idx}(t),
+\end{equation}
+dove $\operatorname{idx}(s) \in [0,63]$ è la rappresentazione intera dello stato sorgente.
+
+\subsection{Modularità 3+3}
+Ogni stato può essere scomposto in due moduli da tre bit:
+\begin{equation}
+s = (l,u), \quad l \in B^3,\ u \in B^3.
+\end{equation}
+La scomposizione 3+3 non introduce significato ereditato; è una proprietà combinatoria utile per classificare se una transizione rimane interna a un modulo o attraversa entrambi i moduli. Date le distanze:
+\begin{equation}
+d_l = d(l_s,l_t), \quad d_u = d(u_s,u_t),
+\end{equation}
+possiamo classificare il campo di mutazione come: nessun cambiamento, solo modulo inferiore, solo modulo superiore o entrambi i moduli.
+
+\section{Ancoraggio deterministico degli stati}
+\subsection{Osservazione e parametrizzazione}
+SemaGraph v0.6 assume che lo stato non venga inferito linguisticamente. Lo stato è prodotto da regole di ancoraggio esplicite applicate a parametri osservati:
+\begin{equation}
+A: X \rightarrow Q_6,
+\end{equation}
+dove $X$ è lo spazio dei vettori osservativi o parametrici. Ogni bit $b_i$ è calcolato da una regola dichiarata:
+\begin{equation}
+b_i = r_i(x), \quad r_i: X \rightarrow \{0,1\}.
+\end{equation}
+Una regola può essere una soglia, una condizione booleana, una categoria nota o un predicato su un parametro.
+
+\subsection{Replayability}
+Dato lo stesso vettore osservato $x$ e la stessa versione delle regole $R = (r_1, \ldots, r_6)$, il sistema produce sempre lo stesso stato:
+\begin{equation}
+A_R(x) = s.
+\end{equation}
+La determinazione dello stato è quindi replayable. L'incertezza di misura non viene negata: deve essere registrata come tolleranza, unità, fonte, timestamp e versione della regola. Tuttavia, questa incertezza appartiene al livello di misura, non al kernel di transizione.
+
+\subsection{Boundary del modello linguistico}
+Il modello linguistico non assegna stati, non modifica parametri e non inferisce misure mancanti. Può intervenire a valle:
+\begin{itemize}
+  \item per spiegare una firma transizionale;
+  \item per proporre policy operative;
+  \item per sintetizzare implicazioni leggibili;
+  \item per confrontare policy già approvate.
+\end{itemize}
+Questa separazione impedisce che l'inferenza linguistica si propaghi dentro la catena deterministica.
+
+\section{Compressione delle catene di transizione}
+\subsection{Catena ordinata}
+Una traiettoria osservata è una sequenza ordinata:
+\begin{equation}
+C = (s_0,s_1,\ldots,s_n), \quad s_i \in Q_6.
+\end{equation}
+Ogni passaggio produce una maschera:
+\begin{equation}
+m_i = s_{i-1} \oplus s_i.
+\end{equation}
+La catena può quindi essere rappresentata come:
+\begin{equation}
+C_M = (m_1,m_2,\ldots,m_n).
+\end{equation}
+
+\subsection{Mutazione netta e distanza cumulativa}
+La mutazione netta è:
+\begin{equation}
+M_{net} = m_1 \oplus m_2 \oplus \cdots \oplus m_n = s_0 \oplus s_n.
+\end{equation}
+La distanza cumulativa è:
+\begin{equation}
+D_C = \sum_{i=1}^{n} \operatorname{popcount}(m_i).
+\end{equation}
+La mutazione netta esprime l'effetto complessivo; la sequenza ordinata conserva il percorso. Questi due livelli devono rimanere separati, perché catene diverse possono avere la stessa mutazione netta.
+
+\subsection{Firma operativa}
+Una firma transizionale minima può essere definita come:
+\begin{equation}
+\Sigma(C) = (s_0, s_n, (m_1,\ldots,m_n), M_{net}, D_C).
+\end{equation}
+Questa firma non sostituisce il dato grezzo, ma lo indicizza. Il dato originale resta necessario per audit, verifica e revisione.
+
+\section{Architettura computazionale}
+\subsection{Livelli}
+L'architettura v0.6 distingue quattro livelli:
+\begin{enumerate}
+  \item osservazione e misura;
+  \item ancoraggio deterministico a State64;
+  \item processore di transizioni e compressione;
+  \item sintesi di policy a valle.
+\end{enumerate}
+Il terzo livello è il nucleo computazionale. Esso può essere implementato con operazioni CPU elementari: XOR, AND, SHIFT, popcount e lookup table.
+
+\subsection{Core Rust}
+La versione v0.6 introduce un core Rust di fattibilità. La rappresentazione minima è:
+\begin{lstlisting}[language=C]
+state: u8          // valori ammessi 0..63
+mutation_mask: u8  // valori ammessi 0..63
+index: u16         // valori ammessi 0..4095
+\end{lstlisting}
+Le operazioni base sono:
+\begin{lstlisting}[language=C]
+next_state = state ^ mutation_mask
+mutation   = source ^ target
+distance   = popcount(source ^ target)
+index      = source * 64 + target
+\end{lstlisting}
+Rust è adatto perché permette controllo numerico, portabilità, test di parità, compilazione verso WebAssembly e interfacce C ABI senza introdurre gestione manuale fragile della memoria.
+
+\subsection{TypeScript come reference layer}
+TypeScript rimane il livello di riferimento per specifica, API, esempi, JSON schema, integrazione web e strumenti AI. Rust non sostituisce immediatamente TypeScript: viene introdotto come candidato a diventare autorità computazionale dopo test di parità.
+
+\section{Tool AI e sintesi di policy}
+La versione v0.6 include un tool adapter per GPT/Claude. Il suo principio operativo è semplice:
+\begin{quote}
+Il modello può usare il kernel per processare stati e catene, ma non può alterare stati osservati, maschere o firme.
+\end{quote}
+Le funzioni principali sono:
+\begin{itemize}
+  \item \texttt{semagraph\_anchor\_state64}: ancoraggio di sei osservazioni note;
+  \item \texttt{semagraph\_lookup\_transition64}: lookup di una transizione;
+  \item \texttt{semagraph\_compress\_chain64}: compressione di una catena ordinata;
+  \item \texttt{semagraph\_policy\_context64}: costruzione del contesto per policy synthesis.
+\end{itemize}
+Il modello linguistico opera quindi come redattore di policy o spiegatore semantico, non come motore di verità osservativa.
+
+\section{Confronto con famiglie note}
+SemaGraph non è un motore fisico, non è un planner general-purpose, non è un motore BPMN e non è un rule engine generico. Ha parentele con automi finiti, statecharts, modelli di transizione, rule engines e policy-as-code, ma il suo scopo è più ristretto: ancorare stati osservati e comprimere catene di trasformazione in firme operative.
+
+\begin{longtable}{p{4cm}p{5cm}p{5cm}}
+\toprule
+Famiglia & Somiglianza & Differenza \\
+\midrule
+Automi finiti & Stati e transizioni finite & SemaGraph è orientato alla compressione di traiettorie osservate \\
+Statecharts & Transizioni controllate e guardie & Non orchestra comportamento applicativo o UI \\
+Rule engines & Predicati e regole & Non produce inferenza generale; valida transizioni e policy context \\
+Policy-as-code & Regole operative formalizzabili & La policy è a valle della firma transizionale \\
+Modelli stocastici & Traiettorie e percorsi & Non sceglie probabilisticamente il percorso; rappresenta deterministicamente i passaggi osservati \\
+LLM toolchains & Output strutturato e validazione & LLM non è autorità su stati o transizioni \\
+\bottomrule
+\end{longtable}
+
+\section{Ipotesi di validazione}
+La validazione non deve dimostrare che SemaGraph ``descrive il mondo'' in senso generale. Deve testare ipotesi operative:
+\begin{enumerate}
+  \item riduce il tempo di classificazione di traiettorie osservate;
+  \item riduce chiamate LLM e token necessari per produrre policy coerenti;
+  \item aumenta replayability e auditabilità;
+  \item conserva informazione decisionale sufficiente rispetto alla traiettoria grezza;
+  \item evita falsi equivalenti prodotti da compressione eccessiva.
+\end{enumerate}
+Una prima validazione può usare traiettorie sintetiche e confrontare tre modalità: analisi libera, analisi LLM-only e analisi SemaGraph con policy synthesis a valle.
+
+\section{Limiti}
+I principali limiti sono:
+\begin{itemize}
+  \item la qualità del sistema dipende dalle regole di ancoraggio;
+  \item la compressione può perdere informazioni rilevanti;
+  \item due catene con uguale mutazione netta possono avere significato operativo diverso;
+  \item il modello non sostituisce solutori numerici o modelli scientifici;
+  \item la sintesi LLM delle policy richiede validazione umana o rule-based.
+\end{itemize}
+Il limite più critico è la perdita informativa. Per questo la firma compressa deve restare sempre collegata alla catena osservata e ai dati grezzi.
+
+\section{Conclusione}
+SemaGraph v0.6 formalizza un kernel deterministico per rappresentare catene di cambiamento in uno spazio finito di 64 stati booleani. La sua funzione non è predire, inferire o simulare direttamente la realtà, ma comprimere transizioni osservate in firme operative riproducibili. Questa struttura può ridurre inferenza ricorrente, migliorare auditabilità e abilitare policy synthesis controllata. La direzione Rust/WASM rende il nucleo compatibile con una futura esecuzione machine-near, mentre TypeScript resta il livello di specifica e integrazione.
+
+\begin{thebibliography}{9}
+
+\bibitem{shannon1948}
+C. E. Shannon, ``A Mathematical Theory of Communication'', \emph{Bell System Technical Journal}, 1948.
+
+\bibitem{hamming1950}
+R. W. Hamming, ``Error Detecting and Error Correcting Codes'', \emph{Bell System Technical Journal}, 1950.
+
+\bibitem{hopcroft2006}
+J. E. Hopcroft, R. Motwani, J. D. Ullman, \emph{Introduction to Automata Theory, Languages, and Computation}, Pearson, 2006.
+
+\bibitem{harel1987}
+D. Harel, ``Statecharts: A Visual Formalism for Complex Systems'', \emph{Science of Computer Programming}, 1987.
+
+\bibitem{alur1995}
+R. Alur, D. L. Dill, ``A Theory of Timed Automata'', \emph{Theoretical Computer Science}, 1994.
+
+\bibitem{russell2021}
+S. Russell, P. Norvig, \emph{Artificial Intelligence: A Modern Approach}, Pearson, 2021.
+
+\end{thebibliography}
+
+\end{document}

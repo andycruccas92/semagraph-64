@@ -1,0 +1,12 @@
+{
+  "definitionId": "demo-direct-anchor",
+  "parameters": {
+    "pressure": 0.7,
+    "cohesion": 0.4,
+    "constraint": true,
+    "direction": "expanding",
+    "visibility": 0.3,
+    "reversible": true
+  },
+  "expectedStateId": "S64-101101"
+}

@@ -1,0 +1,7 @@
+{
+  "sourceStateId": "S64-000000",
+  "targetStateId": "S64-111111",
+  "mutationMask": "M64-111111",
+  "distance": 6,
+  "regimeClass": "full_bit_reversal"
+}

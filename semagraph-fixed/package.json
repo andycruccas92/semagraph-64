@@ -1,0 +1,19 @@
+{
+  "name": "semagraph",
+  "private": true,
+  "version": "0.6.2",
+  "description": "A deterministic observed-state anchoring and transition-chain compression kernel with TypeScript reference implementation and Rust core feasibility layer.",
+  "type": "module",
+  "packageManager": "pnpm@9.15.0",
+  "scripts": {
+    "build": "pnpm -r build",
+    "test": "pnpm -r test",
+    "typecheck": "pnpm -r typecheck",
+    "lint": "pnpm -r lint"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.2",
+    "typescript": "^5.7.2",
+    "vitest": "^2.1.8"
+  }
+}

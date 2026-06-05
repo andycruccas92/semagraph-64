@@ -1,0 +1,34 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://semagraph.org/schemas/trajectory.schema.json",
+  "title": "SemaGraph State Trajectory",
+  "type": "object",
+  "required": ["id", "initialParameters", "initialStateId", "events"],
+  "properties": {
+    "id": { "type": "string" },
+    "initialParameters": { "type": "object", "additionalProperties": { "type": ["boolean", "number", "string"] } },
+    "initialStateId": { "type": ["string", "null"] },
+    "events": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["ruleId", "authority", "accepted", "reason", "sourceStateId", "targetStateId", "before", "after"],
+        "properties": {
+          "ruleId": { "type": "string" },
+          "authority": { "enum": ["rule_allowed", "observed", "triggered", "simulated", "inferred", "validated"] },
+          "accepted": { "type": "boolean" },
+          "reason": { "type": "string" },
+          "sourceStateId": { "type": ["string", "null"] },
+          "targetStateId": { "type": ["string", "null"] },
+          "before": { "type": "object" },
+          "after": { "type": "object" },
+          "observedAt": { "type": "string", "format": "date-time" },
+          "eventRef": { "type": "string" },
+          "note": { "type": "string" }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}

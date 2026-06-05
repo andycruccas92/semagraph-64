@@ -1,0 +1,28 @@
+{
+  "name": "@semagraph/state64-adapter",
+  "version": "0.6.0",
+  "description": "Pure mathematical six-bit State64 / Q6 transition adapter for SemaGraph.",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "vitest run",
+    "lint": "tsc -p tsconfig.json --noEmit",
+    "generate:parity-fixture": "node scripts/generate-parity-fixture.mjs"
+  },
+  "dependencies": {
+    "@semagraph/kernel": "workspace:*"
+  },
+  "devDependencies": {
+    "typescript": "^5.7.2",
+    "vitest": "^2.1.8"
+  }
+}

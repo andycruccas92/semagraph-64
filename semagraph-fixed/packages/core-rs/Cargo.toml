@@ -1,0 +1,20 @@
+[package]
+name = "semagraph-core-rs"
+version = "0.6.1"
+edition = "2021"
+description = "Rust feasibility core for SemaGraph Q6 / State64 deterministic transition compression."
+license = "Apache-2.0"
+
+[lib]
+name = "semagraph_core_rs"
+crate-type = ["rlib", "cdylib", "staticlib"]
+
+[features]
+default = []
+ffi = []
+
+[profile.release]
+opt-level = 3
+lto = true
+codegen-units = 1
+strip = true

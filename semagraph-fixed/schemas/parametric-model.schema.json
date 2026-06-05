@@ -1,0 +1,107 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://semagraph.org/schemas/parametric-model.schema.json",
+  "title": "SemaGraph Parametric State Model",
+  "type": "object",
+  "required": ["id", "parameters", "states", "transitionRules"],
+  "properties": {
+    "id": { "type": "string", "minLength": 1 },
+    "label": { "type": "string" },
+    "parameters": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/parameterDefinition" },
+      "minItems": 1
+    },
+    "states": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/stateDefinition" },
+      "minItems": 1
+    },
+    "transitionRules": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/transitionRule" }
+    }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "parameterDefinition": {
+      "type": "object",
+      "required": ["key", "label", "kind"],
+      "properties": {
+        "key": { "type": "string", "minLength": 1 },
+        "label": { "type": "string", "minLength": 1 },
+        "kind": { "enum": ["boolean", "number", "ordinal", "categorical"] },
+        "description": { "type": "string" },
+        "min": { "type": "number" },
+        "max": { "type": "number" },
+        "allowedValues": { "type": "array", "items": { "type": "string" }, "uniqueItems": true }
+      },
+      "additionalProperties": false
+    },
+    "predicate": {
+      "type": "object",
+      "required": ["parameterKey", "operator", "value"],
+      "properties": {
+        "parameterKey": { "type": "string", "minLength": 1 },
+        "operator": { "enum": ["eq", "neq", "gt", "gte", "lt", "lte", "in"] },
+        "value": {
+          "oneOf": [
+            { "type": ["boolean", "number", "string"] },
+            { "type": "array", "items": { "type": ["boolean", "number", "string"] } }
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "predicateSet": {
+      "type": "object",
+      "properties": {
+        "all": { "type": "array", "items": { "$ref": "#/$defs/predicate" } },
+        "any": { "type": "array", "items": { "$ref": "#/$defs/predicate" } },
+        "none": { "type": "array", "items": { "$ref": "#/$defs/predicate" } }
+      },
+      "additionalProperties": false
+    },
+    "stateDefinition": {
+      "type": "object",
+      "required": ["id", "label", "predicates"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "label": { "type": "string", "minLength": 1 },
+        "description": { "type": "string" },
+        "priority": { "type": "number" },
+        "predicates": { "$ref": "#/$defs/predicateSet" },
+        "tags": { "type": "array", "items": { "type": "string" } }
+      },
+      "additionalProperties": false
+    },
+    "assignment": {
+      "type": "object",
+      "required": ["parameterKey", "value"],
+      "properties": {
+        "parameterKey": { "type": "string" },
+        "value": { "type": ["boolean", "number", "string"] }
+      },
+      "additionalProperties": false
+    },
+    "transitionRule": {
+      "type": "object",
+      "required": ["id", "label", "effects", "allowedAuthorities"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "label": { "type": "string", "minLength": 1 },
+        "sourceStateIds": { "type": "array", "items": { "type": "string" } },
+        "targetStateId": { "type": "string" },
+        "guards": { "$ref": "#/$defs/predicateSet" },
+        "effects": { "type": "array", "items": { "$ref": "#/$defs/assignment" } },
+        "allowedAuthorities": {
+          "type": "array",
+          "items": { "enum": ["rule_allowed", "observed", "triggered", "simulated", "inferred", "validated"] },
+          "uniqueItems": true
+        },
+        "eventType": { "type": "string" }
+      },
+      "additionalProperties": false
+    }
+  }
+}

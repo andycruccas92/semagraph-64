@@ -1,0 +1,46 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  typescript:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9.15.0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile=false
+      - run: pnpm typecheck
+      - run: pnpm test
+      - run: pnpm build
+      # Regenerate the parity fixture from the TypeScript reference and fail if it
+      # differs from the committed copy. This guarantees the golden file the Rust
+      # core is tested against can never silently drift from the reference.
+      - run: node packages/state64-adapter/scripts/generate-parity-fixture.mjs
+      - name: Verify parity fixture is up to date
+        run: git diff --exit-code packages/core-rs/tests/fixtures/transition-parity.json
+
+  rust:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          components: clippy, rustfmt
+      - name: Format check
+        run: cargo fmt --all --check
+        working-directory: packages/core-rs
+      - name: Clippy
+        run: cargo clippy --all-targets -- -D warnings
+        working-directory: packages/core-rs
+      - name: Unit and parity tests
+        run: cargo test --all-targets
+        working-directory: packages/core-rs

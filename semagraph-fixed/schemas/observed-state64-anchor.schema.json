@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://semagraph.local/schemas/observed-state64-anchor.schema.json",
+  "title": "Observed State64 Anchor",
+  "type": "object",
+  "required": ["definitionId", "measurements"],
+  "properties": {
+    "definitionId": { "type": "string", "minLength": 1 },
+    "anchorRuleVersion": { "type": "string", "minLength": 1 },
+    "measurements": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["key", "value"],
+        "properties": {
+          "key": { "type": "string", "minLength": 1 },
+          "value": {},
+          "unit": { "type": "string" },
+          "source": { "type": "string" },
+          "observedAt": { "type": "string" },
+          "tolerance": { "type": "number" },
+          "metadata": { "type": "object" }
+        },
+        "additionalProperties": false
+      }
+    },
+    "expectedStateId": { "type": "string", "pattern": "^S64-[01]{6}$" }
+  },
+  "additionalProperties": false
+}

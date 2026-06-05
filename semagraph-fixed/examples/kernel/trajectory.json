@@ -1,0 +1,18 @@
+{
+  "id": "trajectory-demo-001",
+  "initialParameters": { "pressure": 0.2, "cohesion": 0.8, "constraint": true },
+  "initialStateId": "stable",
+  "events": [
+    {
+      "ruleId": "external-constraint-pressure",
+      "authority": "simulated",
+      "accepted": true,
+      "reason": "Transition accepted by explicit rule evaluation.",
+      "sourceStateId": "stable",
+      "targetStateId": "fragmentation-risk",
+      "before": { "pressure": 0.2, "cohesion": 0.8, "constraint": true },
+      "after": { "pressure": 0.78, "cohesion": 0.28, "constraint": true },
+      "note": "This is a projection, not an observed event."
+    }
+  ]
+}

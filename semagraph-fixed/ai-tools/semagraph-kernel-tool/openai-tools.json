@@ -1,0 +1,89 @@
+[
+  {
+    "type": "function",
+    "function": {
+      "name": "semagraph_anchor_state64",
+      "description": "Deterministically anchor exactly six observed or known parameters into a State64 six-bit state. This tool must not infer missing observations.",
+      "parameters": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["observations"],
+        "properties": {
+          "observations": {
+            "type": "array",
+            "minItems": 6,
+            "maxItems": 6,
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["key", "value", "operator", "threshold"],
+              "properties": {
+                "key": { "type": "string" },
+                "value": { "oneOf": [{ "type": "number" }, { "type": "boolean" }, { "type": "string" }] },
+                "operator": { "type": "string", "enum": ["eq", "neq", "gt", "gte", "lt", "lte"] },
+                "threshold": { "oneOf": [{ "type": "number" }, { "type": "boolean" }, { "type": "string" }] },
+                "trueBit": { "type": "integer", "enum": [0, 1] },
+                "falseBit": { "type": "integer", "enum": [0, 1] },
+                "unit": { "type": "string" },
+                "source": { "type": "string" }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "semagraph_lookup_transition64",
+      "description": "Look up deterministic State64 transition metadata for a source and target state.",
+      "parameters": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["sourceStateId", "targetStateId"],
+        "properties": {
+          "sourceStateId": { "type": "string", "pattern": "^S64-[01]{6}$" },
+          "targetStateId": { "type": "string", "pattern": "^S64-[01]{6}$" }
+        }
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "semagraph_compress_chain64",
+      "description": "Compress an ordered chain of State64 states into mutation masks, net mutation and deterministic transition signature.",
+      "parameters": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["states"],
+        "properties": {
+          "states": {
+            "type": "array",
+            "minItems": 2,
+            "items": { "type": "string", "pattern": "^S64-[01]{6}$" }
+          }
+        }
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "semagraph_policy_context64",
+      "description": "Build a policy-synthesis context from a deterministic State64 transition chain. The LLM may write policy but must not alter observed states or signatures.",
+      "parameters": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["states"],
+        "properties": {
+          "states": { "type": "array", "minItems": 2, "items": { "type": "string", "pattern": "^S64-[01]{6}$" } },
+          "objective": { "type": "string" },
+          "constraints": { "type": "array", "items": { "type": "string" } },
+          "evidenceRefs": { "type": "array", "items": { "type": "string" } }
+        }
+      }
+    }
+  }
+]

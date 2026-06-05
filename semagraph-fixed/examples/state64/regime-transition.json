@@ -1,0 +1,8 @@
+{
+  "sourceStateId": "S64-000000",
+  "targetStateId": "S64-101010",
+  "mutationMask": "M64-101010",
+  "distance": 3,
+  "moduleScope": "both_modules",
+  "regimeClass": "cross_module_regime_shift"
+}

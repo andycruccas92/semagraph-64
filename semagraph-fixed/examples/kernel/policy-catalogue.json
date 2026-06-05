@@ -1,0 +1,12 @@
+[
+  {
+    "id": "policy-fragmentation-risk",
+    "label": "Check fragmentation before local correction",
+    "appliesToRegimeClasses": ["partial_reconfiguration", "regime_shift"],
+    "targetStateIds": ["fragmentation-risk"],
+    "transitionRuleIds": ["external-constraint-pressure"],
+    "priority": 10,
+    "policyText": "Do not treat the transition as a local symptom before checking pressure concentration, cohesion erosion and constraint persistence.",
+    "tags": ["diagnostic", "regime", "stabilization"]
+  }
+]

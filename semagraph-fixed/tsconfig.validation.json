@@ -1,0 +1,26 @@
+{
+  "extends": "./tsconfig.base.json",
+  "compilerOptions": {
+    "noEmit": true,
+    "baseUrl": ".",
+    "paths": {
+      "@semagraph/kernel": [
+        "packages/kernel/src/index.ts"
+      ],
+      "@semagraph/state64-adapter": [
+        "packages/state64-adapter/src/index.ts"
+      ],
+      "@semagraph/renderer-svg": [
+        "packages/renderer-svg/src/index.ts"
+      ]
+    }
+  },
+  "include": [
+    "packages/*/src/**/*.ts",
+    "ai-tools/*/src/**/*.ts"
+  ],
+  "exclude": [
+    "**/dist/**",
+    "**/node_modules/**"
+  ]
+}
