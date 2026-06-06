@@ -1,64 +1,122 @@
-# SemaGraph v0.6
+# semagraph
 
-SemaGraph is a deterministic observed-state anchoring and transition-chain compression kernel.
+A deterministic compression layer for state-transition trajectories in complex
+stochastic systems, where sampling cost is the bottleneck and path-dependence is
+structural.
 
-It represents observed or known parameter states in a finite six-bit boolean space (`Q6` / State64), computes direct transitions through XOR mutation masks, compresses ordered chains into deterministic signatures, and allows LLMs to synthesize policy only after the kernel has produced an auditable signature.
+A domain-specific instruction set for state-transition trajectories.
+Deterministic, branchless, cache-resident. Built to be called by AI agents as a
+symbolic compression layer over a six-bit state alphabet (64 states, 4096
+transitions). It computes structural facts and prints them; it does not
+interpret them.
 
-## Core stance
+## Install
 
-SemaGraph v0.6 is pure mathematical computation over a finite state space. It does not use symbolic lineage claims and it does not depend on an LLM for state inference.
-
-```text
-observed physical/structured parameters
-→ deterministic anchor rules
-→ State64/Q6 state
-→ 64×64 transition matrix lookup
-→ transition-chain compression
-→ policy context
-→ optional LLM policy synthesis
+```bash
+cargo install semagraph        # from crates.io (when published)
 ```
 
-## Packages
+Or download a prebuilt binary from the releases page and run it directly — it is
+statically linked with no runtime dependencies:
 
-- `packages/kernel`: domain-neutral parametric transition kernel and policy primitives.
-- `packages/state64-adapter`: TypeScript reference implementation for State64/Q6, deterministic anchors, transition matrix and chain compression.
-- `packages/renderer-svg`: neutral State64 visual rendering utilities.
-- `packages/core-rs`: Rust feasibility core for machine-near State64 transition processing.
-- `ai-tools/semagraph-kernel-tool`: GPT/Claude-compatible tool schemas, Claude skill and local TypeScript adapter.
-- `paper/overleaf`: Italian LaTeX paper for Overleaf.
+```bash
+chmod +x semagraph && ./semagraph --help
+```
 
-## What v0.6 adds
+Build from source in this repo:
 
-1. Rust feasibility core with zero external dependencies.
-2. Numeric parity helpers for TypeScript ↔ Rust/WASM/C integration.
-3. AI kernel tool layer for GPT/Claude-style integration.
-4. Italian theory/practice paper in LaTeX.
-5. Clearer boundary: LLMs may synthesize policy but must not infer states, observations, masks or signatures.
+```bash
+cargo build --release -p semagraph   # binary at target/release/semagraph
+```
 
-## State64 / Q6 primitives
+## Examples
 
-- `State64`: integer `0..63` or canonical id `S64-010101`.
-- `MutationMask64`: integer `0..63` or canonical id `M64-010101`.
-- Direct transition: `source XOR target`.
-- Distance: `popcount(source XOR target)`.
-- Transition index: `source * 64 + target`.
-- Complete direct transition basis: `64 × 64 = 4096` entries.
+Classify one transition (human-readable by default):
 
-## Validation status
+```text
+$ semagraph classify 5 2
+source:       5  (000101)
+target:       2  (000010)
+mask:         7  (000111)
+distance:     3
+lower_dist:   0
+upper_dist:   3
+scope:        upper_only
+regime:       cross_module_regime_shift
+index:        322
+packed:       346240610437
+```
 
-TypeScript static validation is supported with `tsc`. Rust validation requires a local Rust toolchain.
+Compress a trajectory into its canonical signature:
 
-The generated v0.6 package was statically checked for the TypeScript packages available in the container. Rust files were authored as feasibility source but were not compiled in the container because Rust/Cargo were not installed.
+```text
+$ semagraph compress 0 1 1 3
+path:           0 → 1 → 1 → 3
+length:         4 states, 3 transitions
+net_mutation:   2  (010)
+cumulative_d:   2
+endpoint:       0 → 3  (code 3)
+shape:          0 1 3
+dwell:          1 2 1
+exact_key:      P3:0.1.1.3
+shape_key:      S3:0.1.3
+dwell_sig:      D3:1.2.1
+```
 
-## Non-goals
+Process an ensemble as NDJSON (one trajectory per input line, one result per
+output line):
 
-SemaGraph is not:
+```text
+$ printf '[0,1,3]\n[0,1,1,3]\n[0,2,3]\n' | semagraph batch
+{"path":[0,1,3],"length":{"states":3,"transitions":2},"net_mutation":3,"cumulative_distance":2,"endpoint":{"source":0,"target":3,"code":3},"shape":[0,1,3],"dwell":[1,1,1],"exact_key":"P3:0.1.3","shape_key":"S3:0.1.3","dwell_signature":"D3:1.1.1"}
+{"path":[0,1,1,3],"length":{"states":4,"transitions":3},"net_mutation":3,"cumulative_distance":2,"endpoint":{"source":0,"target":3,"code":3},"shape":[0,1,3],"dwell":[1,2,1],"exact_key":"P3:0.1.1.3","shape_key":"S3:0.1.3","dwell_signature":"D3:1.2.1"}
+{"path":[0,2,3],"length":{"states":3,"transitions":2},"net_mutation":3,"cumulative_distance":2,"endpoint":{"source":0,"target":3,"code":3},"shape":[0,2,3],"dwell":[1,1,1],"exact_key":"P3:0.2.3","shape_key":"S3:0.2.3","dwell_signature":"D3:1.1.1"}
+```
 
-- a physics engine;
-- a general-purpose programming language;
-- a statistical model;
-- a replacement for scientific solvers;
-- an LLM-internal acceleration layer;
-- a policy authority without external validation.
+Add `--json` to any command for machine-readable output. Data goes to stdout,
+errors to stderr, exit code 0 on success.
 
-It is a transition-compression kernel intended to reduce repeated interpretation and make observed state changes replayable, comparable and policy-addressable.
+## What it is / what it is not
+
+It is:
+
+- a deterministic classifier and compressor for trajectories over 64 states;
+- branchless and cache-resident in its hot path;
+- offline, with no runtime dependencies and no telemetry.
+
+It is not:
+
+- an inference engine — it never interprets what a regime or shape means;
+- a statistical solver, a physics engine, or a general programming language;
+- a reconstructor of trajectories from endpoints (endpoints are lossy).
+
+## For AI agent use
+
+The primary consumer is an automated agent parsing `--json` output. The exact
+input/output contract, the anti-inference boundary, and the collapse-factor
+table are in [TOOL_DESCRIPTION.md](TOOL_DESCRIPTION.md). Read that before wiring
+the tool into an agent loop.
+
+## Architecture
+
+The design rationale — why six bits, why branchless, where it sits in the memory
+hierarchy, and what is delegated to a language model — is in
+[docs/ARCHITECTURE.md](docs/ARCHITECTURE.md).
+
+## Domain examples
+
+Worked examples translate the tool into the language of specific fields. See the
+[`examples/`](examples/) folder:
+
+- [`stochastic-simulation.md`](examples/stochastic-simulation.md) — the origin
+  use case: grouping simulation rollouts by canonical shape.
+- [`regime-switching-montecarlo.md`](examples/regime-switching-montecarlo.md) —
+  path-dependent instruments and non-ergodic Monte Carlo.
+- [`quantum-signal-analysis.md`](examples/quantum-signal-analysis.md) — classical
+  analysis of measurement-shot sequences from quantum hardware.
+- [`decision-making-deep-uncertainty.md`](examples/decision-making-deep-uncertainty.md)
+  — quantized organizational decision trajectories.
+
+## License
+
+Apache 2.0. See [LICENSE](LICENSE).

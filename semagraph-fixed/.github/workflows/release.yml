@@ -1,0 +1,73 @@
+name: Release
+
+# Tag-triggered only. The CI workflow (ci.yml) still runs on every push/PR and
+# must stay green; this workflow is additional and builds release binaries.
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    name: Build ${{ matrix.target }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - target: x86_64-unknown-linux-musl
+            os: ubuntu-latest
+          - target: x86_64-apple-darwin
+            os: macos-13
+          - target: aarch64-apple-darwin
+            os: macos-14
+          - target: x86_64-pc-windows-msvc
+            os: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Rust toolchain
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: ${{ matrix.target }}
+
+      # musl is statically linked and needs the musl C toolchain on Linux.
+      # (For more exotic targets, `cargo install cross` + `cross build` is the
+      # drop-in alternative; x86_64 musl builds fine with musl-tools alone.)
+      - name: Install musl tools
+        if: matrix.target == 'x86_64-unknown-linux-musl'
+        run: sudo apt-get update && sudo apt-get install -y musl-tools
+
+      - name: Build release binary
+        run: cargo build --release --locked --manifest-path packages/Cargo.toml -p semagraph --target ${{ matrix.target }}
+
+      - name: Package (Unix)
+        if: matrix.os != 'windows-latest'
+        shell: bash
+        run: |
+          bin="packages/target/${{ matrix.target }}/release/semagraph"
+          name="semagraph-${{ github.ref_name }}-${{ matrix.target }}"
+          tar -C "$(dirname "$bin")" -czf "${name}.tar.gz" semagraph
+          shasum -a 256 "${name}.tar.gz" > "${name}.tar.gz.sha256"
+
+      - name: Package (Windows)
+        if: matrix.os == 'windows-latest'
+        shell: bash
+        run: |
+          bin="packages/target/${{ matrix.target }}/release/semagraph.exe"
+          name="semagraph-${{ github.ref_name }}-${{ matrix.target }}"
+          7z a "${name}.zip" "$bin"
+          certutil -hashfile "${name}.zip" SHA256 > "${name}.zip.sha256"
+
+      - name: Attach to release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            semagraph-${{ github.ref_name }}-${{ matrix.target }}.tar.gz
+            semagraph-${{ github.ref_name }}-${{ matrix.target }}.tar.gz.sha256
+            semagraph-${{ github.ref_name }}-${{ matrix.target }}.zip
+            semagraph-${{ github.ref_name }}-${{ matrix.target }}.zip.sha256
+          fail_on_unmatched_files: false

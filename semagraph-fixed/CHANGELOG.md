@@ -16,6 +16,16 @@
 - Added `docs/ARCHITECTURE.md`: the design-rationale document (six-bit alphabet, branchless/cache-resident hot path, memory hierarchy, kernel-vs-LLM division of labour, the four-level hierarchy, non-goals, future directions).
 - Bumped the `semagraph-core-rs` crate to 0.7.0. The core crate has no new runtime dependencies; Criterion is a dev-dependency and SIMD is behind a feature.
 
+- Added `packages/cli`: the `semagraph` command-line binary that consumes the kernel.
+  - Subcommands: `classify`, `compress`, `compare`, `lookup`, `batch` (NDJSON in/out), and `verify` (self-test over all 4096 transitions).
+  - Global flags `--json` / `--quiet` / `--version` / `--help`. Human-readable output by default; `--json` emits a stable compact-JSON contract. Data goes to stdout, errors to stderr, exit code 0 on success (2 = usage error, 1 = data error).
+  - Zero third-party dependencies: argument parsing and JSON emission are hand-rolled; the only dependency is the in-repo kernel, so the release binary has no runtime dependencies.
+  - Set up a Cargo workspace at `packages/Cargo.toml` (members `core-rs`, `cli`) and moved `[profile.release]` to the workspace root.
+- Added LLM-facing and human-facing documentation: `TOOL_DESCRIPTION.md` (machine-readable tool contract with the collapse-factor table and exact per-subcommand I/O), a rewritten short `README.md`, an "Origin and motivation" section at the top of `docs/ARCHITECTURE.md`, and four domain worked-examples under `examples/`.
+- Added `.github/workflows/release.yml`: tag-triggered (`v*`) build of static Linux (musl), macOS (x86_64 + aarch64) and Windows binaries with SHA-256 checksums attached to the GitHub release.
+- Updated CI so the Rust job runs against the whole workspace (`cargo clippy --workspace`, `cargo test --workspace`) and builds the CLI release binary.
+- DESIGN-NOTE: the CLI brief requested a `v0.6.3` changelog entry, but the kernel work in this delivery already opened an unreleased `v0.7.0`; to keep versions monotonic the CLI ships in the same unreleased `v0.7.0` rather than a backwards `v0.6.3`.
+
 ## v0.6.2
 
 - Added `packages/kernel/src/shapes.ts`: a four-level path/shape hierarchy over the Q3 alphabet.

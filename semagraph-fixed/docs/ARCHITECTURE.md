@@ -1,10 +1,31 @@
 # SemaGraph computational architecture
 
+> A deterministic compression layer for state-transition trajectories in complex
+> stochastic systems, where sampling cost is the bottleneck and path-dependence
+> is structural.
+
 This document gives the engineering vocabulary for the SemaGraph core: what it
 is, why it is built the way it is, and where the deterministic kernel ends and a
 language model begins. Plain language first in each section, precise terms after.
 
-## 1. What this is, in one paragraph
+## 1. Origin and motivation
+
+This tool was built to solve a specific problem: a simulation kernel whose
+rollout cost made it non-portable on consumer hardware. Achieving statistical
+robustness required more samples than available resources could produce.
+
+The insight was a change of representation: instead of reducing the number of
+rollouts needed (a statistical problem), compress the trajectories already
+available into canonical forms, and measure the distribution over forms instead
+of raw path convergence. Deterministic classification of stochastic output.
+
+The state alphabet is derived from the I Ching hexagram system — not for symbolic
+reasons, but because it is the oldest known combinatorial system that is natively
+binary: six positions, two values each, modular 3+3 structure. The cosmology was
+removed; the combinatorial structure was kept. What remained is Q6: 64 states,
+4096 transitions, a complete basis for a six-dimensional boolean space.
+
+## 2. What this is, in one paragraph
 
 SemaGraph records how a system moves between states over time and then groups
 many such recordings by their shape. It works over a tiny fixed alphabet of
@@ -14,7 +35,7 @@ possible moves fits inside the processor's fast on-chip memory, and the work of
 sorting thousands of recordings into "same shape" or "different shape" becomes a
 stream of simple integer operations rather than anything that needs interpretation.
 
-## 2. The one-line technical description
+## 3. The one-line technical description
 
 The core is a branchless, cache-resident classifier over a six-bit state space:
 per-transition metadata is read from compile-time lookup tables indexed by the
@@ -22,7 +43,7 @@ mutation mask `source ^ target`, batches are processed through a struct-of-array
 layout that the compiler can auto-vectorize, and an optional explicit-SIMD path
 mirrors the scalar one bit-for-bit.
 
-## 3. Why a six-bit alphabet
+## 4. Why a six-bit alphabet
 
 The alphabet is deliberately small. A six-bit composite state (Q6) is two
 three-bit modules (Q3 x Q3); the elementary alphabet Q3 has eight states. The
@@ -47,7 +68,7 @@ indices; a small mask domain means the classifier is a table lookup, which is
 branchless and trivially vectorizable across many items at once. The smallness is
 the point.
 
-## 4. Where it sits in the memory hierarchy
+## 5. Where it sits in the memory hierarchy
 
 The hot-path working set is the set of lookup tables in `packages/core-rs/src/tables.rs`:
 
@@ -74,7 +95,7 @@ functions the scalar path uses, so they cannot drift from the reference logic; a
 exhaustive test asserts the table path equals the scalar path on all 4096
 transitions.
 
-## 5. The division of labour
+## 6. The division of labour
 
 The deterministic kernel does the structural work, and only the structural work:
 
@@ -98,7 +119,7 @@ consumes the kernel's outputs; it does not manufacture them. This anti-inference
 boundary is what makes the structural results reproducible and checkable
 independently of any model.
 
-## 6. The four-level hierarchy
+## 7. The four-level hierarchy
 
 The reference (`packages/kernel/src/shapes.ts`, ported to
 `packages/core-rs/src/shapes.rs`) defines four levels:
@@ -126,7 +147,7 @@ comparison cascade is a performance pre-filter, not a decision — equal shape
 forces equal endpoints, but equal endpoints prove nothing about shape, so the
 shape comparison remains the decider.
 
-## 7. What this is NOT
+## 8. What this is NOT
 
 To prevent overstatement:
 
@@ -139,7 +160,7 @@ To prevent overstatement:
 - The performance statements in this repository are either numbers a benchmark
   actually produced or are explicitly marked as architectural expectations.
 
-## 8. Future directions (speculative)
+## 9. Future directions (speculative)
 
 All of the following are speculative and out of present scope:
 

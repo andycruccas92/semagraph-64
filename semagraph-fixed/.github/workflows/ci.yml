@@ -33,6 +33,11 @@ jobs:
 
   rust:
     runs-on: ubuntu-latest
+    # The Rust workspace lives in packages/ (members: core-rs, cli). Running from
+    # the workspace root makes --workspace cover both the kernel and the CLI.
+    defaults:
+      run:
+        working-directory: packages
     steps:
       - uses: actions/checkout@v4
       - uses: dtolnay/rust-toolchain@stable
@@ -40,16 +45,13 @@ jobs:
           components: clippy, rustfmt
       - name: Format check
         run: cargo fmt --all --check
-        working-directory: packages/core-rs
-      - name: Clippy
-        run: cargo clippy --all-targets -- -D warnings
-        working-directory: packages/core-rs
-      - name: Unit and parity tests
-        run: cargo test --all-targets
-        working-directory: packages/core-rs
+      - name: Clippy (workspace)
+        run: cargo clippy --workspace --all-targets -- -D warnings
+      - name: Unit and parity tests (workspace)
+        run: cargo test --workspace --all-targets
       - name: SIMD equality test
-        run: cargo test --features simd
-        working-directory: packages/core-rs
+        run: cargo test -p semagraph-core-rs --features simd
       - name: Benches compile
-        run: cargo build --benches
-        working-directory: packages/core-rs
+        run: cargo build -p semagraph-core-rs --benches
+      - name: CLI builds with no runtime dependencies
+        run: cargo build --release -p semagraph
