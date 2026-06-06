@@ -2,15 +2,16 @@
 
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
-\usepackage[italian]{babel}
-\usepackage{amsmath,amssymb,amsfonts}
+% english is the main language; italian is available for the extended sommario.
+\usepackage[english]{babel}
+\usepackage{amsmath,amssymb,amsfonts,amsthm}
 \usepackage{geometry}
 \usepackage{booktabs}
 \usepackage{array}
-\usepackage{hyperref}
-\usepackage{listings}
-\usepackage{xcolor}
 \usepackage{longtable}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{hyperref}
 
 \geometry{margin=2.5cm}
 \hypersetup{colorlinks=true, linkcolor=black, urlcolor=blue, citecolor=black}
@@ -24,247 +25,432 @@
 }
 \lstset{style=code}
 
-\title{SemaGraph v0.6\\
-\large Kernel deterministico per ancoraggio di stati osservati e compressione di catene di transizione in $Q_6$}
-\author{Bozza tecnica per sviluppo e validazione}
-\date{Giugno 2026}
+\newtheorem{proposition}{Proposition}
+\newtheorem{definition}{Definition}
+
+\title{SemaGraph\\[2pt]
+\large A deterministic, cache-resident kernel for classifying and compressing
+state-transition trajectories over a six-bit alphabet}
+\author{Technical report --- version 0.7 (\texttt{semagraph-64})}
+\date{June 2026}
 
 \begin{document}
 \maketitle
 
 \begin{abstract}
-SemaGraph v0.6 propone un kernel deterministico per rappresentare cambiamenti osservati come catene finite di transizioni in uno spazio booleano a sei dimensioni, indicato come $Q_6$. Ogni stato è codificato da una parola binaria di sei bit; ogni transizione diretta tra due stati è rappresentata da una maschera XOR; ogni catena di trasformazione è comprimibile in una firma operativa costituita da stato sorgente, stato target, maschere ordinate, mutazione netta e distanza cumulativa. Il sistema non usa modelli linguistici per inferire stati o parametri: l'ancoraggio iniziale deriva da osservazioni fisiche, sensori, soglie o parametrizzazioni dichiarate. I modelli linguistici possono intervenire soltanto a valle, per sintetizzare policy o spiegazioni su firme già calcolate. L'obiettivo è ridurre inferenza ricorrente, drift interpretativo e costo computazionale nella lettura di traiettorie dinamiche, mantenendo tracciabilità verso i dati osservati.
+SemaGraph is a deterministic kernel that represents observed change as finite
+trajectories over a small fixed alphabet and classifies and compresses those
+trajectories using only native integer operations. Each state is a six-bit word
+($Q_6$, $64$ states); each direct transition is an XOR mutation mask; the complete
+transition basis is the $64\times64=4096$ ordered pairs. Per-transition metadata
+(Hamming distance, per-module distances, module scope, regime class) is a pure
+function of the mutation mask and is read from compile-time lookup tables with no
+data-dependent branch in the hot loop; the whole working set ($\approx 4.4$~KiB)
+is L1-resident. A struct-of-arrays batch interface processes ensembles of
+trajectories in one call and is written to auto-vectorize, with an optional
+explicit-SIMD path that reproduces the scalar output bit-for-bit. Trajectories
+over the eight-symbol alphabet $Q_3$ form a four-level hierarchy whose
+run-collapsed \emph{shape} (with an aligned \emph{dwell} vector) is the canonical
+form, while coarser projections (net mutation, endpoint code) serve only as
+pre-filters and never as form identities. The kernel performs no inference: states
+are produced by an explicit, versioned anchoring map from observations, and a
+language model may only synthesize policy or explanation over signatures the
+kernel has already computed. We give the formal model with short proofs, the
+computational architecture and its memory rationale, an exhaustive
+cross-implementation parity methodology, the evaluation hypotheses, the limits,
+and explicit non-claims (in particular: no complexity-theory claim, and no model
+of quantum evolution).
 \end{abstract}
 
-\section{Premessa}
-Molti sistemi complessi producono sequenze di stati più che singoli stati isolati. Processi organizzativi, modelli finanziari, fenomeni biologici, eventi fisici discretizzati e simulazioni stocastiche possono essere osservati come traiettorie: una configurazione iniziale cambia, attraversa regimi intermedi e raggiunge una configurazione finale. Il problema non è soltanto classificare lo stato corrente, ma rappresentare come il sistema vi è arrivato.
+\section*{Sommario esteso}
+\addcontentsline{toc}{section}{Sommario esteso (Italiano)}
+SemaGraph è un kernel deterministico che rappresenta il cambiamento osservato come
+traiettorie finite su un alfabeto piccolo e fisso, e che classifica e comprime
+tali traiettorie usando soltanto operazioni intere native. Ogni stato è una parola
+di sei bit ($Q_6$, $64$ stati); ogni transizione diretta tra due stati è una
+maschera XOR $m = s \oplus t$; la base completa delle transizioni è costituita
+dalle $64 \times 64 = 4096$ coppie ordinate. I metadati di una transizione
+(distanza di Hamming, distanze per-modulo, ambito di modulo, classe di regime)
+sono funzione esclusiva della maschera e vengono letti da tabelle di lookup
+costruite a tempo di compilazione, senza alcun salto condizionato sui dati nel
+ciclo caldo; l'insieme di lavoro ($\approx 4.4$~KiB) risiede in cache L1.
 
-SemaGraph v0.6 nasce per formalizzare questo passaggio. Il kernel non pretende di sostituire modelli fisici, chimici, biologici, statistici o linguistici. Esso opera come layer di compressione transizionale: prende stati già osservati o parametrizzati, calcola transizioni deterministiche, comprime catene e genera firme confrontabili.
+La tesi è volutamente ristretta: la parte \emph{strutturale} del ragionamento
+sulle traiettorie è riconducibile a primitive elementari della CPU (XOR, popcount,
+lookup) e parallelizzabile su grandi insiemi (\emph{ensemble}) di traiettorie,
+lasciando al modello linguistico soltanto il lavoro \emph{semantico} (spiegazione,
+sintesi di policy). Il modello linguistico non calcola mai stati, maschere o
+firme. Le traiettorie sull'alfabeto a otto simboli $Q_3$ formano una gerarchia a
+quattro livelli la cui \emph{forma} (lo \emph{shape} ottenuto collassando le
+ripetizioni adiacenti, con il vettore \emph{dwell} allineato) è l'identità di
+forma; le proiezioni più grossolane (mutazione netta, codice di endpoint) sono
+solo pre-filtri e non possono mai fungere da chiave di forma. Lo stato non viene
+inferito linguisticamente: è prodotto da una mappa di ancoraggio esplicita e
+versionata a partire dalle osservazioni.
 
-La tesi principale è la seguente: se gli stati sono ancorati deterministicamente a osservazioni o parametri noti, allora la catena di trasformazione può essere rappresentata come sequenza di transizioni finite, replayable e comprimibili. L'inferenza viene confinata fuori dal nucleo transizionale.
+Il documento fornisce il modello formale con brevi dimostrazioni, l'architettura
+computazionale e la sua motivazione rispetto alla gerarchia di memoria, la
+metodologia di verifica di parità esaustiva fra l'implementazione di riferimento
+in TypeScript e il core in Rust, le ipotesi di validazione, i limiti e le
+non-affermazioni esplicite. In particolare SemaGraph \textbf{non} è un motore
+fisico, non è un linguaggio di programmazione generale, non sostituisce solutori
+numerici o statistici, non avanza alcuna tesi di teoria della complessità (nessuna
+affermazione su P contro NP) e \textbf{non} modella l'evoluzione quantistica:
+quando applicato a hardware quantistico, opera unicamente sulle sequenze classiche
+di esiti di misura, cioè dopo il collasso.
 
-\section{Modello formale}
-\subsection{Spazio degli stati}
-Sia $B = \{0,1\}$. Lo spazio State64 è definito come:
-\begin{equation}
-Q_6 = B^6.
-\end{equation}
-Ogni stato $s \in Q_6$ è una tupla ordinata di sei bit:
-\begin{equation}
-s = (b_1,b_2,b_3,b_4,b_5,b_6), \quad b_i \in \{0,1\}.
-\end{equation}
-Lo spazio contiene esattamente:
-\begin{equation}
-|Q_6| = 2^6 = 64
-\end{equation}
-stati possibili. In implementazione, ogni stato può essere rappresentato come intero unsigned a 8 bit usando soltanto i sei bit meno significativi o come stringa canonica di sei caratteri binari.
+\tableofcontents
+\bigskip
 
-\subsection{Transizione elementare}
-Date due configurazioni $s,t \in Q_6$, la transizione diretta da $s$ a $t$ è definita dalla maschera:
-\begin{equation}
-m = s \oplus t,
-\end{equation}
-dove $\oplus$ indica XOR bit-a-bit. La maschera $m$ specifica quali posizioni cambiano. Se $m_i = 1$, il bit $i$ è mutato; se $m_i = 0$, il bit $i$ è conservato.
+\section{Introduction and motivation}
+Many complex systems produce \emph{sequences} of states rather than isolated
+states. Organizational processes, financial models, discretized physical events
+and stochastic simulations can be observed as trajectories: an initial
+configuration changes, passes through intermediate regimes, and reaches a final
+configuration. The question is not only how to classify the current state, but how
+to represent the way the system got there.
 
-La distanza di trasformazione è la distanza di Hamming:
-\begin{equation}
-d(s,t) = \sum_{i=1}^{6} |s_i - t_i| = \operatorname{popcount}(s \oplus t).
-\end{equation}
-Questa misura non interpreta il cambiamento: misura quante coordinate dello stato sono mutate.
+The concrete problem that motivated SemaGraph was sampling cost. A stochastic
+simulation kernel required, for statistical robustness, more rollouts than
+consumer hardware could produce in reasonable time. The usual response --- run
+more samples --- attacks the statistics but not the use one makes of the samples
+already available. SemaGraph proposes a change of representation instead: collapse
+each trajectory to a canonical form and measure the distribution over \emph{forms},
+which stabilizes with far fewer rollouts than the distribution over raw paths,
+because the form space is coarser while still preserving the order of regimes
+visited.
 
-\subsection{Matrice completa delle transizioni}
-Poiché $Q_6$ contiene 64 stati, il numero di coppie ordinate stato-stato è:
-\begin{equation}
-64 \times 64 = 4096.
-\end{equation}
-Queste 4096 coppie costituiscono la base completa delle transizioni dirette, inclusa l'identità $s \rightarrow s$. Le transizioni trasformative non identitarie sono:
-\begin{equation}
-64 \times 63 = 4032.
-\end{equation}
-L'indice computazionale di una transizione può essere definito come:
-\begin{equation}
-I(s,t) = 64 \cdot \operatorname{idx}(s) + \operatorname{idx}(t),
-\end{equation}
-dove $\operatorname{idx}(s) \in [0,63]$ è la rappresentazione intera dello stato sorgente.
+The state alphabet is derived from the I~Ching hexagram system, used solely
+because it is the oldest known combinatorial system that is natively binary: six
+positions, two values each, with a modular $3+3$ structure. The cosmology is
+discarded; only the combinatorial skeleton is kept. What remains is $Q_6$: $64$
+states, $4096$ transitions, a complete basis for a six-dimensional Boolean space.
 
-\subsection{Modularità 3+3}
-Ogni stato può essere scomposto in due moduli da tre bit:
+The thesis is deliberately narrow and is stated as such throughout: the
+\emph{structural} part of trajectory reasoning reduces to native CPU primitives
+and parallelizes over ensembles, leaving only \emph{semantic} work to any
+downstream language model.
+
+\section{Formal model}
+Notation: $B=\{0,1\}$, $\oplus$ is bitwise XOR, $\operatorname{popcount}(x)$ is the
+Hamming weight of $x$, and $[a,b)$ is a half-open integer interval.
+
+\subsection{The composite state space \texorpdfstring{$Q_6$}{Q6}}
 \begin{equation}
-s = (l,u), \quad l \in B^3,\ u \in B^3.
+Q_6 = B^6, \qquad |Q_6| = 2^6 = 64.
 \end{equation}
-La scomposizione 3+3 non introduce significato ereditato; è una proprietà combinatoria utile per classificare se una transizione rimane interna a un modulo o attraversa entrambi i moduli. Date le distanze:
+A state $s\in Q_6$ is a six-bit word, stored as the low six bits of a byte;
+the canonical string form is \texttt{S64-} followed by six binary digits. Each
+state splits into two three-bit modules, written MSB-first as $b_5b_4b_3b_2b_1b_0$:
 \begin{equation}
-d_l = d(l_s,l_t), \quad d_u = d(u_s,u_t),
+L(s) = (s \gg 3)\ \&\ 7, \qquad U(s) = s\ \&\ 7 .
 \end{equation}
-possiamo classificare il campo di mutazione come: nessun cambiamento, solo modulo inferiore, solo modulo superiore o entrambi i moduli.
+The split carries no inherited meaning; it is the combinatorial property that lets
+a transition be classified as internal to one module or crossing both.
 
-\section{Ancoraggio deterministico degli stati}
-\subsection{Osservazione e parametrizzazione}
-SemaGraph v0.6 assume che lo stato non venga inferito linguisticamente. Lo stato è prodotto da regole di ancoraggio esplicite applicate a parametri osservati:
+\subsection{Transitions, distances, scope}
+For $s,t\in Q_6$ the \emph{mutation mask} and \emph{Hamming distance} are
 \begin{equation}
-A: X \rightarrow Q_6,
+m(s,t) = s\oplus t, \qquad d(s,t) = \operatorname{popcount}(s\oplus t)\in\{0,\dots,6\},
 \end{equation}
-dove $X$ è lo spazio dei vettori osservativi o parametrici. Ogni bit $b_i$ è calcolato da una regola dichiarata:
-\begin{equation}
-b_i = r_i(x), \quad r_i: X \rightarrow \{0,1\}.
-\end{equation}
-Una regola può essere una soglia, una condizione booleana, una categoria nota o un predicato su un parametro.
+with per-module distances $d_L = \operatorname{popcount}(L(s)\oplus L(t))$ and
+$d_U = \operatorname{popcount}(U(s)\oplus U(t))$, and $d = d_L + d_U$. The
+\emph{module scope} is \texttt{none}, \texttt{lower\_only}, \texttt{upper\_only} or
+\texttt{both\_modules} according to which of $d_L,d_U$ are positive.
 
-\subsection{Replayability}
-Dato lo stesso vettore osservato $x$ e la stessa versione delle regole $R = (r_1, \ldots, r_6)$, il sistema produce sempre lo stesso stato:
-\begin{equation}
-A_R(x) = s.
-\end{equation}
-La determinazione dello stato è quindi replayable. L'incertezza di misura non viene negata: deve essere registrata come tolleranza, unità, fonte, timestamp e versione della regola. Tuttavia, questa incertezza appartiene al livello di misura, non al kernel di transizione.
-
-\subsection{Boundary del modello linguistico}
-Il modello linguistico non assegna stati, non modifica parametri e non inferisce misure mancanti. Può intervenire a valle:
-\begin{itemize}
-  \item per spiegare una firma transizionale;
-  \item per proporre policy operative;
-  \item per sintetizzare implicazioni leggibili;
-  \item per confrontare policy già approvate.
-\end{itemize}
-Questa separazione impedisce che l'inferenza linguistica si propaghi dentro la catena deterministica.
-
-\section{Compressione delle catene di transizione}
-\subsection{Catena ordinata}
-Una traiettoria osservata è una sequenza ordinata:
-\begin{equation}
-C = (s_0,s_1,\ldots,s_n), \quad s_i \in Q_6.
-\end{equation}
-Ogni passaggio produce una maschera:
-\begin{equation}
-m_i = s_{i-1} \oplus s_i.
-\end{equation}
-La catena può quindi essere rappresentata come:
-\begin{equation}
-C_M = (m_1,m_2,\ldots,m_n).
-\end{equation}
-
-\subsection{Mutazione netta e distanza cumulativa}
-La mutazione netta è:
-\begin{equation}
-M_{net} = m_1 \oplus m_2 \oplus \cdots \oplus m_n = s_0 \oplus s_n.
-\end{equation}
-La distanza cumulativa è:
-\begin{equation}
-D_C = \sum_{i=1}^{n} \operatorname{popcount}(m_i).
-\end{equation}
-La mutazione netta esprime l'effetto complessivo; la sequenza ordinata conserva il percorso. Questi due livelli devono rimanere separati, perché catene diverse possono avere la stessa mutazione netta.
-
-\subsection{Firma operativa}
-Una firma transizionale minima può essere definita come:
-\begin{equation}
-\Sigma(C) = (s_0, s_n, (m_1,\ldots,m_n), M_{net}, D_C).
-\end{equation}
-Questa firma non sostituisce il dato grezzo, ma lo indicizza. Il dato originale resta necessario per audit, verifica e revisione.
-
-\section{Architettura computazionale}
-\subsection{Livelli}
-L'architettura v0.6 distingue quattro livelli:
-\begin{enumerate}
-  \item osservazione e misura;
-  \item ancoraggio deterministico a State64;
-  \item processore di transizioni e compressione;
-  \item sintesi di policy a valle.
-\end{enumerate}
-Il terzo livello è il nucleo computazionale. Esso può essere implementato con operazioni CPU elementari: XOR, AND, SHIFT, popcount e lookup table.
-
-\subsection{Core Rust}
-La versione v0.6 introduce un core Rust di fattibilità. La rappresentazione minima è:
-\begin{lstlisting}[language=C]
-state: u8          // valori ammessi 0..63
-mutation_mask: u8  // valori ammessi 0..63
-index: u16         // valori ammessi 0..4095
-\end{lstlisting}
-Le operazioni base sono:
-\begin{lstlisting}[language=C]
-next_state = state ^ mutation_mask
-mutation   = source ^ target
-distance   = popcount(source ^ target)
-index      = source * 64 + target
-\end{lstlisting}
-Rust è adatto perché permette controllo numerico, portabilità, test di parità, compilazione verso WebAssembly e interfacce C ABI senza introdurre gestione manuale fragile della memoria.
-
-\subsection{TypeScript come reference layer}
-TypeScript rimane il livello di riferimento per specifica, API, esempi, JSON schema, integrazione web e strumenti AI. Rust non sostituisce immediatamente TypeScript: viene introdotto come candidato a diventare autorità computazionale dopo test di parità.
-
-\section{Tool AI e sintesi di policy}
-La versione v0.6 include un tool adapter per GPT/Claude. Il suo principio operativo è semplice:
-\begin{quote}
-Il modello può usare il kernel per processare stati e catene, ma non può alterare stati osservati, maschere o firme.
-\end{quote}
-Le funzioni principali sono:
-\begin{itemize}
-  \item \texttt{semagraph\_anchor\_state64}: ancoraggio di sei osservazioni note;
-  \item \texttt{semagraph\_lookup\_transition64}: lookup di una transizione;
-  \item \texttt{semagraph\_compress\_chain64}: compressione di una catena ordinata;
-  \item \texttt{semagraph\_policy\_context64}: costruzione del contesto per policy synthesis.
-\end{itemize}
-Il modello linguistico opera quindi come redattore di policy o spiegatore semantico, non come motore di verità osservativa.
-
-\section{Confronto con famiglie note}
-SemaGraph non è un motore fisico, non è un planner general-purpose, non è un motore BPMN e non è un rule engine generico. Ha parentele con automi finiti, statecharts, modelli di transizione, rule engines e policy-as-code, ma il suo scopo è più ristretto: ancorare stati osservati e comprimere catene di trasformazione in firme operative.
-
-\begin{longtable}{p{4cm}p{5cm}p{5cm}}
+\subsection{Regime taxonomy}
+Let $\mathit{both} = (d_L>0 \wedge d_U>0)$. The regime class is the first matching
+clause, in this order:
+\begin{center}
+\begin{tabular}{ll}
 \toprule
-Famiglia & Somiglianza & Differenza \\
+condition & class (code) \\
 \midrule
-Automi finiti & Stati e transizioni finite & SemaGraph è orientato alla compressione di traiettorie osservate \\
-Statecharts & Transizioni controllate e guardie & Non orchestra comportamento applicativo o UI \\
-Rule engines & Predicati e regole & Non produce inferenza generale; valida transizioni e policy context \\
-Policy-as-code & Regole operative formalizzabili & La policy è a valle della firma transizionale \\
-Modelli stocastici & Traiettorie e percorsi & Non sceglie probabilisticamente il percorso; rappresenta deterministicamente i passaggi osservati \\
-LLM toolchains & Output strutturato e validazione & LLM non è autorità su stati o transizioni \\
+$d=0$ & \texttt{no\_change} (0) \\
+$d=1$ & \texttt{bit\_adjustment} (1) \\
+$d\le 2 \wedge \neg\mathit{both}$ & \texttt{module\_reconfiguration} (2) \\
+$d=6$ & \texttt{full\_bit\_reversal} (5) \\
+$d\ge 4$ & \texttt{near\_total\_inversion} (4) \\
+otherwise & \texttt{cross\_module\_regime\_shift} (3) \\
+\bottomrule
+\end{tabular}
+\end{center}
+Thus $d=2$ confined to one module is \texttt{module\_reconfiguration}, while $d=2$
+split across both modules, and every $d=3$, is
+\texttt{cross\_module\_regime\_shift}. The taxonomy is a total function of
+$(d,d_L,d_U)$; the integer codes are part of the cross-implementation contract.
+
+\subsection{Index and packed word}
+The $64\times64=4096$ ordered pairs form the complete direct basis (the $64$
+identities included; $64\times63=4032$ are non-identity). The canonical index is
+\begin{equation}
+I(s,t) = 64\,s + t \in [0,4096).
+\end{equation}
+For low-overhead FFI the full record is packed into one 64-bit word, least
+significant field first:
+\begin{lstlisting}
+source:6 | target:6 | mutation:6 | distance:3 | d_L:2 | d_U:2 | scope:2 | regime:3 | index:12
+\end{lstlisting}
+This word is verified bit-for-bit against the reference for all $4096$ transitions.
+
+\subsection{Chains and their compression}
+A chain is an ordered sequence $C=(s_0,\dots,s_n)$, each step yielding
+$m_i = s_{i-1}\oplus s_i$ and the ordered signature $(m_1,\dots,m_n)$.
+
+\begin{proposition}[Net mutation telescopes]
+$M_{\mathrm{net}} := m_1\oplus\cdots\oplus m_n = s_0 \oplus s_n.$
+\end{proposition}
+\begin{proof}
+$\bigoplus_{i=1}^{n}(s_{i-1}\oplus s_i) = s_0\oplus s_n$, since every interior
+$s_i$ occurs exactly twice and cancels under XOR. \end{proof}
+
+Hence $M_{\mathrm{net}}$ depends only on the endpoints and discards order: distinct
+chains can share a net mutation, which is precisely why the ordered signature and
+the net mutation are retained as distinct objects. The \emph{cumulative distance}
+$D_C = \sum_i \operatorname{popcount}(m_i)$ measures total traversal effort (it
+does not cancel out-and-back moves). The operative signature is
+$\Sigma(C) = (s_0, s_n, (m_1,\dots,m_n), M_{\mathrm{net}}, D_C)$; it indexes the raw
+chain but never replaces it.
+
+\subsection{The four-level trajectory hierarchy over \texorpdfstring{$Q_3$}{Q3}}
+Trajectories are typed over the eight-symbol alphabet $Q_3=\{0,\dots,7\}$.
+
+\textbf{Level 0 --- alphabet.} The eight elementary states.
+
+\textbf{Level 1 --- oriented edge $T_{64}$.} The ordered pair $e(a,b)=8a+b\in[0,64)$.
+\begin{proposition}[Recoverability]
+$e$ is injective and orientation-preserving: $a=\lfloor e/8\rfloor$, $b=e\bmod 8$,
+and $e(a,b)=e(b,a)$ iff $a=b$.
+\end{proposition}
+$T_{64}$ shares the cardinality $64$ with a $Q_6$ \emph{point} but is an oriented
+$Q_3\times Q_3$ \emph{edge}; the two are distinct types and never interconvert.
+
+\textbf{Level 2 --- paths, run-collapse, dwell.} A path is a word over $Q_3$. Its
+run-collapsed \emph{shape} merges adjacent duplicate states; non-adjacent repeats
+are preserved (so $[0,1,0,3]$ does not collapse and stays distinct from $[0,1,3]$).
+The \emph{dwell} vector records, in run order, how many positions each run held.
+\begin{proposition}[Lossless decomposition]
+$\mathit{path}\mapsto(\mathit{shape},\mathit{dwell})$ is a bijection onto pairs in
+which $\mathit{shape}$ has no two adjacent entries equal and $\mathit{dwell}$ is a
+positive-integer vector of equal length.
+\end{proposition}
+\begin{proof}
+This is run-length encoding restricted to maximal constant runs. The
+no-adjacent-equal condition makes run boundaries unique, so repeating
+$\mathit{shape}[k]$ exactly $\mathit{dwell}[k]$ times inverts the map. \end{proof}
+
+\textbf{Level 3 --- declared lossy projections.} Each with its collapse factor:
+\begin{center}
+\begin{tabular}{lll}
+\toprule
+projection & image size & role \\
+\midrule
+net mutation ($Q_3$) & $8$ & coarse pre-filter only \\
+endpoint code ($T_{64}$) & $64$ & medium pre-filter only \\
+endpoint Hamming & scalar & magnitude only \\
+\texttt{shape\_key} & injective on shape & \textbf{form identity} \\
+\texttt{exact\_key} & injective on path & \textbf{trajectory identity} \\
+\texttt{dwell\_signature} & --- & duration identity \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\subsection{Invariants and the comparison cascade}
+\begin{proposition}[Endpoint soundness]
+Equal run-collapsed shape implies equal endpoint.
+\end{proposition}
+\begin{proof}
+Run-collapse never removes the extreme positions, so the shape's first and last
+entries are the path's first and last states, and the endpoint is a function of
+those two. \end{proof}
+The converse fails: $[0,1,3]$ and $[0,2,3]$ share the endpoint $e(0,3)$ but differ
+in shape. Hence the endpoint is a \emph{sound pre-filter} (a mismatch proves the
+shapes differ) but \textbf{never} a form decision. The binding invariant is that
+\emph{no} lossy projection is a form key: \texttt{shape\_key} decides form. The
+comparison of two trajectories returns exactly one relation:
+\begin{center}
+\begin{tabular}{ll}
+\toprule
+result & condition \\
+\midrule
+\texttt{different\_trajectory} & endpoints differ (short-circuit) \\
+\texttt{different\_pattern} & else shapes differ \\
+\texttt{equivalent} & else dwell signatures equal \\
+\texttt{same\_form\_different\_duration} & otherwise \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\section{Deterministic anchoring}
+States are not inferred by a model. They are produced by an explicit anchoring map
+under a versioned rule set $R=(r_1,\dots,r_6)$:
+\begin{equation}
+A_R : X \to Q_6, \qquad b_i = r_i(x)\in\{0,1\},
+\end{equation}
+where $X$ is the space of observed/parametric inputs and each $r_i$ is a declared
+threshold, Boolean condition or predicate. Given the same $x$ and the same $R$,
+$A_R(x)$ is identical (replayability). Measurement uncertainty is recorded at the
+measurement layer --- tolerance, unit, source, timestamp, rule version --- and does
+not enter the transition kernel. A language model may explain a signature, propose
+policy, or compare approved policies; it must never fabricate observations or alter
+states, masks or signatures. This is the anti-inference boundary.
+
+\section{Computational architecture}
+\subsection{Branchless, cache-resident classification}
+Every scalar the classifier needs is a function of the six-bit mask $s\oplus t$,
+so the decision surface fits in a few compile-time tables indexed by that mask. No
+\texttt{if}/\texttt{match} on the data appears in the hot loop. The working set is
+\begin{center}
+\begin{tabular}{lrr}
+\toprule
+table & entries & bytes \\
+\midrule
+distance / lower / upper / scope / regime (by mask) & $5\times 64$ & $320$ \\
+regime by transition $[u8;4096]$ & $4096$ & $4096$ \\
+\midrule
+total & & $4416$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+At $\approx 4.4$~KiB the tables occupy roughly $14\%$ of a typical $32$~KiB L1 data
+cache, so once warm the common path is a few L1-latency loads plus an XOR and a
+multiply-add, with no branch to mispredict. The tables are built from the same
+\texttt{const fn} classifiers as the scalar path, so they cannot drift; an
+exhaustive test asserts equality on all $4096$ transitions.
+
+\subsection{Struct-of-arrays batch and SIMD}
+The batch interface takes parallel input arrays (sources, targets) and writes into
+caller-provided output columns, as a flat counted loop with no early return, no
+per-iteration allocation and no data branch. This is the layout an auto-vectorizer
+can widen. An optional, non-default \texttt{simd} feature provides an explicit SSE2
+path that produces output identical to the scalar batch (asserted by test); the
+scalar version is the source of truth. The trajectory batch compresses an ensemble
+in one call into preallocated columns.
+
+\subsection{Determinism, substrate, and interface}
+The classification path uses no floating point and no randomness. The kernel is
+implemented in dependency-free Rust with a C ABI (and is WASM-compatible); the
+TypeScript implementation remains the executable specification. A single
+zero-dependency CLI, \texttt{semagraph}, exposes the operations; its \texttt{--json}
+output is a stable contract designed for consumption by automated agents (data on
+stdout, errors on stderr, conventional exit codes; NDJSON streaming for batches).
+
+\section{Verification methodology}
+Parity is exhaustive, not sampled. The TypeScript reference generates a golden
+fixture describing all $4096$ transitions with canonical integer codes and the
+packed FFI word; a dependency-free Rust test asserts the core reproduces every
+entry exactly. A second, seeded fixture covers Q3 trajectory projections (shape,
+dwell, net mutation, endpoint, endpoint Hamming, cumulative distance), and the
+branchless path is tested against the validated path on every transition.
+Continuous integration regenerates both fixtures from the reference and fails on
+any drift, so the two implementations cannot diverge silently.
+
+\section{Performance: architectural expectations}
+We state expectations, not measurements. A Criterion benchmark harness compares the
+naive per-item path, the branchless table path, the scalar batch, the optional SIMD
+batch, and end-to-end trajectory compression over a seeded ensemble, reporting
+transitions/second and trajectories/second. The branchless path is expected to be
+at least as fast as the naive path (constant-time L1 loads replacing a comparison
+chain); the batch is expected to meet or exceed the per-item path (vectorizable
+shape); the SIMD gain is bounded by the scalar table gather and is a demonstration,
+not a claim. All four paths produce identical output, which is tested rather than
+assumed. Concrete numbers belong in the repository's \texttt{BENCHMARKS.md},
+recorded with CPU, compiler flags and seed; they are deliberately not invented
+here.
+
+\section{Relationship to known formalisms}
+\begin{longtable}{p{3.4cm}p{5cm}p{5cm}}
+\toprule
+Family & Similarity & Difference \\
+\midrule
+Finite automata & Finite states and transitions & Oriented toward compressing
+\emph{observed} trajectories, not recognizing languages \\
+Statecharts & Guarded transitions & Does not orchestrate application/UI behaviour \\
+Timed automata & Sequences with durations & Dwell is a discrete count, not a
+real-valued clock; no timing constraints \\
+Rule engines & Predicates and rules & Produces no general inference; it classifies
+and compresses \\
+Policy-as-code & Formalizable operational rules & Policy is strictly downstream of
+the computed signature \\
+Markov-switching / Monte Carlo & Trajectories and regimes & Does not sample paths;
+it deterministically classifies given paths \\
 \bottomrule
 \end{longtable}
 
-\section{Ipotesi di validazione}
-La validazione non deve dimostrare che SemaGraph ``descrive il mondo'' in senso generale. Deve testare ipotesi operative:
-\begin{enumerate}
-  \item riduce il tempo di classificazione di traiettorie osservate;
-  \item riduce chiamate LLM e token necessari per produrre policy coerenti;
-  \item aumenta replayability e auditabilità;
-  \item conserva informazione decisionale sufficiente rispetto alla traiettoria grezza;
-  \item evita falsi equivalenti prodotti da compressione eccessiva.
-\end{enumerate}
-Una prima validazione può usare traiettorie sintetiche e confrontare tre modalità: analisi libera, analisi LLM-only e analisi SemaGraph con policy synthesis a valle.
+\section{Domains and evaluation hypotheses}
+The framing is domain-neutral: a deterministic compression layer for
+state-transition trajectories where sampling cost is the bottleneck and
+path-dependence is structural. Worked translations accompany the repository for
+(i)~stochastic simulation (grouping rollouts by \texttt{shape\_key} to stabilize a
+histogram over forms); (ii)~regime-switching Monte Carlo and path-dependent
+instruments, where in non-ergodic settings the ensemble mean does not equal the
+time average and the distribution over typical trajectories is what matters
+\cite{peters2019,hamilton1989}; (iii)~classical analysis of measurement-shot
+sequences from quantum hardware (see the non-claim in \S\ref{sec:not});
+(iv)~decision-making under deep uncertainty, where the anchoring map is the
+quantization of qualitative parameters. The testable hypotheses are: shape/signature
+processing reduces computation versus full-trajectory processing; signature-keyed
+policy reuse improves consistency; the information lost to compression is bounded
+and its false-equivalence cases are characterizable; and the set of domains
+admitting direct deterministic anchoring (versus those requiring an uncertainty
+envelope first) can be delineated.
 
-\section{Limiti}
-I principali limiti sono:
-\begin{itemize}
-  \item la qualità del sistema dipende dalle regole di ancoraggio;
-  \item la compressione può perdere informazioni rilevanti;
-  \item due catene con uguale mutazione netta possono avere significato operativo diverso;
-  \item il modello non sostituisce solutori numerici o modelli scientifici;
-  \item la sintesi LLM delle policy richiede validazione umana o rule-based.
-\end{itemize}
-Il limite più critico è la perdita informativa. Per questo la firma compressa deve restare sempre collegata alla catena osservata e ai dati grezzi.
+\section{Limits and threats to validity}
+The system's quality depends on the anchoring rules: a poor $A_R$ yields
+meaningless states regardless of the kernel. Compression is lossy, and the most
+critical risk is \emph{false equivalence} --- distinct chains sharing a net mutation
+or even an endpoint. This is mitigated structurally (the form decision uses
+\texttt{shape\_key}, not a lossy projection) and operationally (the raw chain is
+always retained and the signature only indexes it), but it cannot be eliminated.
+The kernel does not replace numerical or scientific solvers.
 
-\section{Conclusione}
-SemaGraph v0.6 formalizza un kernel deterministico per rappresentare catene di cambiamento in uno spazio finito di 64 stati booleani. La sua funzione non è predire, inferire o simulare direttamente la realtà, ma comprimere transizioni osservate in firme operative riproducibili. Questa struttura può ridurre inferenza ricorrente, migliorare auditabilità e abilitare policy synthesis controllata. La direzione Rust/WASM rende il nucleo compatibile con una futura esecuzione machine-near, mentre TypeScript resta il livello di specifica e integrazione.
+\section{What this is \emph{not}}\label{sec:not}
+SemaGraph is not a physics engine, a general-purpose programming language, a
+universal simulator, or a replacement for statistical/numerical models. It advances
+\emph{no} complexity-theory result and makes no claim about P versus NP; it is an
+engineering reduction of a narrow, structural task to native CPU primitives. It
+does not model how the state axes are learned --- they are stipulated by the
+anchoring map, not emergent. When applied to quantum hardware it does \textbf{not}
+model quantum evolution (continuous unitary dynamics, complex amplitudes): it
+operates only on the classical sequences of measurement outcomes after collapse,
+as a classical signal-analysis layer.
+
+\section{Future directions (speculative)}
+Wider portable-SIMD and multi-lane implementations of the batch path; an
+FPGA/lookup-ROM realization of the classifier as a near single-cycle lookup over the
+12-bit transition index; and learned anchoring --- inferring the state axes from
+data rather than stipulating them --- which is the genuinely hard, deliberately
+out-of-scope problem.
+
+\section{Conclusion}
+SemaGraph formalizes a deterministic kernel that compresses observed change into
+reproducible structural signatures over a finite $64$-state Boolean space. Its
+contribution is architectural honesty about a narrow claim: the structural part of
+trajectory reasoning is branchless, cache-resident and vectorizable, and can be
+separated cleanly from the semantic work left to a language model. The mathematics,
+the memory rationale, and an exhaustive parity methodology are given so that
+mathematicians, engineers and physicists can each evaluate the part that concerns
+them.
 
 \begin{thebibliography}{9}
-
-\bibitem{shannon1948}
-C. E. Shannon, ``A Mathematical Theory of Communication'', \emph{Bell System Technical Journal}, 1948.
-
-\bibitem{hamming1950}
-R. W. Hamming, ``Error Detecting and Error Correcting Codes'', \emph{Bell System Technical Journal}, 1950.
-
-\bibitem{hopcroft2006}
-J. E. Hopcroft, R. Motwani, J. D. Ullman, \emph{Introduction to Automata Theory, Languages, and Computation}, Pearson, 2006.
-
-\bibitem{harel1987}
-D. Harel, ``Statecharts: A Visual Formalism for Complex Systems'', \emph{Science of Computer Programming}, 1987.
-
-\bibitem{alur1995}
-R. Alur, D. L. Dill, ``A Theory of Timed Automata'', \emph{Theoretical Computer Science}, 1994.
-
-\bibitem{russell2021}
-S. Russell, P. Norvig, \emph{Artificial Intelligence: A Modern Approach}, Pearson, 2021.
-
+\bibitem{shannon1948} C.~E.~Shannon, ``A Mathematical Theory of Communication'',
+\emph{Bell System Technical Journal}, 1948.
+\bibitem{hamming1950} R.~W.~Hamming, ``Error Detecting and Error Correcting Codes'',
+\emph{Bell System Technical Journal}, 1950.
+\bibitem{hopcroft2006} J.~E.~Hopcroft, R.~Motwani, J.~D.~Ullman, \emph{Introduction
+to Automata Theory, Languages, and Computation}, Pearson, 2006.
+\bibitem{harel1987} D.~Harel, ``Statecharts: A Visual Formalism for Complex
+Systems'', \emph{Science of Computer Programming}, 1987.
+\bibitem{alur1994} R.~Alur, D.~L.~Dill, ``A Theory of Timed Automata'',
+\emph{Theoretical Computer Science}, 1994.
+\bibitem{drepper2007} U.~Drepper, ``What Every Programmer Should Know About
+Memory'', technical report, 2007.
+\bibitem{peters2019} O.~Peters, ``The ergodicity problem in economics'',
+\emph{Nature Physics}, 2019.
+\bibitem{hamilton1989} J.~D.~Hamilton, ``A New Approach to the Economic Analysis of
+Nonstationary Time Series and the Business Cycle'', \emph{Econometrica}, 1989.
+\bibitem{russell2021} S.~Russell, P.~Norvig, \emph{Artificial Intelligence: A Modern
+Approach}, Pearson, 2021.
 \end{thebibliography}
 
 \end{document}

@@ -26,6 +26,10 @@
 - Updated CI so the Rust job runs against the whole workspace (`cargo clippy --workspace`, `cargo test --workspace`) and builds the CLI release binary.
 - DESIGN-NOTE: the CLI brief requested a `v0.6.3` changelog entry, but the kernel work in this delivery already opened an unreleased `v0.7.0`; to keep versions monotonic the CLI ships in the same unreleased `v0.7.0` rather than a backwards `v0.6.3`.
 
+- Consolidated `docs/` into three authoritative files: `ARCHITECTURE.md` (prose rationale), `FORMAL-MODEL.md` (the mathematics, with short proofs of the net-mutation telescoping, run-collapse losslessness, and endpoint-soundness invariants), and `DECISIONS.md` (a single architecture decision record). Added a short `docs/README.md` index.
+  - Removed the historical numbered notes (`docs/00`-`docs/09`) and the per-file ADRs (`docs/10`-`docs/15`); their content was folded into the three files above or the paper. `DECISIONS.md` records the status of every prior decision and adds the v0.7 decisions (branchless tables, batch/SIMD, Q3/T64 hierarchy, CLI, workspace, release, docs consolidation).
+- Rewrote `paper/overleaf/main.tex` as an explanatory English paper with an extended Italian *sommario*, suitable both for a general overview and for evaluation by mathematicians, engineers and physicists. Recompiled to `paper/compiled/semagraph-v0.7-paper.pdf` (8 pages) and removed the superseded `semagraph-v0.6-paper.pdf`.
+
 ## v0.6.2
 
 - Added `packages/kernel/src/shapes.ts`: a four-level path/shape hierarchy over the Q3 alphabet.
