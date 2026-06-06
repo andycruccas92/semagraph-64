@@ -36,6 +36,57 @@ pnpm -r typecheck
 pnpm -r test
 ```
 
+## v0.7 generated validation
+
+Environment constraints (authoring sandbox):
+
+- Node.js and `pnpm` (via Corepack) were available; the full TypeScript suite ran.
+- Rust/Cargo were not available, and the package registry needed for the Criterion
+  dev-dependency was unreachable, so the Rust crate and benchmarks were not
+  compiled or run in this environment. The Rust sources were authored and their
+  logic cross-checked against the TypeScript-generated fixtures (see below).
+
+Executed checks:
+
+```bash
+pnpm install
+pnpm -r build
+pnpm -r typecheck
+pnpm -r test
+node packages/state64-adapter/scripts/generate-parity-fixture.mjs
+node packages/state64-adapter/scripts/generate-shape-parity-fixture.mjs
+```
+
+The kernel suite (18 tests, including the new `cumulativeDistanceQ3` test) and the
+adapter suite passed. Both parity fixtures regenerate byte-identical to the
+committed copies. Because a Rust toolchain was unavailable, the new branchless
+table logic and the Q3 shapes port were additionally re-implemented in Node and
+checked against the authoritative fixtures: all 4096 transitions matched
+(`transition-parity.json`, including the packed FFI word and `REGIME_BY_TRANSITION`)
+and all 250 trajectory projections matched (`shape-parity.json`).
+
+Expected external checks when Rust is available:
+
+```bash
+cd packages/core-rs
+cargo fmt --all --check
+cargo clippy --all-targets -- -D warnings
+cargo test --all-targets
+cargo test --features simd      # runs the SIMD == scalar equality test
+cargo build --benches
+cargo bench                     # then record results in BENCHMARKS.md
+```
+
+New Rust tests added in v0.7:
+
+- `tables::tests::branchless_matches_naive_for_all_transitions` — branchless path
+  equals `lookup_transition64` / `pack_transition64` for all 4096 transitions.
+- `tables::tests::batch_matches_per_item` — batch SoA output equals per-item.
+- `tables::simd_tests::simd_matches_scalar` (with `--features simd`).
+- `shapes::tests::*` — run-collapse, projections, batch, and `run_collapse_into`.
+- `shape_parity.rs` — exhaustive shape/projection parity against the TypeScript
+  reference fixture.
+
 ## Corrected discrepancies (parity hardening)
 
 The following defects were present in the first v0.6 cut and have been fixed:

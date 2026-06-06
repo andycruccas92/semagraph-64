@@ -174,6 +174,30 @@ export function netMutationQ3(path: PathQ3): MutationQ3 {
 }
 
 /**
+ * Cumulative Hamming distance along the path: the sum of the popcounts of every
+ * step mask. Unlike netMutationQ3 (which XOR-folds the masks and so cancels
+ * out-and-back moves), this accumulates every bit flip taken, so it measures
+ * total traversal effort rather than net displacement. A scalar magnitude --
+ * never a form key. Equals 0 for a single-state path.
+ *
+ * This is the Q3 counterpart of `compress_chain64`'s `cumulative_distance` in the
+ * Rust core; it is exported so the Rust batch port can be checked against it in
+ * the shape-parity fixture rather than diverging unchecked.
+ */
+export function cumulativeDistanceQ3(path: PathQ3): number {
+  const masks = mutationPathQ3(path).masks;
+  let total = 0;
+  for (const mask of masks) {
+    let value = mask as number;
+    while (value > 0) {
+      total += value & 1;
+      value >>= 1;
+    }
+  }
+  return total;
+}
+
+/**
  * Endpoint code: the oriented (first, last) pair. COLLAPSE FACTOR: 64 buckets.
  * Medium filter only — never a form key. Equal shape implies equal endpoint, but
  * NOT conversely, so this may pre-filter candidates but must never decide form.

@@ -1,6 +1,6 @@
 [package]
 name = "semagraph-core-rs"
-version = "0.6.1"
+version = "0.7.0"
 edition = "2021"
 description = "Rust feasibility core for SemaGraph Q6 / State64 deterministic transition compression."
 license = "Apache-2.0"
@@ -12,6 +12,16 @@ crate-type = ["rlib", "cdylib", "staticlib"]
 [features]
 default = []
 ffi = []
+# Optional explicit-SIMD batch path (x86_64 SSE2) with an always-correct scalar
+# fallback. Off by default; the scalar batch path is the source of truth.
+simd = []
+
+[dev-dependencies]
+criterion = "0.5"
+
+[[bench]]
+name = "throughput"
+harness = false
 
 [profile.release]
 opt-level = 3

@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import {
   compareTrajectories,
   compositePointStateQ6,
+  cumulativeDistanceQ3,
   dwellSignature,
   endpointCompression,
   endpointSource,
@@ -82,6 +83,19 @@ describe("path and shape hierarchy", () => {
     const path = pathQ3([0, 4, 6, 2]); // 000 -> 100 -> 110 -> 010
     expect(netMutationQ3(path)).toBe(0 ^ 2); // source XOR target = 000 XOR 010
     expect(mutationPathQ3(path).masks).toEqual([4, 2, 4]); // 100, 010, 100
+  });
+
+  it("accumulates every step's bit flips in cumulativeDistanceQ3, unlike net mutation", () => {
+    // 000 -> 100 -> 110 -> 010: step popcounts 1 + 1 + 1 = 3, but net XOR is 010 (1 bit).
+    const path = pathQ3([0, 4, 6, 2]);
+    expect(cumulativeDistanceQ3(path)).toBe(3);
+    expect(netMutationQ3(path)).toBe(2);
+    // Out-and-back cancels in net mutation but not in cumulative distance.
+    const outAndBack = pathQ3([0, 7, 0]); // 000 -> 111 -> 000
+    expect(cumulativeDistanceQ3(outAndBack)).toBe(6);
+    expect(netMutationQ3(outAndBack)).toBe(0);
+    // A single-state path has no steps.
+    expect(cumulativeDistanceQ3(pathQ3([3]))).toBe(0);
   });
 
   it("never lets a lossy projection decide form: groupByShape keys on shape only", () => {

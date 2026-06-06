@@ -16,7 +16,8 @@
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "test": "vitest run",
     "lint": "tsc -p tsconfig.json --noEmit",
-    "generate:parity-fixture": "node scripts/generate-parity-fixture.mjs"
+    "generate:parity-fixture": "node scripts/generate-parity-fixture.mjs",
+    "generate:shape-parity-fixture": "node scripts/generate-shape-parity-fixture.mjs"
   },
   "dependencies": {
     "@semagraph/kernel": "workspace:*"

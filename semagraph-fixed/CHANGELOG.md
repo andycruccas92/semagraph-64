@@ -1,5 +1,21 @@
 # Changelog
 
+## v0.7.0
+
+- Added `packages/core-rs/src/tables.rs`: branchless, cache-resident classification.
+  - Compile-time `const` lookup tables (`DISTANCE_BY_MASK`, `LOWER_DISTANCE_BY_MASK`, `UPPER_DISTANCE_BY_MASK`, `MODULE_SCOPE_BY_MASK`, `REGIME_BY_MASK`, and the spec-required `REGIME_BY_TRANSITION: [u8; 4096]`) built from the same `const fn` classifiers as the scalar path, so they cannot drift. Total working set 4416 bytes (L1-resident).
+  - `classify_branchless` / `classify_branchless_packed`: index -> table reads -> pack, with no data-dependent branching in the hot loop. A test asserts equality with `lookup_transition64` / `pack_transition64` for all 4096 transitions.
+- Added a batch / vectorizable API.
+  - `classify_batch` (regime per item) and `classify_batch_full` (full struct-of-arrays metadata) over caller-provided buffers, written as flat counted loops the compiler can auto-vectorize.
+  - Optional `simd` cargo feature: `classify_batch_simd` (x86_64 SSE2) with an always-correct scalar fallback and a test asserting identical output to the scalar path.
+- Added `packages/core-rs/src/shapes.rs`: the Rust port of `kernel/shapes.ts` Q3 trajectory projections.
+  - `project_trajectory`, `compress_trajectory_batch` (preallocated SoA outputs), and `run_collapse_into`. Run-collapse merges adjacent duplicates only; dwell is aligned to runs.
+  - Added `cumulativeDistanceQ3` to `kernel/shapes.ts` as the TypeScript counterpart of the new cumulative-distance projection, so the Rust port stays parity-checked rather than diverging.
+- Added the trajectory shape/projection parity fixture (`generate-shape-parity-fixture.mjs` -> `shape-parity.json`, seeded and reproducible) and the Rust integration test `shape_parity.rs` that checks the port against the TypeScript reference exactly.
+- Added Criterion throughput benchmarks (`benches/throughput.rs`) for the naive, branchless, batch, SIMD, and trajectory-compression paths, wired under `[[bench]]`, with `BENCHMARKS.md` documenting how to run them and the seeds used.
+- Added `docs/ARCHITECTURE.md`: the design-rationale document (six-bit alphabet, branchless/cache-resident hot path, memory hierarchy, kernel-vs-LLM division of labour, the four-level hierarchy, non-goals, future directions).
+- Bumped the `semagraph-core-rs` crate to 0.7.0. The core crate has no new runtime dependencies; Criterion is a dev-dependency and SIMD is behind a feature.
+
 ## v0.6.2
 
 - Added `packages/kernel/src/shapes.ts`: a four-level path/shape hierarchy over the Q3 alphabet.

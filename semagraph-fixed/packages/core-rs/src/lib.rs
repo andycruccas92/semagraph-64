@@ -8,6 +8,10 @@ pub const STATE64_MASK: u8 = 0b0011_1111;
 pub const STATE64_COUNT: usize = 64;
 pub const TRANSITION64_COUNT: usize = 4096;
 
+/// The stable 64-bit word produced by `pack_transition64`. Named so the
+/// branchless path can advertise it as its return type.
+pub type PackedTransition = u64;
+
 #[repr(u8)]
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum SemagraphErrorCode {
@@ -128,7 +132,7 @@ pub fn transition_index64(source: u8, target: u8) -> Result<u16, SemagraphErrorC
 }
 
 #[inline]
-pub fn module_scope_from_distances(lower_distance: u8, upper_distance: u8) -> ModuleScopeCode {
+pub const fn module_scope_from_distances(lower_distance: u8, upper_distance: u8) -> ModuleScopeCode {
     match (lower_distance > 0, upper_distance > 0) {
         (false, false) => ModuleScopeCode::NoChange,
         (true, false) => ModuleScopeCode::LowerOnly,
@@ -144,7 +148,7 @@ pub fn module_scope_from_distances(lower_distance: u8, upper_distance: u8) -> Mo
 /// information the TS code derives from `lower_distance`/`upper_distance`, so the
 /// `both_modules` test below is equivalent to `moduleScope !== "both_modules"`.
 #[inline]
-pub fn regime_class_from_distances(distance: u8, lower_distance: u8, upper_distance: u8) -> RegimeClassCode {
+pub const fn regime_class_from_distances(distance: u8, lower_distance: u8, upper_distance: u8) -> RegimeClassCode {
     let both_modules = lower_distance > 0 && upper_distance > 0;
     if distance == 0 {
         RegimeClassCode::NoChange
@@ -230,6 +234,21 @@ pub fn pack_transition64(entry: Transition64Entry) -> u64 {
     packed |= ((entry.index as u64) & 0x0fff) << 30;
     packed
 }
+
+pub mod shapes;
+pub mod tables;
+
+pub use shapes::{
+    compress_trajectory_batch, project_trajectory, run_collapse_into, TrajectoryProjection,
+    Q3_COUNT, Q3_MASK,
+};
+pub use tables::{
+    classify_batch, classify_batch_full, classify_branchless, classify_branchless_packed,
+    BatchOut, DISTANCE_BY_MASK, LOWER_DISTANCE_BY_MASK, MODULE_SCOPE_BY_MASK, REGIME_BY_MASK,
+    REGIME_BY_TRANSITION, UPPER_DISTANCE_BY_MASK,
+};
+#[cfg(feature = "simd")]
+pub use tables::classify_batch_simd;
 
 #[no_mangle]
 pub extern "C" fn sg64_is_valid_state(value: u8) -> u8 {

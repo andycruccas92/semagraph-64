@@ -53,6 +53,7 @@ export type {
 export {
   compareTrajectories,
   compositePointStateQ6,
+  cumulativeDistanceQ3,
   dwellSignature,
   elementaryStateQ3,
   endpointCompression,
