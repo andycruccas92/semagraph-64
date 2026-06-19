@@ -1,4 +1,4 @@
-import { assertValidParameterSnapshot, evaluatePredicate } from "@semagraph/kernel";
+import { assertValidParameterSnapshot, assertValidPredicateParameterReferences, evaluatePredicateExpression } from "@semagraph/kernel";
 import type { EncodedState64, State64EncodingDecision, State64EncodingDefinition } from "./types.js";
 import { createBinaryState64 } from "./hypercube.js";
 
@@ -7,6 +7,7 @@ export function encodeParameterSnapshotToState64(
   parameters: EncodedState64["parameters"]
 ): EncodedState64 {
   assertValidParameterSnapshot(definition.parameterDefinitions, parameters);
+  assertValidPredicateParameterReferences(definition.parameterDefinitions, definition.bitRules.map((rule) => rule.predicate));
   const positions = new Set(definition.bitRules.map((rule) => rule.position));
   if (definition.bitRules.some((rule) => !Number.isInteger(rule.position) || rule.position < 1 || rule.position > 6) || positions.size !== 6) {
     throw new Error("A State64 encoder must define bit positions 1 through 6 exactly once.");
@@ -16,7 +17,7 @@ export function encodeParameterSnapshotToState64(
     .slice()
     .sort((left, right) => left.position - right.position)
     .map((rule) => {
-      const result = evaluatePredicate(rule.predicate, parameters);
+      const result = evaluatePredicateExpression(rule.predicate, parameters);
       return {
         position: rule.position,
         label: rule.label,

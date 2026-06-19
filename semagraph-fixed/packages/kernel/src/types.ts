@@ -22,10 +22,12 @@ export type Predicate = {
   value: ParameterValue | readonly ParameterValue[];
 };
 
+export type PredicateExpression = Predicate | PredicateSet;
+
 export type PredicateSet = {
-  all?: readonly Predicate[];
-  any?: readonly Predicate[];
-  none?: readonly Predicate[];
+  all?: readonly PredicateExpression[];
+  any?: readonly PredicateExpression[];
+  none?: readonly PredicateExpression[];
 };
 
 export type StateId = string;

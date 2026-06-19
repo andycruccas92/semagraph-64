@@ -1,9 +1,11 @@
-import type { ParameterDefinition, ParameterSnapshot, ParameterValue } from "./types.js";
+import type { ParameterDefinition, ParameterSnapshot, ParameterValue, Predicate, PredicateExpression } from "./types.js";
 
 export type ValidationIssue = {
   parameterKey: string;
   message: string;
 };
+
+export type PredicateReferenceInput = PredicateExpression | readonly PredicateExpression[];
 
 function isValidValue(definition: ParameterDefinition, value: ParameterValue): boolean {
   switch (definition.kind) {
@@ -73,6 +75,68 @@ export function validateParameterSnapshot(
     }
   }
   return issues;
+}
+
+function isPredicate(expression: PredicateExpression): expression is Predicate {
+  return "parameterKey" in expression;
+}
+
+function isPredicateReferenceList(reference: PredicateReferenceInput): reference is readonly PredicateExpression[] {
+  return Array.isArray(reference);
+}
+
+function collectPredicateParameterReferenceIssues(
+  reference: PredicateReferenceInput,
+  definitionByKey: ReadonlyMap<string, ParameterDefinition>,
+  issues: ValidationIssue[]
+): void {
+  if (isPredicateReferenceList(reference)) {
+    for (const expression of reference) {
+      collectPredicateParameterReferenceIssues(expression, definitionByKey, issues);
+    }
+    return;
+  }
+
+  if (isPredicate(reference)) {
+    if (!definitionByKey.has(reference.parameterKey)) {
+      issues.push({
+        parameterKey: reference.parameterKey,
+        message: "Predicate references undeclared parameter key."
+      });
+    }
+    return;
+  }
+
+  for (const expression of reference.all ?? []) {
+    collectPredicateParameterReferenceIssues(expression, definitionByKey, issues);
+  }
+  for (const expression of reference.any ?? []) {
+    collectPredicateParameterReferenceIssues(expression, definitionByKey, issues);
+  }
+  for (const expression of reference.none ?? []) {
+    collectPredicateParameterReferenceIssues(expression, definitionByKey, issues);
+  }
+}
+
+export function validatePredicateParameterReferences(
+  definitions: readonly ParameterDefinition[],
+  references: PredicateReferenceInput
+): ValidationIssue[] {
+  const issues = validateParameterDefinitions(definitions);
+  const definitionByKey = new Map(definitions.map((definition) => [definition.key, definition]));
+  collectPredicateParameterReferenceIssues(references, definitionByKey, issues);
+  return issues;
+}
+
+export function assertValidPredicateParameterReferences(
+  definitions: readonly ParameterDefinition[],
+  references: PredicateReferenceInput
+): void {
+  const issues = validatePredicateParameterReferences(definitions, references);
+  if (issues.length) {
+    const summary = issues.map((issue) => `${issue.parameterKey}: ${issue.message}`).join("; ");
+    throw new Error(`Invalid predicate parameter references: ${summary}`);
+  }
 }
 
 export function assertValidParameterSnapshot(

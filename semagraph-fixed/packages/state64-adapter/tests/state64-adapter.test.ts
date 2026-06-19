@@ -79,6 +79,52 @@ describe("@semagraph/state64-adapter", () => {
     expect(result.decisions).toHaveLength(6);
   });
 
+  it("rejects bit rule predicate referencing undeclared parameter key", () => {
+    const malformedEncoder: State64EncodingDefinition = {
+      ...ENCODER,
+      bitRules: [
+        { ...ENCODER.bitRules[0], predicate: { parameterKey: "presssure", operator: "gte", value: 0.6 } },
+        ...ENCODER.bitRules.slice(1)
+      ] as State64EncodingDefinition["bitRules"]
+    };
+
+    expect(() => encodeParameterSnapshotToState64(malformedEncoder, {
+      pressure: 0.7,
+      cohesion: 0.4,
+      constraint: true,
+      direction: "expanding",
+      visibility: 0.3,
+      reversible: true
+    })).toThrow(/presssure: Predicate references undeclared parameter key\./);
+  });
+
+  it("rejects nested bit rule predicate referencing undeclared parameter key", () => {
+    const malformedEncoder: State64EncodingDefinition = {
+      ...ENCODER,
+      bitRules: [
+        {
+          ...ENCODER.bitRules[0],
+          predicate: {
+            all: [
+              { parameterKey: "pressure", operator: "gte", value: 0.6 },
+              { any: [{ parameterKey: "unregistered-pressure", operator: "gte", value: 0.8 }] }
+            ]
+          }
+        },
+        ...ENCODER.bitRules.slice(1)
+      ] as State64EncodingDefinition["bitRules"]
+    };
+
+    expect(() => encodeParameterSnapshotToState64(malformedEncoder, {
+      pressure: 0.7,
+      cohesion: 0.4,
+      constraint: true,
+      direction: "expanding",
+      visibility: 0.3,
+      reversible: true
+    })).toThrow(/unregistered-pressure: Predicate references undeclared parameter key\./);
+  });
+
   it("anchors observed measurements without LLM inference", () => {
     const result = anchorObservedMeasurementsToState64({
       definition: ENCODER,

@@ -8,6 +8,7 @@ export type {
   ParameterSnapshot,
   ParameterValue,
   Predicate,
+  PredicateExpression,
   PredicateOperator,
   PredicateSet,
   StateEvaluation,
@@ -26,9 +27,15 @@ export type { RegimeClass, RegimeClassification, RegimeClassificationThresholds 
 export type { PolicyResolutionResult, PolicyRule, ResolvedPolicy } from "./policies.js";
 export type { PolicySynthesisInput, PolicySynthesisOrigin, PolicySynthesisValidationIssue, PolicySynthesisValidationResult } from "./policy-synthesis.js";
 
-export type { ValidationIssue } from "./parameters.js";
-export { assertValidParameterSnapshot, validateParameterDefinitions, validateParameterSnapshot } from "./parameters.js";
-export { evaluatePredicate, evaluatePredicateSet, flattenPredicateResults } from "./predicates.js";
+export type { PredicateReferenceInput, ValidationIssue } from "./parameters.js";
+export {
+  assertValidParameterSnapshot,
+  assertValidPredicateParameterReferences,
+  validateParameterDefinitions,
+  validateParameterSnapshot,
+  validatePredicateParameterReferences
+} from "./parameters.js";
+export { evaluatePredicate, evaluatePredicateExpression, evaluatePredicateSet, flattenPredicateResults } from "./predicates.js";
 export { evaluateStates, requireSelectedState } from "./states.js";
 export { compileDeclaredStateGraph, outgoingEdges } from "./graph.js";
 export { applyEffects, evaluateTransition } from "./transitions.js";

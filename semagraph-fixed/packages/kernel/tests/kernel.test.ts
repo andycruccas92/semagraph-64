@@ -3,6 +3,7 @@ import {
   appendTransition,
   compileDeclaredStateGraph,
   assertValidParameterSnapshot,
+  assertValidPredicateParameterReferences,
   createTrajectory,
   currentStateId,
   outgoingEdges,
@@ -10,6 +11,7 @@ import {
   evaluateTransition,
   resolvePoliciesForClassification,
   classifyTransitionRegime,
+  validatePredicateParameterReferences,
   weightedSnapshotSimilarity,
   type DerivedStateDefinition,
   type ParameterDefinition,
@@ -62,6 +64,29 @@ describe("@semagraph/kernel", () => {
     const snapshot = { pressure: 0.2, cohesion: 0.8, constraint: false } as const;
     assertValidParameterSnapshot(PARAMETERS, snapshot);
     expect(evaluateStates(STATES, snapshot).selectedStateId).toBe("stable");
+  });
+
+  it("rejects predicate set referencing undeclared parameter key", () => {
+    const issues = validatePredicateParameterReferences(PARAMETERS, {
+      all: [
+        { parameterKey: "pressure", operator: "gte", value: 0.5 },
+        {
+          any: [
+            { parameterKey: "constraint", operator: "eq", value: true },
+            { parameterKey: "stale-parameter", operator: "eq", value: true }
+          ]
+        }
+      ]
+    });
+
+    expect(issues).toEqual([
+      {
+        parameterKey: "stale-parameter",
+        message: "Predicate references undeclared parameter key."
+      }
+    ]);
+    expect(() => assertValidPredicateParameterReferences(PARAMETERS, { none: [{ parameterKey: "removed", operator: "eq", value: false }] }))
+      .toThrow(/removed: Predicate references undeclared parameter key\./);
   });
 
   it("accepts a guarded transition and derives the declared target", () => {

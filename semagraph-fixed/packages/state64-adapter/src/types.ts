@@ -1,4 +1,4 @@
-import type { ParameterDefinition, ParameterSnapshot, ParameterValue, Predicate } from "@semagraph/kernel";
+import type { ParameterDefinition, ParameterSnapshot, ParameterValue, PredicateExpression } from "@semagraph/kernel";
 
 export type BinaryBitValue = 0 | 1;
 export type BitVector3 = readonly [BinaryBitValue, BinaryBitValue, BinaryBitValue];
@@ -43,7 +43,7 @@ export type State64Transition = {
 export type State64BitRule = {
   position: BitPosition;
   label: string;
-  predicate: Predicate;
+  predicate: PredicateExpression;
   trueValue?: BinaryBitValue;
   falseValue?: BinaryBitValue;
 };
