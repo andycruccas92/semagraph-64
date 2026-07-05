@@ -1,8 +1,28 @@
 {
   "name": "@semagraph/kernel",
   "version": "0.6.0",
-  "description": "Domain-neutral parametric state-transition kernel for SemaGraph.",
+  "description": "Domain-neutral parametric state-transition kernel for SemaGraph. Deterministic, dependency-free classifier and compressor for state-transition trajectories.",
   "type": "module",
+  "license": "Apache-2.0",
+  "author": "Andy Cruccas",
+  "homepage": "https://github.com/OWNER/semagraph#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/OWNER/semagraph.git",
+    "directory": "packages/kernel"
+  },
+  "bugs": {
+    "url": "https://github.com/OWNER/semagraph/issues"
+  },
+  "keywords": [
+    "state-machine",
+    "state-transition",
+    "trajectory",
+    "deterministic",
+    "compression",
+    "regime-classification",
+    "kernel"
+  ],
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "exports": {
@@ -11,11 +31,20 @@
       "default": "./dist/index.js"
     }
   },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "sideEffects": false,
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "test": "vitest run",
-    "lint": "tsc -p tsconfig.json --noEmit"
+    "lint": "tsc -p tsconfig.json --noEmit",
+    "prepublishOnly": "npm run build"
   },
   "devDependencies": {
     "typescript": "^5.7.2",

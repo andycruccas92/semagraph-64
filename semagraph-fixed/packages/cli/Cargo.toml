@@ -5,6 +5,8 @@ edition = "2021"
 description = "Deterministic CLI for classifying and compressing state-transition trajectories over a six-bit state alphabet. No inference, no network, no runtime dependencies."
 license = "Apache-2.0"
 readme = "../../README.md"
+repository = "https://github.com/OWNER/semagraph"
+homepage = "https://github.com/OWNER/semagraph"
 categories = ["command-line-utilities"]
 keywords = ["state-machine", "trajectory", "deterministic", "compression"]
 
@@ -16,5 +18,8 @@ path = "src/main.rs"
 # parsing and JSON emission are hand-rolled so the binary keeps the project's
 # zero-runtime-dependency promise and stays trivially auditable. The only
 # dependency is the in-repo kernel.
+# NOTE: crates.io requires a `version` on path dependencies. `semagraph-core-rs`
+# must be published to crates.io BEFORE `semagraph`, and this version must match
+# the published core-rs version.
 [dependencies]
-semagraph-core-rs = { path = "../core-rs" }
+semagraph-core-rs = { path = "../core-rs", version = "0.7.0" }

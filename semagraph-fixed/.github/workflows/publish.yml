@@ -1,0 +1,67 @@
+name: Publish
+
+# Tag-triggered package publishing. This is SEPARATE from release.yml (which only
+# builds and attaches binaries to the GitHub Release). This workflow pushes the
+# npm package and the Rust crates to their public registries.
+#
+# Required repository secrets:
+#   NPM_TOKEN             - npm automation token with publish rights for @semagraph
+#   CARGO_REGISTRY_TOKEN  - crates.io API token with publish rights
+#
+# Each job is a no-op (skips) if its token is not configured, so you can enable
+# npm and crates.io independently.
+
+on:
+  push:
+    tags:
+      - "v*"
+  workflow_dispatch:
+
+jobs:
+  npm:
+    name: Publish @semagraph/kernel to npm
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write # required for npm --provenance
+    env:
+      NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9.15.0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+          registry-url: https://registry.npmjs.org
+      - run: pnpm install --frozen-lockfile=false
+      - run: pnpm -r build
+      - name: Publish
+        if: ${{ env.NODE_AUTH_TOKEN != '' }}
+        working-directory: packages/kernel
+        # --provenance requires the workflow to run from a public repo; drop it if
+        # publishing from a private repo. --access public is required for a scoped
+        # package on its first publish (also set in package.json publishConfig).
+        run: npm publish --access public --provenance
+
+  crates:
+    name: Publish crates to crates.io
+    runs-on: ubuntu-latest
+    env:
+      CARGO_REGISTRY_TOKEN: ${{ secrets.CARGO_REGISTRY_TOKEN }}
+    defaults:
+      run:
+        working-directory: packages
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - name: Publish core-rs, then cli
+        if: ${{ env.CARGO_REGISTRY_TOKEN != '' }}
+        # Order matters: `semagraph` depends on `semagraph-core-rs`, so the core
+        # must be indexed on crates.io first. The sleep lets the index catch up.
+        run: |
+          cargo publish -p semagraph-core-rs
+          sleep 30
+          cargo publish -p semagraph
