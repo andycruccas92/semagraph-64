@@ -1,0 +1,20 @@
+{
+  "transitionId": "t07",
+  "status": "ok",
+  "exitCode": 0,
+  "stdout": "{\"source\":21,\"target\":42,\"mutation_mask\":63,\"distance\":6,\"lower_distance\":3,\"upper_distance\":3,\"module_scope\":\"both_modules\",\"regime_class\":\"full_bit_reversal\",\"regime_class_code\":5,\"index\":1386,\"packed\":\"1489011210901\"}",
+  "stderr": "",
+  "parsed": {
+    "source": 21,
+    "target": 42,
+    "mutation_mask": 63,
+    "distance": 6,
+    "lower_distance": 3,
+    "upper_distance": 3,
+    "module_scope": "both_modules",
+    "regime_class": "full_bit_reversal",
+    "regime_class_code": 5,
+    "index": 1386,
+    "packed": "1489011210901"
+  }
+}

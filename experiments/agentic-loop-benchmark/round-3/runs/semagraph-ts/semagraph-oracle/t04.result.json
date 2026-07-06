@@ -1,0 +1,24 @@
+{
+  "tool": "semagraph_lookup_transition64",
+  "status": "ok",
+  "result": {
+    "sourceStateId": "S64-000000",
+    "targetStateId": "S64-101001",
+    "mutationMask": "M64-101001",
+    "changedPositions": [
+      1,
+      3,
+      6
+    ],
+    "distance": 3,
+    "lowerDistance": 2,
+    "upperDistance": 1,
+    "moduleScope": "both_modules",
+    "regimeClass": "cross_module_regime_shift",
+    "sourceNumber": 0,
+    "targetNumber": 41,
+    "mutationMaskNumber": 41,
+    "transitionIndex": 41,
+    "inferenceUsed": false
+  }
+}

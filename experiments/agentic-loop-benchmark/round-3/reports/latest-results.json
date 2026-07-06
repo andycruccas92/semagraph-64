@@ -1,0 +1,727 @@
+{
+  "benchmark": "agentic-loop-benchmark-round-3",
+  "generatedAt": "2026-07-06T15:53:42.030Z",
+  "fixture": "fixtures/transitions.json",
+  "strict": true,
+  "results": [
+    {
+      "variant": "baseline",
+      "delivered": true,
+      "hasAgentLog": true,
+      "hasOutput": true,
+      "correct": true,
+      "quality": {
+        "passed": 5,
+        "total": 5,
+        "score": 1,
+        "checks": [
+          {
+            "name": "transitions",
+            "passed": true
+          },
+          {
+            "name": "groups",
+            "passed": true
+          },
+          {
+            "name": "aggregate",
+            "passed": true
+          },
+          {
+            "name": "comparisons",
+            "passed": true
+          },
+          {
+            "name": "transitionSummaries",
+            "passed": true
+          }
+        ]
+      },
+      "durationMs": 294293,
+      "durationSeconds": 294.293,
+      "loopCount": 1,
+      "reworkEventCount": 2,
+      "reworkEvents": [
+        "Corrected smoke-test fixture aggregate assertions from 50 and 3.125 to the deterministic computed values 47 and 2.938.",
+        "Worked around a managed-sandbox cwd write denial by running the same TypeScript project build from the workspace root."
+      ],
+      "semagraphRuntime": "none",
+      "semagraphCallCount": 0,
+      "semagraphCalls": [],
+      "tokenUsage": "unavailable",
+      "tokenUsageAvailable": false,
+      "acceptanceChecks": [
+        "node node_modules/typescript/bin/tsc -p experiments/agentic-loop-benchmark/round-3/runs/baseline/tsconfig.json",
+        "node experiments/agentic-loop-benchmark/round-3/runs/baseline/scripts/smoke-test.mjs",
+        "node experiments/agentic-loop-benchmark/round-3/runs/baseline/dist/transition-matrix-profiler.js experiments/agentic-loop-benchmark/round-3/fixtures/transitions.json"
+      ]
+    },
+    {
+      "variant": "semagraph-ts",
+      "delivered": true,
+      "hasAgentLog": true,
+      "hasOutput": true,
+      "correct": true,
+      "quality": {
+        "passed": 5,
+        "total": 5,
+        "score": 1,
+        "checks": [
+          {
+            "name": "transitions",
+            "passed": true
+          },
+          {
+            "name": "groups",
+            "passed": true
+          },
+          {
+            "name": "aggregate",
+            "passed": true
+          },
+          {
+            "name": "comparisons",
+            "passed": true
+          },
+          {
+            "name": "transitionSummaries",
+            "passed": true
+          }
+        ]
+      },
+      "durationMs": 2527,
+      "durationSeconds": 2.527,
+      "loopCount": 1,
+      "reworkEventCount": 0,
+      "reworkEvents": [],
+      "semagraphRuntime": "ts",
+      "semagraphCallCount": 16,
+      "semagraphCalls": [
+        {
+          "id": "t00",
+          "status": "ok",
+          "observed": {
+            "sourceStateId": "S64-000000",
+            "targetStateId": "S64-000000",
+            "mutationMask": "M64-000000",
+            "distance": 0,
+            "changedPositions": [],
+            "transitionIndex": 0,
+            "inferenceUsed": false
+          }
+        },
+        {
+          "id": "t01",
+          "status": "ok",
+          "observed": {
+            "sourceStateId": "S64-000000",
+            "targetStateId": "S64-100000",
+            "mutationMask": "M64-100000",
+            "distance": 1,
+            "changedPositions": [
+              1
+            ],
+            "transitionIndex": 32,
+            "inferenceUsed": false
+          }
+        },
+        {
+          "id": "t02",
+          "status": "ok",
+          "observed": {
+            "sourceStateId": "S64-000000",
+            "targetStateId": "S64-110000",
+            "mutationMask": "M64-110000",
+            "distance": 2,
+            "changedPositions": [
+              1,
+              2
+            ],
+            "transitionIndex": 48,
+            "inferenceUsed": false
+          }
+        },
+        {
+          "id": "t03",
+          "status": "ok",
+          "observed": {
+            "sourceStateId": "S64-000000",
+            "targetStateId": "S64-000110",
+            "mutationMask": "M64-000110",
+            "distance": 2,
+            "changedPositions": [
+              4,
+              5
+            ],
+            "transitionIndex": 6,
+            "inferenceUsed": false
+          }
+        },
+        {
+          "id": "t04",
+          "status": "ok",
+          "observed": {
+            "sourceStateId": "S64-000000",
+            "targetStateId": "S64-101001",
+            "mutationMask": "M64-101001",
+            "distance": 3,
+            "changedPositions": [
+              1,
+              3,
+              6
+            ],
+            "transitionIndex": 41,
+            "inferenceUsed": false
+          }
+        },
+        {
+          "id": "t05",
+          "status": "ok",
+          "observed": {
+            "sourceStateId": "S64-000000",
+            "targetStateId": "S64-111100",
+            "mutationMask": "M64-111100",
+            "distance": 4,
+            "changedPositions": [
+              1,
+              2,
+              3,
+              4
+            ],
+            "transitionIndex": 60,
+            "inferenceUsed": false
+          }
+        },
+        {
+          "id": "t06",
+          "status": "ok",
+          "observed": {
+            "sourceStateId": "S64-000000",
+            "targetStateId": "S64-111111",
+            "mutationMask": "M64-111111",
+            "distance": 6,
+            "changedPositions": [
+              1,
+              2,
+              3,
+              4,
+              5,
+              6
+            ],
+            "transitionIndex": 63,
+            "inferenceUsed": false
+          }
+        },
+        {
+          "id": "t07",
+          "status": "ok",
+          "observed": {
+            "sourceStateId": "S64-010101",
+            "targetStateId": "S64-101010",
+            "mutationMask": "M64-111111",
+            "distance": 6,
+            "changedPositions": [
+              1,
+              2,
+              3,
+              4,
+              5,
+              6
+            ],
+            "transitionIndex": 1386,
+            "inferenceUsed": false
+          }
+        },
+        {
+          "id": "t08",
+          "status": "ok",
+          "observed": {
+            "sourceStateId": "S64-111000",
+            "targetStateId": "S64-001111",
+            "mutationMask": "M64-110111",
+            "distance": 5,
+            "changedPositions": [
+              1,
+              2,
+              4,
+              5,
+              6
+            ],
+            "transitionIndex": 3599,
+            "inferenceUsed": false
+          }
+        },
+        {
+          "id": "t09",
+          "status": "ok",
+          "observed": {
+            "sourceStateId": "S64-101010",
+            "targetStateId": "S64-100011",
+            "mutationMask": "M64-001001",
+            "distance": 2,
+            "changedPositions": [
+              3,
+              6
+            ],
+            "transitionIndex": 2723,
+            "inferenceUsed": false
+          }
+        },
+        {
+          "id": "t10",
+          "status": "ok",
+          "observed": {
+            "sourceStateId": "S64-001111",
+            "targetStateId": "S64-001000",
+            "mutationMask": "M64-000111",
+            "distance": 3,
+            "changedPositions": [
+              4,
+              5,
+              6
+            ],
+            "transitionIndex": 968,
+            "inferenceUsed": false
+          }
+        },
+        {
+          "id": "t11",
+          "status": "ok",
+          "observed": {
+            "sourceStateId": "S64-110011",
+            "targetStateId": "S64-010001",
+            "mutationMask": "M64-100010",
+            "distance": 2,
+            "changedPositions": [
+              1,
+              5
+            ],
+            "transitionIndex": 3281,
+            "inferenceUsed": false
+          }
+        },
+        {
+          "id": "t12",
+          "status": "ok",
+          "observed": {
+            "sourceStateId": "S64-011001",
+            "targetStateId": "S64-011101",
+            "mutationMask": "M64-000100",
+            "distance": 1,
+            "changedPositions": [
+              4
+            ],
+            "transitionIndex": 1629,
+            "inferenceUsed": false
+          }
+        },
+        {
+          "id": "t13",
+          "status": "ok",
+          "observed": {
+            "sourceStateId": "S64-100100",
+            "targetStateId": "S64-011100",
+            "mutationMask": "M64-111000",
+            "distance": 3,
+            "changedPositions": [
+              1,
+              2,
+              3
+            ],
+            "transitionIndex": 2332,
+            "inferenceUsed": false
+          }
+        },
+        {
+          "id": "t14",
+          "status": "ok",
+          "observed": {
+            "sourceStateId": "S64-010010",
+            "targetStateId": "S64-111010",
+            "mutationMask": "M64-101000",
+            "distance": 2,
+            "changedPositions": [
+              1,
+              3
+            ],
+            "transitionIndex": 1210,
+            "inferenceUsed": false
+          }
+        },
+        {
+          "id": "t15",
+          "status": "ok",
+          "observed": {
+            "sourceStateId": "S64-111111",
+            "targetStateId": "S64-000001",
+            "mutationMask": "M64-111110",
+            "distance": 5,
+            "changedPositions": [
+              1,
+              2,
+              3,
+              4,
+              5
+            ],
+            "transitionIndex": 4033,
+            "inferenceUsed": false
+          }
+        }
+      ],
+      "tokenUsage": "unavailable",
+      "tokenUsageAvailable": false,
+      "acceptanceChecks": [
+        {
+          "name": "fixture profiles generated",
+          "status": "passed",
+          "observed": "16 transitions"
+        },
+        {
+          "name": "oracle transition fields match",
+          "status": "passed",
+          "observed": "16 semagraph_lookup_transition64 calls"
+        },
+        {
+          "name": "summaries are non-empty",
+          "status": "passed",
+          "observed": "all transition summaries checked"
+        }
+      ]
+    },
+    {
+      "variant": "semagraph-rs",
+      "delivered": true,
+      "hasAgentLog": true,
+      "hasOutput": true,
+      "correct": true,
+      "quality": {
+        "passed": 5,
+        "total": 5,
+        "score": 1,
+        "checks": [
+          {
+            "name": "transitions",
+            "passed": true
+          },
+          {
+            "name": "groups",
+            "passed": true
+          },
+          {
+            "name": "aggregate",
+            "passed": true
+          },
+          {
+            "name": "comparisons",
+            "passed": true
+          },
+          {
+            "name": "transitionSummaries",
+            "passed": true
+          }
+        ]
+      },
+      "durationMs": 284,
+      "durationSeconds": 0.284,
+      "loopCount": 1,
+      "reworkEventCount": 0,
+      "reworkEvents": [],
+      "semagraphRuntime": "rs",
+      "semagraphCallCount": 16,
+      "semagraphCalls": [
+        {
+          "transitionId": "t00",
+          "status": "ok",
+          "observed": {
+            "source": 0,
+            "target": 0,
+            "mutationMaskNumber": 0,
+            "mutationMask": "M64-000000",
+            "distance": 0,
+            "lowerDistance": 0,
+            "upperDistance": 0,
+            "moduleScope": "none",
+            "regimeClass": "no_change",
+            "transitionIndex": 0
+          }
+        },
+        {
+          "transitionId": "t01",
+          "status": "ok",
+          "observed": {
+            "source": 0,
+            "target": 32,
+            "mutationMaskNumber": 32,
+            "mutationMask": "M64-100000",
+            "distance": 1,
+            "lowerDistance": 1,
+            "upperDistance": 0,
+            "moduleScope": "lower_only",
+            "regimeClass": "bit_adjustment",
+            "transitionIndex": 32
+          }
+        },
+        {
+          "transitionId": "t02",
+          "status": "ok",
+          "observed": {
+            "source": 0,
+            "target": 48,
+            "mutationMaskNumber": 48,
+            "mutationMask": "M64-110000",
+            "distance": 2,
+            "lowerDistance": 2,
+            "upperDistance": 0,
+            "moduleScope": "lower_only",
+            "regimeClass": "module_reconfiguration",
+            "transitionIndex": 48
+          }
+        },
+        {
+          "transitionId": "t03",
+          "status": "ok",
+          "observed": {
+            "source": 0,
+            "target": 6,
+            "mutationMaskNumber": 6,
+            "mutationMask": "M64-000110",
+            "distance": 2,
+            "lowerDistance": 0,
+            "upperDistance": 2,
+            "moduleScope": "upper_only",
+            "regimeClass": "module_reconfiguration",
+            "transitionIndex": 6
+          }
+        },
+        {
+          "transitionId": "t04",
+          "status": "ok",
+          "observed": {
+            "source": 0,
+            "target": 41,
+            "mutationMaskNumber": 41,
+            "mutationMask": "M64-101001",
+            "distance": 3,
+            "lowerDistance": 2,
+            "upperDistance": 1,
+            "moduleScope": "both_modules",
+            "regimeClass": "cross_module_regime_shift",
+            "transitionIndex": 41
+          }
+        },
+        {
+          "transitionId": "t05",
+          "status": "ok",
+          "observed": {
+            "source": 0,
+            "target": 60,
+            "mutationMaskNumber": 60,
+            "mutationMask": "M64-111100",
+            "distance": 4,
+            "lowerDistance": 3,
+            "upperDistance": 1,
+            "moduleScope": "both_modules",
+            "regimeClass": "near_total_inversion",
+            "transitionIndex": 60
+          }
+        },
+        {
+          "transitionId": "t06",
+          "status": "ok",
+          "observed": {
+            "source": 0,
+            "target": 63,
+            "mutationMaskNumber": 63,
+            "mutationMask": "M64-111111",
+            "distance": 6,
+            "lowerDistance": 3,
+            "upperDistance": 3,
+            "moduleScope": "both_modules",
+            "regimeClass": "full_bit_reversal",
+            "transitionIndex": 63
+          }
+        },
+        {
+          "transitionId": "t07",
+          "status": "ok",
+          "observed": {
+            "source": 21,
+            "target": 42,
+            "mutationMaskNumber": 63,
+            "mutationMask": "M64-111111",
+            "distance": 6,
+            "lowerDistance": 3,
+            "upperDistance": 3,
+            "moduleScope": "both_modules",
+            "regimeClass": "full_bit_reversal",
+            "transitionIndex": 1386
+          }
+        },
+        {
+          "transitionId": "t08",
+          "status": "ok",
+          "observed": {
+            "source": 56,
+            "target": 15,
+            "mutationMaskNumber": 55,
+            "mutationMask": "M64-110111",
+            "distance": 5,
+            "lowerDistance": 2,
+            "upperDistance": 3,
+            "moduleScope": "both_modules",
+            "regimeClass": "near_total_inversion",
+            "transitionIndex": 3599
+          }
+        },
+        {
+          "transitionId": "t09",
+          "status": "ok",
+          "observed": {
+            "source": 42,
+            "target": 35,
+            "mutationMaskNumber": 9,
+            "mutationMask": "M64-001001",
+            "distance": 2,
+            "lowerDistance": 1,
+            "upperDistance": 1,
+            "moduleScope": "both_modules",
+            "regimeClass": "cross_module_regime_shift",
+            "transitionIndex": 2723
+          }
+        },
+        {
+          "transitionId": "t10",
+          "status": "ok",
+          "observed": {
+            "source": 15,
+            "target": 8,
+            "mutationMaskNumber": 7,
+            "mutationMask": "M64-000111",
+            "distance": 3,
+            "lowerDistance": 0,
+            "upperDistance": 3,
+            "moduleScope": "upper_only",
+            "regimeClass": "cross_module_regime_shift",
+            "transitionIndex": 968
+          }
+        },
+        {
+          "transitionId": "t11",
+          "status": "ok",
+          "observed": {
+            "source": 51,
+            "target": 17,
+            "mutationMaskNumber": 34,
+            "mutationMask": "M64-100010",
+            "distance": 2,
+            "lowerDistance": 1,
+            "upperDistance": 1,
+            "moduleScope": "both_modules",
+            "regimeClass": "cross_module_regime_shift",
+            "transitionIndex": 3281
+          }
+        },
+        {
+          "transitionId": "t12",
+          "status": "ok",
+          "observed": {
+            "source": 25,
+            "target": 29,
+            "mutationMaskNumber": 4,
+            "mutationMask": "M64-000100",
+            "distance": 1,
+            "lowerDistance": 0,
+            "upperDistance": 1,
+            "moduleScope": "upper_only",
+            "regimeClass": "bit_adjustment",
+            "transitionIndex": 1629
+          }
+        },
+        {
+          "transitionId": "t13",
+          "status": "ok",
+          "observed": {
+            "source": 36,
+            "target": 28,
+            "mutationMaskNumber": 56,
+            "mutationMask": "M64-111000",
+            "distance": 3,
+            "lowerDistance": 3,
+            "upperDistance": 0,
+            "moduleScope": "lower_only",
+            "regimeClass": "cross_module_regime_shift",
+            "transitionIndex": 2332
+          }
+        },
+        {
+          "transitionId": "t14",
+          "status": "ok",
+          "observed": {
+            "source": 18,
+            "target": 58,
+            "mutationMaskNumber": 40,
+            "mutationMask": "M64-101000",
+            "distance": 2,
+            "lowerDistance": 2,
+            "upperDistance": 0,
+            "moduleScope": "lower_only",
+            "regimeClass": "module_reconfiguration",
+            "transitionIndex": 1210
+          }
+        },
+        {
+          "transitionId": "t15",
+          "status": "ok",
+          "observed": {
+            "source": 63,
+            "target": 1,
+            "mutationMaskNumber": 62,
+            "mutationMask": "M64-111110",
+            "distance": 5,
+            "lowerDistance": 3,
+            "upperDistance": 2,
+            "moduleScope": "both_modules",
+            "regimeClass": "near_total_inversion",
+            "transitionIndex": 4033
+          }
+        }
+      ],
+      "tokenUsage": "unavailable",
+      "tokenUsageAvailable": false,
+      "acceptanceChecks": [
+        "TypeScript CLI executed against shared transitions fixture.",
+        "Rust SemaGraph classify oracle called once per fixture transition.",
+        "Direct transition fields matched oracle mutation mask, distances, module scope, regime class, and index.",
+        "output.json written from CLI stdout."
+      ]
+    }
+  ],
+  "oracleBenchmark": {
+    "generatedAt": "2026-07-06T15:53:36.788Z",
+    "fixture": "fixtures/transitions.json",
+    "repeats": 3,
+    "ts": {
+      "runtime": "semagraph-ts",
+      "available": true,
+      "ok": true,
+      "failures": [],
+      "callCount": 48,
+      "repeats": 3,
+      "durationMs": 4750.422,
+      "averageMsPerCall": 98.967,
+      "surface": "node ai-tools/semagraph-kernel-tool/dist/cli.js semagraph_lookup_transition64 <args.json>"
+    },
+    "rs": {
+      "runtime": "semagraph-rs",
+      "available": true,
+      "binarySource": "SEMAGRAPH_RS_BIN",
+      "ok": true,
+      "failures": [],
+      "callCount": 48,
+      "repeats": 3,
+      "durationMs": 490.063,
+      "averageMsPerCall": 10.21,
+      "surface": "semagraph classify <sourceNumber> <targetNumber> --json"
+    }
+  }
+}

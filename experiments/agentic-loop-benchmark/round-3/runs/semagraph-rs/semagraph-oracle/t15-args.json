@@ -1,0 +1,14 @@
+{
+  "transitionId": "t15",
+  "sourceStateId": "S64-111111",
+  "targetStateId": "S64-000001",
+  "sourceNumber": 63,
+  "targetNumber": 1,
+  "executable": "C:/Users/gregg/AppData/Local/Temp/semagraph-rs-v0.7.0/unzipped/packages/target/x86_64-pc-windows-msvc/release/semagraph.exe",
+  "args": [
+    "classify",
+    "63",
+    "1",
+    "--json"
+  ]
+}

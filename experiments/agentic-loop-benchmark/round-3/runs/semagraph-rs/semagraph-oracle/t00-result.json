@@ -1,0 +1,20 @@
+{
+  "transitionId": "t00",
+  "status": "ok",
+  "exitCode": 0,
+  "stdout": "{\"source\":0,\"target\":0,\"mutation_mask\":0,\"distance\":0,\"lower_distance\":0,\"upper_distance\":0,\"module_scope\":\"none\",\"regime_class\":\"no_change\",\"regime_class_code\":0,\"index\":0,\"packed\":\"0\"}",
+  "stderr": "",
+  "parsed": {
+    "source": 0,
+    "target": 0,
+    "mutation_mask": 0,
+    "distance": 0,
+    "lower_distance": 0,
+    "upper_distance": 0,
+    "module_scope": "none",
+    "regime_class": "no_change",
+    "regime_class_code": 0,
+    "index": 0,
+    "packed": "0"
+  }
+}

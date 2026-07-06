@@ -1,0 +1,496 @@
+{
+  "transitions": [
+    {
+      "id": "t00",
+      "sourceStateId": "S64-000000",
+      "targetStateId": "S64-000000",
+      "groupId": "identity",
+      "mutationMask": "M64-000000",
+      "changedPositions": [],
+      "distance": 0,
+      "lowerDistance": 0,
+      "upperDistance": 0,
+      "moduleScope": "none",
+      "regimeClass": "no_change",
+      "transitionIndex": 0,
+      "summary": "t00: S64-000000 to S64-000000 uses M64-000000 with distance 0, classified as no_change in none."
+    },
+    {
+      "id": "t01",
+      "sourceStateId": "S64-000000",
+      "targetStateId": "S64-100000",
+      "groupId": "single_bit",
+      "mutationMask": "M64-100000",
+      "changedPositions": [
+        1
+      ],
+      "distance": 1,
+      "lowerDistance": 1,
+      "upperDistance": 0,
+      "moduleScope": "lower_only",
+      "regimeClass": "bit_adjustment",
+      "transitionIndex": 32,
+      "summary": "t01: S64-000000 to S64-100000 uses M64-100000 with distance 1, classified as bit_adjustment in lower_only."
+    },
+    {
+      "id": "t02",
+      "sourceStateId": "S64-000000",
+      "targetStateId": "S64-110000",
+      "groupId": "single_module",
+      "mutationMask": "M64-110000",
+      "changedPositions": [
+        1,
+        2
+      ],
+      "distance": 2,
+      "lowerDistance": 2,
+      "upperDistance": 0,
+      "moduleScope": "lower_only",
+      "regimeClass": "module_reconfiguration",
+      "transitionIndex": 48,
+      "summary": "t02: S64-000000 to S64-110000 uses M64-110000 with distance 2, classified as module_reconfiguration in lower_only."
+    },
+    {
+      "id": "t03",
+      "sourceStateId": "S64-000000",
+      "targetStateId": "S64-000110",
+      "groupId": "single_module",
+      "mutationMask": "M64-000110",
+      "changedPositions": [
+        4,
+        5
+      ],
+      "distance": 2,
+      "lowerDistance": 0,
+      "upperDistance": 2,
+      "moduleScope": "upper_only",
+      "regimeClass": "module_reconfiguration",
+      "transitionIndex": 6,
+      "summary": "t03: S64-000000 to S64-000110 uses M64-000110 with distance 2, classified as module_reconfiguration in upper_only."
+    },
+    {
+      "id": "t04",
+      "sourceStateId": "S64-000000",
+      "targetStateId": "S64-101001",
+      "groupId": "cross_module",
+      "mutationMask": "M64-101001",
+      "changedPositions": [
+        1,
+        3,
+        6
+      ],
+      "distance": 3,
+      "lowerDistance": 2,
+      "upperDistance": 1,
+      "moduleScope": "both_modules",
+      "regimeClass": "cross_module_regime_shift",
+      "transitionIndex": 41,
+      "summary": "t04: S64-000000 to S64-101001 uses M64-101001 with distance 3, classified as cross_module_regime_shift in both_modules."
+    },
+    {
+      "id": "t05",
+      "sourceStateId": "S64-000000",
+      "targetStateId": "S64-111100",
+      "groupId": "inversion",
+      "mutationMask": "M64-111100",
+      "changedPositions": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "distance": 4,
+      "lowerDistance": 3,
+      "upperDistance": 1,
+      "moduleScope": "both_modules",
+      "regimeClass": "near_total_inversion",
+      "transitionIndex": 60,
+      "summary": "t05: S64-000000 to S64-111100 uses M64-111100 with distance 4, classified as near_total_inversion in both_modules."
+    },
+    {
+      "id": "t06",
+      "sourceStateId": "S64-000000",
+      "targetStateId": "S64-111111",
+      "groupId": "inversion",
+      "mutationMask": "M64-111111",
+      "changedPositions": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "distance": 6,
+      "lowerDistance": 3,
+      "upperDistance": 3,
+      "moduleScope": "both_modules",
+      "regimeClass": "full_bit_reversal",
+      "transitionIndex": 63,
+      "summary": "t06: S64-000000 to S64-111111 uses M64-111111 with distance 6, classified as full_bit_reversal in both_modules."
+    },
+    {
+      "id": "t07",
+      "sourceStateId": "S64-010101",
+      "targetStateId": "S64-101010",
+      "groupId": "inversion",
+      "mutationMask": "M64-111111",
+      "changedPositions": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "distance": 6,
+      "lowerDistance": 3,
+      "upperDistance": 3,
+      "moduleScope": "both_modules",
+      "regimeClass": "full_bit_reversal",
+      "transitionIndex": 1386,
+      "summary": "t07: S64-010101 to S64-101010 uses M64-111111 with distance 6, classified as full_bit_reversal in both_modules."
+    },
+    {
+      "id": "t08",
+      "sourceStateId": "S64-111000",
+      "targetStateId": "S64-001111",
+      "groupId": "inversion",
+      "mutationMask": "M64-110111",
+      "changedPositions": [
+        1,
+        2,
+        4,
+        5,
+        6
+      ],
+      "distance": 5,
+      "lowerDistance": 2,
+      "upperDistance": 3,
+      "moduleScope": "both_modules",
+      "regimeClass": "near_total_inversion",
+      "transitionIndex": 3599,
+      "summary": "t08: S64-111000 to S64-001111 uses M64-110111 with distance 5, classified as near_total_inversion in both_modules."
+    },
+    {
+      "id": "t09",
+      "sourceStateId": "S64-101010",
+      "targetStateId": "S64-100011",
+      "groupId": "cross_module",
+      "mutationMask": "M64-001001",
+      "changedPositions": [
+        3,
+        6
+      ],
+      "distance": 2,
+      "lowerDistance": 1,
+      "upperDistance": 1,
+      "moduleScope": "both_modules",
+      "regimeClass": "cross_module_regime_shift",
+      "transitionIndex": 2723,
+      "summary": "t09: S64-101010 to S64-100011 uses M64-001001 with distance 2, classified as cross_module_regime_shift in both_modules."
+    },
+    {
+      "id": "t10",
+      "sourceStateId": "S64-001111",
+      "targetStateId": "S64-001000",
+      "groupId": "cross_module",
+      "mutationMask": "M64-000111",
+      "changedPositions": [
+        4,
+        5,
+        6
+      ],
+      "distance": 3,
+      "lowerDistance": 0,
+      "upperDistance": 3,
+      "moduleScope": "upper_only",
+      "regimeClass": "cross_module_regime_shift",
+      "transitionIndex": 968,
+      "summary": "t10: S64-001111 to S64-001000 uses M64-000111 with distance 3, classified as cross_module_regime_shift in upper_only."
+    },
+    {
+      "id": "t11",
+      "sourceStateId": "S64-110011",
+      "targetStateId": "S64-010001",
+      "groupId": "cross_module",
+      "mutationMask": "M64-100010",
+      "changedPositions": [
+        1,
+        5
+      ],
+      "distance": 2,
+      "lowerDistance": 1,
+      "upperDistance": 1,
+      "moduleScope": "both_modules",
+      "regimeClass": "cross_module_regime_shift",
+      "transitionIndex": 3281,
+      "summary": "t11: S64-110011 to S64-010001 uses M64-100010 with distance 2, classified as cross_module_regime_shift in both_modules."
+    },
+    {
+      "id": "t12",
+      "sourceStateId": "S64-011001",
+      "targetStateId": "S64-011101",
+      "groupId": "single_bit",
+      "mutationMask": "M64-000100",
+      "changedPositions": [
+        4
+      ],
+      "distance": 1,
+      "lowerDistance": 0,
+      "upperDistance": 1,
+      "moduleScope": "upper_only",
+      "regimeClass": "bit_adjustment",
+      "transitionIndex": 1629,
+      "summary": "t12: S64-011001 to S64-011101 uses M64-000100 with distance 1, classified as bit_adjustment in upper_only."
+    },
+    {
+      "id": "t13",
+      "sourceStateId": "S64-100100",
+      "targetStateId": "S64-011100",
+      "groupId": "cross_module",
+      "mutationMask": "M64-111000",
+      "changedPositions": [
+        1,
+        2,
+        3
+      ],
+      "distance": 3,
+      "lowerDistance": 3,
+      "upperDistance": 0,
+      "moduleScope": "lower_only",
+      "regimeClass": "cross_module_regime_shift",
+      "transitionIndex": 2332,
+      "summary": "t13: S64-100100 to S64-011100 uses M64-111000 with distance 3, classified as cross_module_regime_shift in lower_only."
+    },
+    {
+      "id": "t14",
+      "sourceStateId": "S64-010010",
+      "targetStateId": "S64-111010",
+      "groupId": "single_module",
+      "mutationMask": "M64-101000",
+      "changedPositions": [
+        1,
+        3
+      ],
+      "distance": 2,
+      "lowerDistance": 2,
+      "upperDistance": 0,
+      "moduleScope": "lower_only",
+      "regimeClass": "module_reconfiguration",
+      "transitionIndex": 1210,
+      "summary": "t14: S64-010010 to S64-111010 uses M64-101000 with distance 2, classified as module_reconfiguration in lower_only."
+    },
+    {
+      "id": "t15",
+      "sourceStateId": "S64-111111",
+      "targetStateId": "S64-000001",
+      "groupId": "inversion",
+      "mutationMask": "M64-111110",
+      "changedPositions": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "distance": 5,
+      "lowerDistance": 3,
+      "upperDistance": 2,
+      "moduleScope": "both_modules",
+      "regimeClass": "near_total_inversion",
+      "transitionIndex": 4033,
+      "summary": "t15: S64-111111 to S64-000001 uses M64-111110 with distance 5, classified as near_total_inversion in both_modules."
+    }
+  ],
+  "groups": [
+    {
+      "id": "identity",
+      "transitionCount": 1,
+      "totalDistance": 0,
+      "averageDistance": 0,
+      "maxDistance": 0,
+      "maxDistanceTransitionIds": [
+        "t00"
+      ],
+      "regimeHistogram": {
+        "no_change": 1
+      },
+      "moduleScopeHistogram": {
+        "none": 1
+      }
+    },
+    {
+      "id": "single_bit",
+      "transitionCount": 2,
+      "totalDistance": 2,
+      "averageDistance": 1,
+      "maxDistance": 1,
+      "maxDistanceTransitionIds": [
+        "t01",
+        "t12"
+      ],
+      "regimeHistogram": {
+        "bit_adjustment": 2
+      },
+      "moduleScopeHistogram": {
+        "lower_only": 1,
+        "upper_only": 1
+      }
+    },
+    {
+      "id": "single_module",
+      "transitionCount": 3,
+      "totalDistance": 6,
+      "averageDistance": 2,
+      "maxDistance": 2,
+      "maxDistanceTransitionIds": [
+        "t02",
+        "t03",
+        "t14"
+      ],
+      "regimeHistogram": {
+        "module_reconfiguration": 3
+      },
+      "moduleScopeHistogram": {
+        "lower_only": 2,
+        "upper_only": 1
+      }
+    },
+    {
+      "id": "cross_module",
+      "transitionCount": 5,
+      "totalDistance": 13,
+      "averageDistance": 2.6,
+      "maxDistance": 3,
+      "maxDistanceTransitionIds": [
+        "t04",
+        "t10",
+        "t13"
+      ],
+      "regimeHistogram": {
+        "cross_module_regime_shift": 5
+      },
+      "moduleScopeHistogram": {
+        "lower_only": 1,
+        "upper_only": 1,
+        "both_modules": 3
+      }
+    },
+    {
+      "id": "inversion",
+      "transitionCount": 5,
+      "totalDistance": 26,
+      "averageDistance": 5.2,
+      "maxDistance": 6,
+      "maxDistanceTransitionIds": [
+        "t06",
+        "t07"
+      ],
+      "regimeHistogram": {
+        "near_total_inversion": 3,
+        "full_bit_reversal": 2
+      },
+      "moduleScopeHistogram": {
+        "both_modules": 5
+      }
+    }
+  ],
+  "aggregate": {
+    "transitionCount": 16,
+    "totalDistance": 47,
+    "averageDistance": 2.938,
+    "maxDistance": 6,
+    "maxDistanceTransitionIds": [
+      "t06",
+      "t07"
+    ],
+    "regimeHistogram": {
+      "no_change": 1,
+      "bit_adjustment": 2,
+      "module_reconfiguration": 3,
+      "cross_module_regime_shift": 5,
+      "near_total_inversion": 3,
+      "full_bit_reversal": 2
+    },
+    "moduleScopeHistogram": {
+      "none": 1,
+      "lower_only": 4,
+      "upper_only": 3,
+      "both_modules": 8
+    },
+    "mutationMaskHistogram": {
+      "M64-000000": 1,
+      "M64-000100": 1,
+      "M64-000110": 1,
+      "M64-000111": 1,
+      "M64-001001": 1,
+      "M64-100000": 1,
+      "M64-100010": 1,
+      "M64-101000": 1,
+      "M64-101001": 1,
+      "M64-110000": 1,
+      "M64-110111": 1,
+      "M64-111000": 1,
+      "M64-111100": 1,
+      "M64-111110": 1,
+      "M64-111111": 2
+    }
+  },
+  "comparisons": [
+    {
+      "left": "t01",
+      "right": "t12",
+      "sameMutationMask": false,
+      "sameRegimeClass": true,
+      "sameModuleScope": false,
+      "distanceDelta": 0,
+      "sharedChangedPositionCount": 0
+    },
+    {
+      "left": "t02",
+      "right": "t14",
+      "sameMutationMask": false,
+      "sameRegimeClass": true,
+      "sameModuleScope": true,
+      "distanceDelta": 0,
+      "sharedChangedPositionCount": 1
+    },
+    {
+      "left": "t06",
+      "right": "t07",
+      "sameMutationMask": true,
+      "sameRegimeClass": true,
+      "sameModuleScope": true,
+      "distanceDelta": 0,
+      "sharedChangedPositionCount": 6
+    },
+    {
+      "left": "t05",
+      "right": "t15",
+      "sameMutationMask": false,
+      "sameRegimeClass": true,
+      "sameModuleScope": true,
+      "distanceDelta": -1,
+      "sharedChangedPositionCount": 4
+    },
+    {
+      "left": "t09",
+      "right": "t11",
+      "sameMutationMask": false,
+      "sameRegimeClass": true,
+      "sameModuleScope": true,
+      "distanceDelta": 0,
+      "sharedChangedPositionCount": 0
+    },
+    {
+      "left": "t00",
+      "right": "t06",
+      "sameMutationMask": false,
+      "sameRegimeClass": false,
+      "sameModuleScope": false,
+      "distanceDelta": -6,
+      "sharedChangedPositionCount": 0
+    }
+  ]
+}

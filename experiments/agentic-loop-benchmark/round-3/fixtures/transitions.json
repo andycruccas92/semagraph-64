@@ -1,0 +1,35 @@
+{
+  "transitions": [
+    { "id": "t00", "sourceStateId": "S64-000000", "targetStateId": "S64-000000", "groupId": "identity" },
+    { "id": "t01", "sourceStateId": "S64-000000", "targetStateId": "S64-100000", "groupId": "single_bit" },
+    { "id": "t02", "sourceStateId": "S64-000000", "targetStateId": "S64-110000", "groupId": "single_module" },
+    { "id": "t03", "sourceStateId": "S64-000000", "targetStateId": "S64-000110", "groupId": "single_module" },
+    { "id": "t04", "sourceStateId": "S64-000000", "targetStateId": "S64-101001", "groupId": "cross_module" },
+    { "id": "t05", "sourceStateId": "S64-000000", "targetStateId": "S64-111100", "groupId": "inversion" },
+    { "id": "t06", "sourceStateId": "S64-000000", "targetStateId": "S64-111111", "groupId": "inversion" },
+    { "id": "t07", "sourceStateId": "S64-010101", "targetStateId": "S64-101010", "groupId": "inversion" },
+    { "id": "t08", "sourceStateId": "S64-111000", "targetStateId": "S64-001111", "groupId": "inversion" },
+    { "id": "t09", "sourceStateId": "S64-101010", "targetStateId": "S64-100011", "groupId": "cross_module" },
+    { "id": "t10", "sourceStateId": "S64-001111", "targetStateId": "S64-001000", "groupId": "cross_module" },
+    { "id": "t11", "sourceStateId": "S64-110011", "targetStateId": "S64-010001", "groupId": "cross_module" },
+    { "id": "t12", "sourceStateId": "S64-011001", "targetStateId": "S64-011101", "groupId": "single_bit" },
+    { "id": "t13", "sourceStateId": "S64-100100", "targetStateId": "S64-011100", "groupId": "cross_module" },
+    { "id": "t14", "sourceStateId": "S64-010010", "targetStateId": "S64-111010", "groupId": "single_module" },
+    { "id": "t15", "sourceStateId": "S64-111111", "targetStateId": "S64-000001", "groupId": "inversion" }
+  ],
+  "groups": [
+    { "id": "identity", "transitionIds": ["t00"] },
+    { "id": "single_bit", "transitionIds": ["t01", "t12"] },
+    { "id": "single_module", "transitionIds": ["t02", "t03", "t14"] },
+    { "id": "cross_module", "transitionIds": ["t04", "t09", "t10", "t11", "t13"] },
+    { "id": "inversion", "transitionIds": ["t05", "t06", "t07", "t08", "t15"] }
+  ],
+  "comparePairs": [
+    { "left": "t01", "right": "t12" },
+    { "left": "t02", "right": "t14" },
+    { "left": "t06", "right": "t07" },
+    { "left": "t05", "right": "t15" },
+    { "left": "t09", "right": "t11" },
+    { "left": "t00", "right": "t06" }
+  ]
+}

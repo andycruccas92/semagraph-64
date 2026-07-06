@@ -1,0 +1,302 @@
+{
+  "startTimeIso": "2026-07-06T15:50:09.544Z",
+  "endTimeIso": "2026-07-06T15:50:12.071Z",
+  "loopCount": 1,
+  "reworkEvents": [],
+  "toolUseNotes": [
+    "Used TypeScript SemaGraph oracle semagraph_lookup_transition64 for every fixture transition.",
+    "Saved oracle args and results under semagraph-oracle/.",
+    "Compared profiler mutationMask, distance, changedPositions and transitionIndex against oracle results."
+  ],
+  "acceptanceChecks": [
+    {
+      "name": "fixture profiles generated",
+      "status": "passed",
+      "observed": "16 transitions"
+    },
+    {
+      "name": "oracle transition fields match",
+      "status": "passed",
+      "observed": "16 semagraph_lookup_transition64 calls"
+    },
+    {
+      "name": "summaries are non-empty",
+      "status": "passed",
+      "observed": "all transition summaries checked"
+    }
+  ],
+  "semagraphRuntime": "ts",
+  "semagraphCalls": [
+    {
+      "id": "t00",
+      "status": "ok",
+      "observed": {
+        "sourceStateId": "S64-000000",
+        "targetStateId": "S64-000000",
+        "mutationMask": "M64-000000",
+        "distance": 0,
+        "changedPositions": [],
+        "transitionIndex": 0,
+        "inferenceUsed": false
+      }
+    },
+    {
+      "id": "t01",
+      "status": "ok",
+      "observed": {
+        "sourceStateId": "S64-000000",
+        "targetStateId": "S64-100000",
+        "mutationMask": "M64-100000",
+        "distance": 1,
+        "changedPositions": [
+          1
+        ],
+        "transitionIndex": 32,
+        "inferenceUsed": false
+      }
+    },
+    {
+      "id": "t02",
+      "status": "ok",
+      "observed": {
+        "sourceStateId": "S64-000000",
+        "targetStateId": "S64-110000",
+        "mutationMask": "M64-110000",
+        "distance": 2,
+        "changedPositions": [
+          1,
+          2
+        ],
+        "transitionIndex": 48,
+        "inferenceUsed": false
+      }
+    },
+    {
+      "id": "t03",
+      "status": "ok",
+      "observed": {
+        "sourceStateId": "S64-000000",
+        "targetStateId": "S64-000110",
+        "mutationMask": "M64-000110",
+        "distance": 2,
+        "changedPositions": [
+          4,
+          5
+        ],
+        "transitionIndex": 6,
+        "inferenceUsed": false
+      }
+    },
+    {
+      "id": "t04",
+      "status": "ok",
+      "observed": {
+        "sourceStateId": "S64-000000",
+        "targetStateId": "S64-101001",
+        "mutationMask": "M64-101001",
+        "distance": 3,
+        "changedPositions": [
+          1,
+          3,
+          6
+        ],
+        "transitionIndex": 41,
+        "inferenceUsed": false
+      }
+    },
+    {
+      "id": "t05",
+      "status": "ok",
+      "observed": {
+        "sourceStateId": "S64-000000",
+        "targetStateId": "S64-111100",
+        "mutationMask": "M64-111100",
+        "distance": 4,
+        "changedPositions": [
+          1,
+          2,
+          3,
+          4
+        ],
+        "transitionIndex": 60,
+        "inferenceUsed": false
+      }
+    },
+    {
+      "id": "t06",
+      "status": "ok",
+      "observed": {
+        "sourceStateId": "S64-000000",
+        "targetStateId": "S64-111111",
+        "mutationMask": "M64-111111",
+        "distance": 6,
+        "changedPositions": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ],
+        "transitionIndex": 63,
+        "inferenceUsed": false
+      }
+    },
+    {
+      "id": "t07",
+      "status": "ok",
+      "observed": {
+        "sourceStateId": "S64-010101",
+        "targetStateId": "S64-101010",
+        "mutationMask": "M64-111111",
+        "distance": 6,
+        "changedPositions": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ],
+        "transitionIndex": 1386,
+        "inferenceUsed": false
+      }
+    },
+    {
+      "id": "t08",
+      "status": "ok",
+      "observed": {
+        "sourceStateId": "S64-111000",
+        "targetStateId": "S64-001111",
+        "mutationMask": "M64-110111",
+        "distance": 5,
+        "changedPositions": [
+          1,
+          2,
+          4,
+          5,
+          6
+        ],
+        "transitionIndex": 3599,
+        "inferenceUsed": false
+      }
+    },
+    {
+      "id": "t09",
+      "status": "ok",
+      "observed": {
+        "sourceStateId": "S64-101010",
+        "targetStateId": "S64-100011",
+        "mutationMask": "M64-001001",
+        "distance": 2,
+        "changedPositions": [
+          3,
+          6
+        ],
+        "transitionIndex": 2723,
+        "inferenceUsed": false
+      }
+    },
+    {
+      "id": "t10",
+      "status": "ok",
+      "observed": {
+        "sourceStateId": "S64-001111",
+        "targetStateId": "S64-001000",
+        "mutationMask": "M64-000111",
+        "distance": 3,
+        "changedPositions": [
+          4,
+          5,
+          6
+        ],
+        "transitionIndex": 968,
+        "inferenceUsed": false
+      }
+    },
+    {
+      "id": "t11",
+      "status": "ok",
+      "observed": {
+        "sourceStateId": "S64-110011",
+        "targetStateId": "S64-010001",
+        "mutationMask": "M64-100010",
+        "distance": 2,
+        "changedPositions": [
+          1,
+          5
+        ],
+        "transitionIndex": 3281,
+        "inferenceUsed": false
+      }
+    },
+    {
+      "id": "t12",
+      "status": "ok",
+      "observed": {
+        "sourceStateId": "S64-011001",
+        "targetStateId": "S64-011101",
+        "mutationMask": "M64-000100",
+        "distance": 1,
+        "changedPositions": [
+          4
+        ],
+        "transitionIndex": 1629,
+        "inferenceUsed": false
+      }
+    },
+    {
+      "id": "t13",
+      "status": "ok",
+      "observed": {
+        "sourceStateId": "S64-100100",
+        "targetStateId": "S64-011100",
+        "mutationMask": "M64-111000",
+        "distance": 3,
+        "changedPositions": [
+          1,
+          2,
+          3
+        ],
+        "transitionIndex": 2332,
+        "inferenceUsed": false
+      }
+    },
+    {
+      "id": "t14",
+      "status": "ok",
+      "observed": {
+        "sourceStateId": "S64-010010",
+        "targetStateId": "S64-111010",
+        "mutationMask": "M64-101000",
+        "distance": 2,
+        "changedPositions": [
+          1,
+          3
+        ],
+        "transitionIndex": 1210,
+        "inferenceUsed": false
+      }
+    },
+    {
+      "id": "t15",
+      "status": "ok",
+      "observed": {
+        "sourceStateId": "S64-111111",
+        "targetStateId": "S64-000001",
+        "mutationMask": "M64-111110",
+        "distance": 5,
+        "changedPositions": [
+          1,
+          2,
+          3,
+          4,
+          5
+        ],
+        "transitionIndex": 4033,
+        "inferenceUsed": false
+      }
+    }
+  ],
+  "tokenUsage": "unavailable"
+}

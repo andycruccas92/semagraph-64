@@ -1,0 +1,20 @@
+{
+  "transitionId": "t15",
+  "status": "ok",
+  "exitCode": 0,
+  "stdout": "{\"source\":63,\"target\":1,\"mutation_mask\":62,\"distance\":5,\"lower_distance\":3,\"upper_distance\":2,\"module_scope\":\"both_modules\",\"regime_class\":\"near_total_inversion\",\"regime_class_code\":4,\"index\":4033,\"packed\":\"4331062943871\"}",
+  "stderr": "",
+  "parsed": {
+    "source": 63,
+    "target": 1,
+    "mutation_mask": 62,
+    "distance": 5,
+    "lower_distance": 3,
+    "upper_distance": 2,
+    "module_scope": "both_modules",
+    "regime_class": "near_total_inversion",
+    "regime_class_code": 4,
+    "index": 4033,
+    "packed": "4331062943871"
+  }
+}

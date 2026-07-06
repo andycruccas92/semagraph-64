@@ -1,0 +1,28 @@
+{
+  "generatedAt": "2026-07-06T15:53:36.788Z",
+  "fixture": "fixtures/transitions.json",
+  "repeats": 3,
+  "ts": {
+    "runtime": "semagraph-ts",
+    "available": true,
+    "ok": true,
+    "failures": [],
+    "callCount": 48,
+    "repeats": 3,
+    "durationMs": 4750.422,
+    "averageMsPerCall": 98.967,
+    "surface": "node ai-tools/semagraph-kernel-tool/dist/cli.js semagraph_lookup_transition64 <args.json>"
+  },
+  "rs": {
+    "runtime": "semagraph-rs",
+    "available": true,
+    "binarySource": "SEMAGRAPH_RS_BIN",
+    "ok": true,
+    "failures": [],
+    "callCount": 48,
+    "repeats": 3,
+    "durationMs": 490.063,
+    "averageMsPerCall": 10.21,
+    "surface": "semagraph classify <sourceNumber> <targetNumber> --json"
+  }
+}

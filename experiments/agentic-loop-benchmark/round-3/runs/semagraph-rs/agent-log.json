@@ -1,0 +1,277 @@
+{
+  "startTimeIso": "2026-07-06T15:49:43.807Z",
+  "endTimeIso": "2026-07-06T15:49:44.091Z",
+  "loopCount": 1,
+  "reworkEvents": [],
+  "toolUseNotes": [
+    "Used deterministic TypeScript implementation for profiler output.",
+    "Used semagraph.exe classify <sourceNumber> <targetNumber> --json as RS oracle for every fixture transition.",
+    "Saved per-transition oracle args/results in semagraph-oracle/."
+  ],
+  "acceptanceChecks": [
+    "TypeScript CLI executed against shared transitions fixture.",
+    "Rust SemaGraph classify oracle called once per fixture transition.",
+    "Direct transition fields matched oracle mutation mask, distances, module scope, regime class, and index.",
+    "output.json written from CLI stdout."
+  ],
+  "semagraphRuntime": "rs",
+  "semagraphCalls": [
+    {
+      "transitionId": "t00",
+      "status": "ok",
+      "observed": {
+        "source": 0,
+        "target": 0,
+        "mutationMaskNumber": 0,
+        "mutationMask": "M64-000000",
+        "distance": 0,
+        "lowerDistance": 0,
+        "upperDistance": 0,
+        "moduleScope": "none",
+        "regimeClass": "no_change",
+        "transitionIndex": 0
+      }
+    },
+    {
+      "transitionId": "t01",
+      "status": "ok",
+      "observed": {
+        "source": 0,
+        "target": 32,
+        "mutationMaskNumber": 32,
+        "mutationMask": "M64-100000",
+        "distance": 1,
+        "lowerDistance": 1,
+        "upperDistance": 0,
+        "moduleScope": "lower_only",
+        "regimeClass": "bit_adjustment",
+        "transitionIndex": 32
+      }
+    },
+    {
+      "transitionId": "t02",
+      "status": "ok",
+      "observed": {
+        "source": 0,
+        "target": 48,
+        "mutationMaskNumber": 48,
+        "mutationMask": "M64-110000",
+        "distance": 2,
+        "lowerDistance": 2,
+        "upperDistance": 0,
+        "moduleScope": "lower_only",
+        "regimeClass": "module_reconfiguration",
+        "transitionIndex": 48
+      }
+    },
+    {
+      "transitionId": "t03",
+      "status": "ok",
+      "observed": {
+        "source": 0,
+        "target": 6,
+        "mutationMaskNumber": 6,
+        "mutationMask": "M64-000110",
+        "distance": 2,
+        "lowerDistance": 0,
+        "upperDistance": 2,
+        "moduleScope": "upper_only",
+        "regimeClass": "module_reconfiguration",
+        "transitionIndex": 6
+      }
+    },
+    {
+      "transitionId": "t04",
+      "status": "ok",
+      "observed": {
+        "source": 0,
+        "target": 41,
+        "mutationMaskNumber": 41,
+        "mutationMask": "M64-101001",
+        "distance": 3,
+        "lowerDistance": 2,
+        "upperDistance": 1,
+        "moduleScope": "both_modules",
+        "regimeClass": "cross_module_regime_shift",
+        "transitionIndex": 41
+      }
+    },
+    {
+      "transitionId": "t05",
+      "status": "ok",
+      "observed": {
+        "source": 0,
+        "target": 60,
+        "mutationMaskNumber": 60,
+        "mutationMask": "M64-111100",
+        "distance": 4,
+        "lowerDistance": 3,
+        "upperDistance": 1,
+        "moduleScope": "both_modules",
+        "regimeClass": "near_total_inversion",
+        "transitionIndex": 60
+      }
+    },
+    {
+      "transitionId": "t06",
+      "status": "ok",
+      "observed": {
+        "source": 0,
+        "target": 63,
+        "mutationMaskNumber": 63,
+        "mutationMask": "M64-111111",
+        "distance": 6,
+        "lowerDistance": 3,
+        "upperDistance": 3,
+        "moduleScope": "both_modules",
+        "regimeClass": "full_bit_reversal",
+        "transitionIndex": 63
+      }
+    },
+    {
+      "transitionId": "t07",
+      "status": "ok",
+      "observed": {
+        "source": 21,
+        "target": 42,
+        "mutationMaskNumber": 63,
+        "mutationMask": "M64-111111",
+        "distance": 6,
+        "lowerDistance": 3,
+        "upperDistance": 3,
+        "moduleScope": "both_modules",
+        "regimeClass": "full_bit_reversal",
+        "transitionIndex": 1386
+      }
+    },
+    {
+      "transitionId": "t08",
+      "status": "ok",
+      "observed": {
+        "source": 56,
+        "target": 15,
+        "mutationMaskNumber": 55,
+        "mutationMask": "M64-110111",
+        "distance": 5,
+        "lowerDistance": 2,
+        "upperDistance": 3,
+        "moduleScope": "both_modules",
+        "regimeClass": "near_total_inversion",
+        "transitionIndex": 3599
+      }
+    },
+    {
+      "transitionId": "t09",
+      "status": "ok",
+      "observed": {
+        "source": 42,
+        "target": 35,
+        "mutationMaskNumber": 9,
+        "mutationMask": "M64-001001",
+        "distance": 2,
+        "lowerDistance": 1,
+        "upperDistance": 1,
+        "moduleScope": "both_modules",
+        "regimeClass": "cross_module_regime_shift",
+        "transitionIndex": 2723
+      }
+    },
+    {
+      "transitionId": "t10",
+      "status": "ok",
+      "observed": {
+        "source": 15,
+        "target": 8,
+        "mutationMaskNumber": 7,
+        "mutationMask": "M64-000111",
+        "distance": 3,
+        "lowerDistance": 0,
+        "upperDistance": 3,
+        "moduleScope": "upper_only",
+        "regimeClass": "cross_module_regime_shift",
+        "transitionIndex": 968
+      }
+    },
+    {
+      "transitionId": "t11",
+      "status": "ok",
+      "observed": {
+        "source": 51,
+        "target": 17,
+        "mutationMaskNumber": 34,
+        "mutationMask": "M64-100010",
+        "distance": 2,
+        "lowerDistance": 1,
+        "upperDistance": 1,
+        "moduleScope": "both_modules",
+        "regimeClass": "cross_module_regime_shift",
+        "transitionIndex": 3281
+      }
+    },
+    {
+      "transitionId": "t12",
+      "status": "ok",
+      "observed": {
+        "source": 25,
+        "target": 29,
+        "mutationMaskNumber": 4,
+        "mutationMask": "M64-000100",
+        "distance": 1,
+        "lowerDistance": 0,
+        "upperDistance": 1,
+        "moduleScope": "upper_only",
+        "regimeClass": "bit_adjustment",
+        "transitionIndex": 1629
+      }
+    },
+    {
+      "transitionId": "t13",
+      "status": "ok",
+      "observed": {
+        "source": 36,
+        "target": 28,
+        "mutationMaskNumber": 56,
+        "mutationMask": "M64-111000",
+        "distance": 3,
+        "lowerDistance": 3,
+        "upperDistance": 0,
+        "moduleScope": "lower_only",
+        "regimeClass": "cross_module_regime_shift",
+        "transitionIndex": 2332
+      }
+    },
+    {
+      "transitionId": "t14",
+      "status": "ok",
+      "observed": {
+        "source": 18,
+        "target": 58,
+        "mutationMaskNumber": 40,
+        "mutationMask": "M64-101000",
+        "distance": 2,
+        "lowerDistance": 2,
+        "upperDistance": 0,
+        "moduleScope": "lower_only",
+        "regimeClass": "module_reconfiguration",
+        "transitionIndex": 1210
+      }
+    },
+    {
+      "transitionId": "t15",
+      "status": "ok",
+      "observed": {
+        "source": 63,
+        "target": 1,
+        "mutationMaskNumber": 62,
+        "mutationMask": "M64-111110",
+        "distance": 5,
+        "lowerDistance": 3,
+        "upperDistance": 2,
+        "moduleScope": "both_modules",
+        "regimeClass": "near_total_inversion",
+        "transitionIndex": 4033
+      }
+    }
+  ],
+  "tokenUsage": "unavailable"
+}
