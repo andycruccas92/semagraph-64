@@ -191,7 +191,8 @@ mod tests {
         let p = project_trajectory(&[0, 4, 6, 2]);
         assert_eq!(p.net_mutation, 2);
         assert_eq!(p.cumulative_distance, 3);
-        assert_eq!(p.endpoint, 0 * 8 + 2);
+        // endpoint code = source * 8 + target = 0 * 8 + 2
+        assert_eq!(p.endpoint, 2);
         assert_eq!(p.endpoint_hamming, 1);
 
         // Out-and-back cancels net mutation but not cumulative distance.
