@@ -122,8 +122,16 @@ fn shape_parity_matches_reference() {
 
     for exp in &expected {
         let projection = project_trajectory(&exp.states);
-        assert_eq!(projection.shape, exp.shape, "shape mismatch for {:?}", exp.states);
-        assert_eq!(projection.dwell, exp.dwell, "dwell mismatch for {:?}", exp.states);
+        assert_eq!(
+            projection.shape, exp.shape,
+            "shape mismatch for {:?}",
+            exp.states
+        );
+        assert_eq!(
+            projection.dwell, exp.dwell,
+            "dwell mismatch for {:?}",
+            exp.states
+        );
         assert_eq!(
             projection.net_mutation, exp.net_mutation,
             "net mutation mismatch for {:?}",
@@ -157,16 +165,30 @@ fn shape_parity_batch_matches_reference() {
     let mut cum = vec![0u32; n];
     let mut endpoint = vec![0u8; n];
     let mut endpoint_hamming = vec![0u8; n];
-    compress_trajectory_batch(&paths, &mut net, &mut cum, &mut endpoint, &mut endpoint_hamming);
+    compress_trajectory_batch(
+        &paths,
+        &mut net,
+        &mut cum,
+        &mut endpoint,
+        &mut endpoint_hamming,
+    );
 
     for (i, exp) in expected.iter().enumerate() {
-        assert_eq!(net[i], exp.net_mutation, "batch net mismatch for {:?}", exp.states);
+        assert_eq!(
+            net[i], exp.net_mutation,
+            "batch net mismatch for {:?}",
+            exp.states
+        );
         assert_eq!(
             cum[i], exp.cumulative_distance,
             "batch cumulative mismatch for {:?}",
             exp.states
         );
-        assert_eq!(endpoint[i], exp.endpoint, "batch endpoint mismatch for {:?}", exp.states);
+        assert_eq!(
+            endpoint[i], exp.endpoint,
+            "batch endpoint mismatch for {:?}",
+            exp.states
+        );
         assert_eq!(
             endpoint_hamming[i], exp.endpoint_hamming,
             "batch endpoint hamming mismatch for {:?}",

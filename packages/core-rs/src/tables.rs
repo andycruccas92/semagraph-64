@@ -192,10 +192,10 @@ pub fn classify_batch(sources: &[u8], targets: &[u8], out: &mut [u8]) {
     let sources = &sources[..n];
     let targets = &targets[..n];
     let out = &mut out[..n];
-        // Indexed loop kept deliberately: a flat counted loop over SoA slices is
-        // the most autovectorization-friendly shape (see fn docs). clippy would
-        // prefer iterators here, but that obscures the SoA intent.
-        #[allow(clippy::needless_range_loop)]
+    // Indexed loop kept deliberately: a flat counted loop over SoA slices is
+    // the most autovectorization-friendly shape (see fn docs). clippy would
+    // prefer iterators here, but that obscures the SoA intent.
+    #[allow(clippy::needless_range_loop)]
     for i in 0..n {
         out[i] = REGIME_BY_MASK[((sources[i] ^ targets[i]) & STATE64_MASK) as usize];
     }
@@ -226,10 +226,10 @@ pub fn classify_batch_full(sources: &[u8], targets: &[u8], out: &mut BatchOut<'_
         .min(out.upper_distance.len())
         .min(out.module_scope.len())
         .min(out.regime_class.len());
-        // Indexed loop kept deliberately: a flat counted loop over SoA slices is
-        // the most autovectorization-friendly shape (see fn docs). clippy would
-        // prefer iterators here, but that obscures the SoA intent.
-        #[allow(clippy::needless_range_loop)]
+    // Indexed loop kept deliberately: a flat counted loop over SoA slices is
+    // the most autovectorization-friendly shape (see fn docs). clippy would
+    // prefer iterators here, but that obscures the SoA intent.
+    #[allow(clippy::needless_range_loop)]
     for i in 0..n {
         let mask = (sources[i] ^ targets[i]) & STATE64_MASK;
         let mi = mask as usize;
@@ -252,7 +252,7 @@ pub fn classify_batch_full(sources: &[u8], targets: &[u8], out: &mut BatchOut<'_
 #[cfg(all(feature = "simd", target_arch = "x86_64"))]
 pub fn classify_batch_simd(sources: &[u8], targets: &[u8], out: &mut [u8]) {
     use core::arch::x86_64::{
-        _mm_and_si128, _mm_loadu_si128, _mm_set1_epi8, _mm_storeu_si128, _mm_xor_si128, __m128i,
+        __m128i, _mm_and_si128, _mm_loadu_si128, _mm_set1_epi8, _mm_storeu_si128, _mm_xor_si128,
     };
 
     let n = sources.len().min(targets.len()).min(out.len());
@@ -330,7 +330,10 @@ mod tests {
         classify_batch(&sources, &targets, &mut regime);
         #[allow(clippy::needless_range_loop)]
         for i in 0..sources.len() {
-            assert_eq!(regime[i], classify_branchless(sources[i], targets[i]).regime_class);
+            assert_eq!(
+                regime[i],
+                classify_branchless(sources[i], targets[i]).regime_class
+            );
         }
 
         let mut mutation_mask = vec![0u8; sources.len()];

@@ -84,12 +84,20 @@ pub const fn is_valid_mask64(value: u8) -> bool {
 
 #[inline]
 pub fn validate_state64(value: u8) -> Result<u8, SemagraphErrorCode> {
-    if is_valid_state64(value) { Ok(value) } else { Err(SemagraphErrorCode::InvalidState) }
+    if is_valid_state64(value) {
+        Ok(value)
+    } else {
+        Err(SemagraphErrorCode::InvalidState)
+    }
 }
 
 #[inline]
 pub fn validate_mask64(value: u8) -> Result<u8, SemagraphErrorCode> {
-    if is_valid_mask64(value) { Ok(value) } else { Err(SemagraphErrorCode::InvalidMask) }
+    if is_valid_mask64(value) {
+        Ok(value)
+    } else {
+        Err(SemagraphErrorCode::InvalidMask)
+    }
 }
 
 #[inline]
@@ -132,7 +140,10 @@ pub fn transition_index64(source: u8, target: u8) -> Result<u16, SemagraphErrorC
 }
 
 #[inline]
-pub const fn module_scope_from_distances(lower_distance: u8, upper_distance: u8) -> ModuleScopeCode {
+pub const fn module_scope_from_distances(
+    lower_distance: u8,
+    upper_distance: u8,
+) -> ModuleScopeCode {
     match (lower_distance > 0, upper_distance > 0) {
         (false, false) => ModuleScopeCode::NoChange,
         (true, false) => ModuleScopeCode::LowerOnly,
@@ -148,7 +159,11 @@ pub const fn module_scope_from_distances(lower_distance: u8, upper_distance: u8)
 /// information the TS code derives from `lower_distance`/`upper_distance`, so the
 /// `both_modules` test below is equivalent to `moduleScope !== "both_modules"`.
 #[inline]
-pub const fn regime_class_from_distances(distance: u8, lower_distance: u8, upper_distance: u8) -> RegimeClassCode {
+pub const fn regime_class_from_distances(
+    distance: u8,
+    lower_distance: u8,
+    upper_distance: u8,
+) -> RegimeClassCode {
     let both_modules = lower_distance > 0 && upper_distance > 0;
     if distance == 0 {
         RegimeClassCode::NoChange
@@ -165,7 +180,10 @@ pub const fn regime_class_from_distances(distance: u8, lower_distance: u8, upper
     }
 }
 
-pub fn lookup_transition64(source: u8, target: u8) -> Result<Transition64Entry, SemagraphErrorCode> {
+pub fn lookup_transition64(
+    source: u8,
+    target: u8,
+) -> Result<Transition64Entry, SemagraphErrorCode> {
     let mutation_mask = mutation_between64(source, target)?;
     let distance = mutation_mask.count_ones() as u8;
     let lower_mask = (mutation_mask >> 3) & 0b0000_0111;
@@ -242,34 +260,44 @@ pub use shapes::{
     compress_trajectory_batch, project_trajectory, run_collapse_into, TrajectoryProjection,
     Q3_COUNT, Q3_MASK,
 };
-pub use tables::{
-    classify_batch, classify_batch_full, classify_branchless, classify_branchless_packed,
-    BatchOut, DISTANCE_BY_MASK, LOWER_DISTANCE_BY_MASK, MODULE_SCOPE_BY_MASK, REGIME_BY_MASK,
-    REGIME_BY_TRANSITION, UPPER_DISTANCE_BY_MASK,
-};
 #[cfg(feature = "simd")]
 pub use tables::classify_batch_simd;
+pub use tables::{
+    classify_batch, classify_batch_full, classify_branchless, classify_branchless_packed, BatchOut,
+    DISTANCE_BY_MASK, LOWER_DISTANCE_BY_MASK, MODULE_SCOPE_BY_MASK, REGIME_BY_MASK,
+    REGIME_BY_TRANSITION, UPPER_DISTANCE_BY_MASK,
+};
 
 #[no_mangle]
 pub extern "C" fn sg64_is_valid_state(value: u8) -> u8 {
-    if is_valid_state64(value) { 1 } else { 0 }
+    if is_valid_state64(value) {
+        1
+    } else {
+        0
+    }
 }
 
 #[no_mangle]
 pub extern "C" fn sg64_apply_mutation(state: u8, mutation_mask: u8) -> u8 {
-    if !is_valid_state64(state) || !is_valid_mask64(mutation_mask) { return 255; }
+    if !is_valid_state64(state) || !is_valid_mask64(mutation_mask) {
+        return 255;
+    }
     state ^ mutation_mask
 }
 
 #[no_mangle]
 pub extern "C" fn sg64_hamming_distance(source: u8, target: u8) -> u8 {
-    if !is_valid_state64(source) || !is_valid_state64(target) { return 255; }
+    if !is_valid_state64(source) || !is_valid_state64(target) {
+        return 255;
+    }
     (source ^ target).count_ones() as u8
 }
 
 #[no_mangle]
 pub extern "C" fn sg64_transition_index(source: u8, target: u8) -> u16 {
-    if !is_valid_state64(source) || !is_valid_state64(target) { return u16::MAX; }
+    if !is_valid_state64(source) || !is_valid_state64(target) {
+        return u16::MAX;
+    }
     (source as u16) * 64 + (target as u16)
 }
 
@@ -310,25 +338,61 @@ mod tests {
     #[test]
     fn regime_classes_match_typescript_taxonomy() {
         // distance 0 -> no_change
-        assert_eq!(regime_class_from_distances(0, 0, 0), RegimeClassCode::NoChange);
+        assert_eq!(
+            regime_class_from_distances(0, 0, 0),
+            RegimeClassCode::NoChange
+        );
         // distance 1 -> bit_adjustment
-        assert_eq!(regime_class_from_distances(1, 1, 0), RegimeClassCode::BitAdjustment);
+        assert_eq!(
+            regime_class_from_distances(1, 1, 0),
+            RegimeClassCode::BitAdjustment
+        );
         // distance 2, single module -> module_reconfiguration
-        assert_eq!(regime_class_from_distances(2, 2, 0), RegimeClassCode::ModuleReconfiguration);
-        assert_eq!(regime_class_from_distances(2, 0, 2), RegimeClassCode::ModuleReconfiguration);
+        assert_eq!(
+            regime_class_from_distances(2, 2, 0),
+            RegimeClassCode::ModuleReconfiguration
+        );
+        assert_eq!(
+            regime_class_from_distances(2, 0, 2),
+            RegimeClassCode::ModuleReconfiguration
+        );
         // distance 2, both modules -> cross_module_regime_shift (NOT module_reconfiguration)
-        assert_eq!(regime_class_from_distances(2, 1, 1), RegimeClassCode::CrossModuleRegimeShift);
+        assert_eq!(
+            regime_class_from_distances(2, 1, 1),
+            RegimeClassCode::CrossModuleRegimeShift
+        );
         // distance 3, single module -> cross_module_regime_shift (previously diverged: Rust said IntraModule)
-        assert_eq!(regime_class_from_distances(3, 3, 0), RegimeClassCode::CrossModuleRegimeShift);
-        assert_eq!(regime_class_from_distances(3, 0, 3), RegimeClassCode::CrossModuleRegimeShift);
+        assert_eq!(
+            regime_class_from_distances(3, 3, 0),
+            RegimeClassCode::CrossModuleRegimeShift
+        );
+        assert_eq!(
+            regime_class_from_distances(3, 0, 3),
+            RegimeClassCode::CrossModuleRegimeShift
+        );
         // distance 3, both modules -> cross_module_regime_shift
-        assert_eq!(regime_class_from_distances(3, 2, 1), RegimeClassCode::CrossModuleRegimeShift);
+        assert_eq!(
+            regime_class_from_distances(3, 2, 1),
+            RegimeClassCode::CrossModuleRegimeShift
+        );
         // distance 4 and 5 -> near_total_inversion (this class did not exist in the old Rust core)
-        assert_eq!(regime_class_from_distances(4, 2, 2), RegimeClassCode::NearTotalInversion);
-        assert_eq!(regime_class_from_distances(4, 1, 3), RegimeClassCode::NearTotalInversion);
-        assert_eq!(regime_class_from_distances(5, 2, 3), RegimeClassCode::NearTotalInversion);
+        assert_eq!(
+            regime_class_from_distances(4, 2, 2),
+            RegimeClassCode::NearTotalInversion
+        );
+        assert_eq!(
+            regime_class_from_distances(4, 1, 3),
+            RegimeClassCode::NearTotalInversion
+        );
+        assert_eq!(
+            regime_class_from_distances(5, 2, 3),
+            RegimeClassCode::NearTotalInversion
+        );
         // distance 6 -> full_bit_reversal
-        assert_eq!(regime_class_from_distances(6, 3, 3), RegimeClassCode::FullBitReversal);
+        assert_eq!(
+            regime_class_from_distances(6, 3, 3),
+            RegimeClassCode::FullBitReversal
+        );
     }
 
     #[test]

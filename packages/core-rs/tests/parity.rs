@@ -150,12 +150,19 @@ fn parity_covers_all_4096_transitions() {
             pack_transition64(entry),
             exp.packed,
             "packed word mismatch for {} -> {}",
-            exp.source, exp.target
+            exp.source,
+            exp.target
         );
 
         // Cross-check the standalone primitives against the same expectations.
-        assert_eq!(hamming_distance64(exp.source, exp.target).unwrap(), exp.distance);
-        assert_eq!(transition_index64(exp.source, exp.target).unwrap(), exp.index);
+        assert_eq!(
+            hamming_distance64(exp.source, exp.target).unwrap(),
+            exp.distance
+        );
+        assert_eq!(
+            transition_index64(exp.source, exp.target).unwrap(),
+            exp.index
+        );
     }
 }
 

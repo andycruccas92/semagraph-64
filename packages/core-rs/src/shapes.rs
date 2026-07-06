@@ -156,10 +156,10 @@ pub fn compress_trajectory_batch(
         .min(cumulative_distance.len())
         .min(endpoint.len())
         .min(endpoint_hamming.len());
-        // Indexed loop kept deliberately: a flat counted loop over SoA slices is
-        // the most autovectorization-friendly shape (see fn docs). clippy would
-        // prefer iterators here, but that obscures the SoA intent.
-        #[allow(clippy::needless_range_loop)]
+    // Indexed loop kept deliberately: a flat counted loop over SoA slices is
+    // the most autovectorization-friendly shape (see fn docs). clippy would
+    // prefer iterators here, but that obscures the SoA intent.
+    #[allow(clippy::needless_range_loop)]
     for i in 0..n {
         let (net, cumulative) = fold_steps(paths[i]);
         let (ep, eph) = endpoints(paths[i]);

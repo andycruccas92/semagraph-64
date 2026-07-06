@@ -20,7 +20,7 @@ use std::process::ExitCode;
 
 use semagraph_core_rs::{
     lookup_transition64, pack_transition64, project_trajectory, transition_index64,
-    Transition64Entry, TrajectoryProjection,
+    TrajectoryProjection, Transition64Entry,
 };
 
 /// Module-scope names, indexed by `ModuleScopeCode`. Mirrors `regimes.ts`.
@@ -212,7 +212,10 @@ fn render_transition(ctx: &Ctx, entry: &Transition64Entry) {
     } else {
         println!("source:       {}  ({:06b})", entry.source, entry.source);
         println!("target:       {}  ({:06b})", entry.target, entry.target);
-        println!("mask:         {}  ({:06b})", entry.mutation_mask, entry.mutation_mask);
+        println!(
+            "mask:         {}  ({:06b})",
+            entry.mutation_mask, entry.mutation_mask
+        );
         println!("distance:     {}", entry.distance);
         println!("lower_dist:   {}", entry.lower_distance);
         println!("upper_dist:   {}", entry.upper_distance);
@@ -284,9 +287,15 @@ fn print_compress_human(path: &[u8], p: &TrajectoryProjection) {
         path.len(),
         path.len() - 1
     );
-    println!("net_mutation:   {}  ({:03b})", p.net_mutation, p.net_mutation);
+    println!(
+        "net_mutation:   {}  ({:03b})",
+        p.net_mutation, p.net_mutation
+    );
     println!("cumulative_d:   {}", p.cumulative_distance);
-    println!("endpoint:       {} \u{2192} {}  (code {})", source, target, p.endpoint);
+    println!(
+        "endpoint:       {} \u{2192} {}  (code {})",
+        source, target, p.endpoint
+    );
     println!("shape:          {}", join_space(&p.shape));
     println!("dwell:          {}", join_space_u32(&p.dwell));
     println!("exact_key:      {}", exact_key(path));
@@ -373,8 +382,18 @@ fn cmd_compare(ctx: &Ctx, rest: &[String]) -> Result<(), CliError> {
         println!("same_endpoint:  {}", same_endpoint);
         println!("same_shape:     {}", out_same_shape);
         println!("same_dwell:     {}", out_same_dwell);
-        println!("path_a:         {}  {}  {}", exact_key(&left), shape_l, dwell_l);
-        println!("path_b:         {}  {}  {}", exact_key(&right), shape_r, dwell_r);
+        println!(
+            "path_a:         {}  {}  {}",
+            exact_key(&left),
+            shape_l,
+            dwell_l
+        );
+        println!(
+            "path_b:         {}  {}  {}",
+            exact_key(&right),
+            shape_r,
+            dwell_r
+        );
         println!("rationale:      {}", rationale);
     }
     Ok(())
