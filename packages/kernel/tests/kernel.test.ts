@@ -59,7 +59,7 @@ const RULE: TransitionRule<DemoState> = {
   allowedAuthorities: ["observed", "simulated"]
 };
 
-describe("@semagraph/kernel", () => {
+describe("@semagraph-64/kernel", () => {
   it("derives a selected state from explicit parameters and predicates", () => {
     const snapshot = { pressure: 0.2, cohesion: 0.8, constraint: false } as const;
     assertValidParameterSnapshot(PARAMETERS, snapshot);

@@ -18,7 +18,7 @@ alphabet (64 states, 4096 transitions). It computes structural facts; it does
 ## Repository layout
 
 ```
-packages/kernel           TypeScript reference kernel  (@semagraph/kernel, published to npm)
+packages/kernel           TypeScript reference kernel  (@semagraph-64/kernel, published to npm)
 packages/state64-adapter  State64/Q6 adapter + parity-fixture generators
 packages/renderer-svg      SVG renderer
 packages/core-rs          Rust core            (semagraph-core-rs, crates.io)

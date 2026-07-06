@@ -1,4 +1,4 @@
-import { assertValidParameterSnapshot, assertValidPredicateParameterReferences, evaluatePredicateExpression } from "@semagraph/kernel";
+import { assertValidParameterSnapshot, assertValidPredicateParameterReferences, evaluatePredicateExpression } from "@semagraph-64/kernel";
 import type { EncodedState64, State64EncodingDecision, State64EncodingDefinition } from "./types.js";
 import { createBinaryState64 } from "./hypercube.js";
 

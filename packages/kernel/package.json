@@ -1,5 +1,5 @@
 {
-  "name": "@semagraph/kernel",
+  "name": "@semagraph-64/kernel",
   "version": "0.7.0",
   "description": "Domain-neutral parametric state-transition kernel for SemaGraph. Deterministic, dependency-free classifier and compressor for state-transition trajectories.",
   "type": "module",

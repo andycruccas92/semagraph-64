@@ -3,7 +3,7 @@
 // Output: packages/core-rs/tests/fixtures/shape-parity.json
 //
 // The fixture is produced by the TypeScript reference implementation in
-// `@semagraph/kernel`'s `shapes.ts` and is the authority the Rust batch port
+// `@semagraph-64/kernel`'s `shapes.ts` and is the authority the Rust batch port
 // (`packages/core-rs/src/shapes.rs`) is checked against. For each Q3 trajectory
 // it records the run-collapsed shape, the dwell vector, and the declared lossy
 // projections (net mutation, endpoint code, endpoint Hamming distance) plus the
@@ -27,7 +27,7 @@ import {
   netMutationQ3,
   normalizePathRunCollapse,
   pathQ3
-} from "@semagraph/kernel";
+} from "@semagraph-64/kernel";
 
 const here = dirname(fileURLToPath(import.meta.url));
 const outPath = resolve(here, "../../core-rs/tests/fixtures/shape-parity.json");

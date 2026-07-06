@@ -19,7 +19,7 @@ on:
 
 jobs:
   npm:
-    name: Publish @semagraph/kernel to npm
+    name: Publish @semagraph-64/kernel to npm
     runs-on: ubuntu-latest
     permissions:
       contents: read

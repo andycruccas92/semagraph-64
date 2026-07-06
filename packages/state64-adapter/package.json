@@ -20,7 +20,7 @@
     "generate:shape-parity-fixture": "node scripts/generate-shape-parity-fixture.mjs"
   },
   "dependencies": {
-    "@semagraph/kernel": "workspace:*"
+    "@semagraph-64/kernel": "workspace:*"
   },
   "devDependencies": {
     "typescript": "^5.7.2",

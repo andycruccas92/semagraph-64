@@ -1,4 +1,4 @@
-import type { ParameterDefinition, ParameterSnapshot, ParameterValue, PredicateExpression } from "@semagraph/kernel";
+import type { ParameterDefinition, ParameterSnapshot, ParameterValue, PredicateExpression } from "@semagraph-64/kernel";
 
 export type BinaryBitValue = 0 | 1;
 export type BitVector3 = readonly [BinaryBitValue, BinaryBitValue, BinaryBitValue];

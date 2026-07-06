@@ -1,4 +1,4 @@
-# @semagraph/kernel
+# @semagraph-64/kernel
 
 Domain-neutral parametric **state-transition kernel** for SemaGraph.
 
@@ -14,7 +14,7 @@ guess, call the network, or carry any runtime dependency.
 ## Install
 
 ```bash
-npm install @semagraph/kernel
+npm install @semagraph-64/kernel
 ```
 
 ## What it does
@@ -32,7 +32,7 @@ The kernel is organized as a pipeline of pure functions:
 ## Quick example
 
 ```ts
-import { pathQ3, shapeKey, dwellSignature, compareTrajectories } from "@semagraph/kernel";
+import { pathQ3, shapeKey, dwellSignature, compareTrajectories } from "@semagraph-64/kernel";
 
 const a = pathQ3([0, 1, 3]);
 const b = pathQ3([0, 1, 1, 3]);
@@ -46,7 +46,7 @@ compareTrajectories(a, b).relation; // "same_form_different_duration"
 Classifying a transition's regime:
 
 ```ts
-import { classifyTransitionRegime } from "@semagraph/kernel";
+import { classifyTransitionRegime } from "@semagraph-64/kernel";
 
 classifyTransitionRegime(transitionResult).regimeClass;
 // "no_change" | "local_adjustment" | "partial_reconfiguration"
