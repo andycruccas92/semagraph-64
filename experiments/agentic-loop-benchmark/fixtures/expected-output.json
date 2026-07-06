@@ -1,0 +1,18 @@
+{
+  "sourceStateId": "S64-000000",
+  "targetStateId": "S64-101010",
+  "states": [
+    "S64-000000",
+    "S64-100000",
+    "S64-101000",
+    "S64-101010"
+  ],
+  "transitionCount": 3,
+  "changedMasks": [
+    "M64-100000",
+    "M64-001000",
+    "M64-000010"
+  ],
+  "netMutationMask": "M64-101010",
+  "cumulativeDistance": 3
+}

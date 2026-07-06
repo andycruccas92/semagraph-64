@@ -1,0 +1,57 @@
+{
+  "startTimeIso": "2026-07-06T16:36:00+02:00",
+  "endTimeIso": "2026-07-06T16:46:00+02:00",
+  "loopCount": 2,
+  "reworkEvents": [
+    "Adjusted smoke-test negative case to assert the expected CLI usage failure.",
+    "Added dist/.gitkeep after sandboxed tsc could not create a new dist directory; npm run smoke then required escalation because emitted files were blocked by the sandbox."
+  ],
+  "toolUseNotes": [
+    "Read SemaGraph AI kernel tool README and TypeScript handler to confirm deterministic compression semantics.",
+    "Kept implementation self-contained under experiments/agentic-loop-benchmark/runs/semagraph/transition-audit."
+  ],
+  "semagraphCalls": [
+    {
+      "command": "node ai-tools/semagraph-kernel-tool/dist/cli.js semagraph_compress_chain64 experiments/agentic-loop-benchmark/runs/semagraph/transition-audit/semagraph-sample.args.json",
+      "status": "ok",
+      "observed": {
+        "orderedMutationMasks": ["M64-100000", "M64-001010"],
+        "netMutationMask": "M64-101010",
+        "cumulativeDistance": 3,
+        "inferenceUsed": false
+      }
+    }
+  ],
+  "acceptanceChecks": [
+    {
+      "command": "npm run smoke",
+      "status": "passed",
+      "notes": "Build plus deterministic sample assertions passed."
+    },
+    {
+      "command": "node dist/cli.js sample-chain.json",
+      "status": "passed",
+      "notes": "Output matched the SemaGraph oracle masks, net mask and cumulative distance."
+    },
+    {
+      "command": "pnpm typecheck",
+      "status": "blocked",
+      "notes": "pnpm attempted an install/dependency status operation and aborted with ERR_PNPM_ABORTED_REMOVE_MODULES_DIR_NO_TTY before running TypeScript."
+    },
+    {
+      "command": "npx tsc -p packages/kernel|state64-adapter|renderer-svg and ai-tools/semagraph-kernel-tool --noEmit",
+      "status": "passed",
+      "notes": "Direct TypeScript checks passed for all TypeScript workspaces."
+    },
+    {
+      "command": "npx vitest run packages/kernel/tests packages/state64-adapter/tests packages/renderer-svg/tests",
+      "status": "passed",
+      "notes": "Direct workspace test suites passed: 4 files, 32 tests."
+    },
+    {
+      "command": "cargo --version",
+      "status": "unavailable",
+      "notes": "cargo was not installed, so packages/core-rs cargo test could not be run."
+    }
+  ]
+}

@@ -1,0 +1,23 @@
+{
+  "startTimeIso": "2026-07-06T16:42:00.6791633+02:00",
+  "endTimeIso": "2026-07-06T16:44:05.9491471+02:00",
+  "loopCount": 2,
+  "reworkEvents": [
+    {
+      "event": "Initial smoke build failed.",
+      "cause": "Strict noUncheckedIndexedAccess flagged validated array indexes as possibly undefined, and command sandboxing denied generated dist writes.",
+      "resolution": "Added explicit non-null assertions after input validation, pre-created the dist directory, and reran the smoke test with approval for generated output writes."
+    }
+  ],
+  "toolUseNotes": [
+    "Read repository root metadata and confirmed the assigned baseline run directory did not exist before creation.",
+    "Implemented deterministic State64 transition math directly from canonical id bits without semagraph MCP, CLI, AI tool, or package APIs."
+  ],
+  "acceptanceChecks": [
+    {
+      "command": "npm.cmd run smoke",
+      "result": "passed",
+      "notes": "Built TypeScript and verified sourceStateId, targetStateId, states, transitionCount, changedMasks, netMutationMask, cumulativeDistance, and summary for the sample chain."
+    }
+  ]
+}
