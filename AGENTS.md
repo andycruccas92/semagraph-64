@@ -1,8 +1,8 @@
-# AGENTS — SemaGraph v0.6
+# AGENTS — SemaGraph v0.7
 
 ## Operating boundary
 
-SemaGraph v0.6 is a deterministic observed-state anchoring and transition-chain compression kernel. Do not reintroduce symbolic lineage terminology. Treat State64/Q6 as pure finite boolean mathematics.
+SemaGraph v0.7 is a deterministic observed-state anchoring and transition-chain compression kernel. Do not reintroduce symbolic lineage terminology. Treat State64/Q6 as pure finite boolean mathematics.
 
 ## Development rules
 

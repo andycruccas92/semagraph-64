@@ -1,6 +1,6 @@
 # SemaGraph Core Skill
 
-SemaGraph v0.5 treats State64 as a pure mathematical transition space.
+SemaGraph v0.7 treats State64 as a pure mathematical transition space.
 
 Rules:
 

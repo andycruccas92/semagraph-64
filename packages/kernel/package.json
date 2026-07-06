@@ -1,18 +1,18 @@
 {
   "name": "@semagraph/kernel",
-  "version": "0.6.0",
+  "version": "0.7.0",
   "description": "Domain-neutral parametric state-transition kernel for SemaGraph. Deterministic, dependency-free classifier and compressor for state-transition trajectories.",
   "type": "module",
   "license": "Apache-2.0",
   "author": "Andy Cruccas",
-  "homepage": "https://github.com/OWNER/semagraph#readme",
+  "homepage": "https://github.com/andycruccas92/semagraph#readme",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/OWNER/semagraph.git",
+    "url": "git+https://github.com/andycruccas92/semagraph.git",
     "directory": "packages/kernel"
   },
   "bugs": {
-    "url": "https://github.com/OWNER/semagraph/issues"
+    "url": "https://github.com/andycruccas92/semagraph/issues"
   },
   "keywords": [
     "state-machine",
