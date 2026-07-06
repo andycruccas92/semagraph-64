@@ -4,7 +4,7 @@
   "targetStateId": "S64-101001",
   "sourceNumber": 0,
   "targetNumber": 41,
-  "executable": "C:/Users/gregg/AppData/Local/Temp/semagraph-rs-v0.7.0/unzipped/packages/target/x86_64-pc-windows-msvc/release/semagraph.exe",
+  "executable": "SEMAGRAPH_RS_BIN",
   "args": [
     "classify",
     "0",

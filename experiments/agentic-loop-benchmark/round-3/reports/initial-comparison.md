@@ -3,7 +3,7 @@
 Generated from:
 
 ```bash
-SEMAGRAPH_RS_BIN=<semagraph.exe> node experiments/agentic-loop-benchmark/round-3/scripts/evaluate.mjs
+SEMAGRAPH_RS_BIN=<semagraph.exe> node experiments/agentic-loop-benchmark/round-3/scripts/evaluate.mjs --strict
 ```
 
 Fixture: `fixtures/transitions.json`
@@ -30,15 +30,26 @@ tool and the current Rust CLI expose that surface cleanly.
 | Correct against fixture | yes | yes | yes |
 | Quality score | 1.00 | 1.00 | 1.00 |
 | Quality checks passed | 5 / 5 | 5 / 5 | 5 / 5 |
-| Agent-log duration | 294.293 s | 2.527 s | 0.284 s |
 | Loop count | 1 | 1 | 1 |
 | Rework events | 2 | 0 | 0 |
 | SemaGraph oracle calls | 0 | 16 | 16 |
 | Token usage | unavailable | unavailable | unavailable |
 
-Agent-log durations are reported from each worker's own `agent-log.json`. The
-current sub-agent runtime does not expose authoritative host-level wall-clock or
-token usage, so these timings are useful but not billing-grade telemetry.
+Worker `agent-log.json` files include raw start/end durations, but those values
+are not used as comparative delivery-speed evidence in this report. In this run
+the baseline log includes time outside the isolated experimental task, so using
+that value as a headline latency metric would be misleading.
+
+Raw, non-normalized worker-log durations were:
+
+| Variant | Raw worker-log duration |
+| --- | ---: |
+| baseline | 294.293 s |
+| semagraph-ts | 2.527 s |
+| semagraph-rs | 0.238 s |
+
+These values are retained as provenance only. The current sub-agent runtime does
+not expose authoritative host-level wall-clock or token usage.
 
 ## Oracle Runtime Benchmark
 
@@ -47,11 +58,11 @@ transitions, repeated 3 times.
 
 | Runtime | Calls | Total duration | Average per call | Correct |
 | --- | ---: | ---: | ---: | --- |
-| semagraph-ts | 48 | 4750.422 ms | 98.967 ms | yes |
-| semagraph-rs | 48 | 490.063 ms | 10.210 ms | yes |
+| semagraph-ts | 48 | 3869.242 ms | 80.609 ms | yes |
+| semagraph-rs | 48 | 384.674 ms | 8.014 ms | yes |
 
-On this run the Rust CLI surface was about 9.69x faster per oracle call than the
-TypeScript CLI surface, an 89.7% lower average per-call time.
+On this run the Rust CLI surface was about 10.06x faster per oracle call than the
+TypeScript CLI surface, a 90.1% lower average per-call time.
 
 This measures published tool surfaces, not pure in-process kernel time:
 
@@ -63,11 +74,12 @@ This measures published tool surfaces, not pure in-process kernel time:
 Round 3 removes the quality gap seen in Round 2: all three implementations
 matched the deterministic expected output.
 
-The useful signal is runtime cost. When the task is aligned to direct Q6
-transition classification, the Rust oracle is materially cheaper than the TS
-oracle in per-call latency. That supports the hypothesis that TS process/tool
-overhead was a large part of the Round 2 latency story, while still keeping the
-TypeScript layer as the reference API/schema/integration surface.
+The useful latency signal is the isolated oracle microbenchmark, not the raw
+worker-log duration. When the task is aligned to direct Q6 transition
+classification, the Rust oracle is materially cheaper than the TS oracle in
+per-call latency. That supports the hypothesis that TS process/tool overhead was
+a large part of the Round 2 latency story, while still keeping the TypeScript
+layer as the reference API/schema/integration surface.
 
 Token consumption remains unavailable. The benchmark keeps `tokenUsage` fields
 in every `agent-log.json` so real usage can be attached later when the host

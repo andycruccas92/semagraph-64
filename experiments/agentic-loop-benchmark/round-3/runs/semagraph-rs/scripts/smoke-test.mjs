@@ -18,8 +18,8 @@ const fixturePath = join(
 );
 const cliPath = join(runDir, "dist", "transition-matrix-profiler.js");
 const oracleDir = join(runDir, "semagraph-oracle");
-const oracleExe =
-  "C:/Users/gregg/AppData/Local/Temp/semagraph-rs-v0.7.0/unzipped/packages/target/x86_64-pc-windows-msvc/release/semagraph.exe";
+const oracleExe = process.env.SEMAGRAPH_RS_BIN ?? join(runDir, "runtime", "semagraph.exe");
+const oracleSource = process.env.SEMAGRAPH_RS_BIN ? "SEMAGRAPH_RS_BIN" : "round-3/runs/semagraph-rs/runtime/semagraph.exe";
 
 mkdirSync(oracleDir, { recursive: true });
 
@@ -49,7 +49,7 @@ for (const transition of dataset.transitions) {
     targetStateId: transition.targetStateId,
     sourceNumber,
     targetNumber,
-    executable: oracleExe,
+    executable: oracleSource,
     args,
   };
   writeFileSync(

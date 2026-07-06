@@ -1,6 +1,6 @@
 {
   "benchmark": "agentic-loop-benchmark-round-3",
-  "generatedAt": "2026-07-06T15:53:42.030Z",
+  "generatedAt": "2026-07-06T15:55:47.511Z",
   "fixture": "fixtures/transitions.json",
   "strict": true,
   "results": [
@@ -421,8 +421,8 @@
           }
         ]
       },
-      "durationMs": 284,
-      "durationSeconds": 0.284,
+      "durationMs": 238,
+      "durationSeconds": 0.238,
       "loopCount": 1,
       "reworkEventCount": 0,
       "reworkEvents": [],
@@ -697,7 +697,7 @@
     }
   ],
   "oracleBenchmark": {
-    "generatedAt": "2026-07-06T15:53:36.788Z",
+    "generatedAt": "2026-07-06T15:55:43.256Z",
     "fixture": "fixtures/transitions.json",
     "repeats": 3,
     "ts": {
@@ -707,8 +707,8 @@
       "failures": [],
       "callCount": 48,
       "repeats": 3,
-      "durationMs": 4750.422,
-      "averageMsPerCall": 98.967,
+      "durationMs": 3869.242,
+      "averageMsPerCall": 80.609,
       "surface": "node ai-tools/semagraph-kernel-tool/dist/cli.js semagraph_lookup_transition64 <args.json>"
     },
     "rs": {
@@ -719,8 +719,8 @@
       "failures": [],
       "callCount": 48,
       "repeats": 3,
-      "durationMs": 490.063,
-      "averageMsPerCall": 10.21,
+      "durationMs": 384.674,
+      "averageMsPerCall": 8.014,
       "surface": "semagraph classify <sourceNumber> <targetNumber> --json"
     }
   }
