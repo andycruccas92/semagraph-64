@@ -1,0 +1,247 @@
+{
+  "benchmark": "baseline-vs-rust-metrology",
+  "generatedAt": "2026-07-06T16:03:30.448Z",
+  "config": {
+    "sampleSize": 128,
+    "repeats": 7,
+    "warmups": 2,
+    "inprocessIterations": 10000,
+    "sampleStrategy": "stratified round-robin over mutation distances 0..6"
+  },
+  "environment": {
+    "node": "v24.13.0",
+    "platform": "win32",
+    "arch": "x64",
+    "rustBinary": "C:\\Users\\gregg\\AppData\\Local\\Temp\\semagraph-rs-v0.7.0\\unzipped\\packages\\target\\x86_64-pc-windows-msvc\\release\\semagraph.exe"
+  },
+  "rustVerify": {
+    "available": true,
+    "verified": 4096,
+    "total": 4096,
+    "ok": true
+  },
+  "measurements": [
+    {
+      "name": "baseline-js-inprocess",
+      "boundary": "in-process-lower-bound",
+      "valid": true,
+      "validationFailures": [],
+      "repeats": 7,
+      "warmups": 2,
+      "callsPerRepeat": 1280000,
+      "totalCalls": 8960000,
+      "totalMs": {
+        "min": 28.2962,
+        "median": 35.329,
+        "mean": 34.902771,
+        "p95": 40.0069,
+        "max": 40.0069,
+        "stdev": 3.354313,
+        "mad": 1.3051,
+        "cv": 0.096104
+      },
+      "perCallMs": {
+        "min": 0.000022,
+        "median": 0.000028,
+        "mean": 0.000027,
+        "p95": 0.000031,
+        "max": 0.000031,
+        "stdev": 0.000003,
+        "mad": 0.000001,
+        "cv": 0.096104
+      },
+      "samples": [
+        {
+          "sample": 0,
+          "calls": 1280000,
+          "totalMs": 28.2962,
+          "perCallMs": 0.000022
+        },
+        {
+          "sample": 1,
+          "calls": 1280000,
+          "totalMs": 34.3364,
+          "perCallMs": 0.000027
+        },
+        {
+          "sample": 2,
+          "calls": 1280000,
+          "totalMs": 33.1915,
+          "perCallMs": 0.000026
+        },
+        {
+          "sample": 3,
+          "calls": 1280000,
+          "totalMs": 36.5253,
+          "perCallMs": 0.000029
+        },
+        {
+          "sample": 4,
+          "calls": 1280000,
+          "totalMs": 40.0069,
+          "perCallMs": 0.000031
+        },
+        {
+          "sample": 5,
+          "calls": 1280000,
+          "totalMs": 35.329,
+          "perCallMs": 0.000028
+        },
+        {
+          "sample": 6,
+          "calls": 1280000,
+          "totalMs": 36.6341,
+          "perCallMs": 0.000029
+        }
+      ]
+    },
+    {
+      "name": "baseline-node-cli",
+      "boundary": "cli-per-transition",
+      "valid": true,
+      "validationFailures": [],
+      "repeats": 7,
+      "warmups": 2,
+      "callsPerRepeat": 128,
+      "totalCalls": 896,
+      "totalMs": {
+        "min": 7157.7917,
+        "median": 7524.4304,
+        "mean": 7605.950914,
+        "p95": 8318.2785,
+        "max": 8318.2785,
+        "stdev": 360.25008,
+        "mad": 260.0311,
+        "cv": 0.047364
+      },
+      "perCallMs": {
+        "min": 55.920248,
+        "median": 58.784613,
+        "mean": 59.421492,
+        "p95": 64.986551,
+        "max": 64.986551,
+        "stdev": 2.814454,
+        "mad": 2.031493,
+        "cv": 0.047364
+      },
+      "samples": [
+        {
+          "sample": 0,
+          "calls": 128,
+          "totalMs": 7591.7677,
+          "perCallMs": 59.310685
+        },
+        {
+          "sample": 1,
+          "calls": 128,
+          "totalMs": 7868.1642,
+          "perCallMs": 61.470033
+        },
+        {
+          "sample": 2,
+          "calls": 128,
+          "totalMs": 8318.2785,
+          "perCallMs": 64.986551
+        },
+        {
+          "sample": 3,
+          "calls": 128,
+          "totalMs": 7264.3993,
+          "perCallMs": 56.75312
+        },
+        {
+          "sample": 4,
+          "calls": 128,
+          "totalMs": 7524.4304,
+          "perCallMs": 58.784613
+        },
+        {
+          "sample": 5,
+          "calls": 128,
+          "totalMs": 7157.7917,
+          "perCallMs": 55.920248
+        },
+        {
+          "sample": 6,
+          "calls": 128,
+          "totalMs": 7516.8246,
+          "perCallMs": 58.725192
+        }
+      ]
+    },
+    {
+      "name": "semagraph-rs-cli",
+      "boundary": "cli-per-transition",
+      "valid": true,
+      "validationFailures": [],
+      "repeats": 7,
+      "warmups": 2,
+      "callsPerRepeat": 128,
+      "totalCalls": 896,
+      "totalMs": {
+        "min": 1489.7072,
+        "median": 1600.6387,
+        "mean": 1600.3544,
+        "p95": 1803.1881,
+        "max": 1803.1881,
+        "stdev": 92.872396,
+        "mad": 37.1164,
+        "cv": 0.058032
+      },
+      "perCallMs": {
+        "min": 11.638338,
+        "median": 12.50499,
+        "mean": 12.502769,
+        "p95": 14.087407,
+        "max": 14.087407,
+        "stdev": 0.725566,
+        "mad": 0.289972,
+        "cv": 0.058032
+      },
+      "samples": [
+        {
+          "sample": 0,
+          "calls": 128,
+          "totalMs": 1489.7072,
+          "perCallMs": 11.638338
+        },
+        {
+          "sample": 1,
+          "calls": 128,
+          "totalMs": 1563.5223,
+          "perCallMs": 12.215018
+        },
+        {
+          "sample": 2,
+          "calls": 128,
+          "totalMs": 1606.4162,
+          "perCallMs": 12.550127
+        },
+        {
+          "sample": 3,
+          "calls": 128,
+          "totalMs": 1612.4911,
+          "perCallMs": 12.597587
+        },
+        {
+          "sample": 4,
+          "calls": 128,
+          "totalMs": 1526.5172,
+          "perCallMs": 11.925916
+        },
+        {
+          "sample": 5,
+          "calls": 128,
+          "totalMs": 1803.1881,
+          "perCallMs": 14.087407
+        },
+        {
+          "sample": 6,
+          "calls": 128,
+          "totalMs": 1600.6387,
+          "perCallMs": 12.50499
+        }
+      ]
+    }
+  ]
+}
