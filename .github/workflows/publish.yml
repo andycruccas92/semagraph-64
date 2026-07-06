@@ -43,7 +43,15 @@ jobs:
         # --provenance requires the workflow to run from a public repo; drop it if
         # publishing from a private repo. --access public is required for a scoped
         # package on its first publish (also set in package.json publishConfig).
-        run: npm publish --access public --provenance
+        run: |
+          package_name="$(node -p "require('./package.json').name")"
+          package_version="$(node -p "require('./package.json').version")"
+
+          if npm view "${package_name}@${package_version}" version >/dev/null 2>&1; then
+            echo "${package_name}@${package_version} already exists on npm; skipping."
+          else
+            npm publish --access public --provenance
+          fi
 
   crates:
     name: Publish crates to crates.io
@@ -60,7 +68,35 @@ jobs:
         if: ${{ env.CARGO_REGISTRY_TOKEN != '' }}
         # Order matters: `semagraph` depends on `semagraph-core-rs`, so the core
         # must be indexed on crates.io first. The sleep lets the index catch up.
+        # Reruns may see an already-published crate version; skip that case so
+        # the remaining publish/release work can continue.
         run: |
-          cargo publish -p semagraph-core-rs
+          publish_crate() {
+            package="$1"
+            version="$2"
+
+            set +e
+            output="$(cargo publish -p "$package" 2>&1)"
+            status="$?"
+            set -e
+
+            printf '%s\n' "$output"
+
+            if [ "$status" -eq 0 ]; then
+              return 0
+            fi
+
+            if printf '%s\n' "$output" | grep -q "crate ${package}@${version} already exists"; then
+              echo "${package}@${version} already exists on crates.io; skipping."
+              return 0
+            fi
+
+            return "$status"
+          }
+
+          core_version="$(grep -m1 '^version = ' core-rs/Cargo.toml | cut -d '"' -f2)"
+          cli_version="$(grep -m1 '^version = ' cli/Cargo.toml | cut -d '"' -f2)"
+
+          publish_crate semagraph-core-rs "$core_version"
           sleep 30
-          cargo publish -p semagraph
+          publish_crate semagraph "$cli_version"
