@@ -17,9 +17,12 @@ jobs:
         with:
           node-version: 22
       - run: pnpm install --frozen-lockfile=false
+      # Build first: packages that consume @semagraph/kernel (state64-adapter,
+      # renderer-svg) resolve its emitted dist/*.d.ts, which only exist after a
+      # build. pnpm -r builds in topological order, so the kernel compiles first.
+      - run: pnpm build
       - run: pnpm typecheck
       - run: pnpm test
-      - run: pnpm build
       # Regenerate the parity fixture from the TypeScript reference and fail if it
       # differs from the committed copy. This guarantees the golden file the Rust
       # core is tested against can never silently drift from the reference.
