@@ -1,0 +1,52 @@
+{
+  "startTimeIso": "2026-07-06T17:08:56.4690812+02:00",
+  "endTimeIso": "2026-07-06T17:16:07.1911840+02:00",
+  "loopCount": 1,
+  "reworkEvents": [
+    {
+      "event": "The common fixture path was absent during the first read attempt and appeared later; output.json was produced for the common fixture once it was available."
+    },
+    {
+      "event": "Command-created artifact writes for dist/output paths were rejected by the sandbox, so the package uses no-emit TypeScript validation and the smoke test compares the checked output.json artifact to fresh CLI stdout."
+    }
+  ],
+  "toolUseNotes": [
+    "Used shell commands for inspection, TypeScript typechecking, and smoke execution.",
+    "Used apply_patch for all manual file creation and edits.",
+    "Did not use any SemaGraph tool, package, CLI, or MCP capability.",
+    "Did not infer, repair, or synthesize observations; all transition math is finite six-bit XOR and bit counting."
+  ],
+  "acceptanceChecks": [
+    {
+      "name": "State64 validation",
+      "status": "passed",
+      "detail": "CLI rejects states that do not match S64-[01]{6}."
+    },
+    {
+      "name": "Scenario length validation",
+      "status": "passed",
+      "detail": "CLI rejects scenario chains with fewer than 2 states."
+    },
+    {
+      "name": "Deterministic transition math",
+      "status": "passed",
+      "detail": "Adjacent masks, net mutation masks, distances, volatility classes, aggregate totals, histograms, and comparisons are computed without inference."
+    },
+    {
+      "name": "TypeScript typecheck",
+      "status": "passed",
+      "detail": "npm.cmd run smoke executed tsc -p tsconfig.json --noEmit."
+    },
+    {
+      "name": "Smoke test",
+      "status": "passed",
+      "detail": "npm.cmd run smoke passed against experiments/agentic-loop-benchmark/round-2/fixtures/scenarios.json."
+    },
+    {
+      "name": "Write scope",
+      "status": "passed",
+      "detail": "All intentional writes were under experiments/agentic-loop-benchmark/round-2/runs/baseline/."
+    }
+  ],
+  "tokenUsage": "unavailable"
+}

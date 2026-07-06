@@ -1,0 +1,118 @@
+{
+  "startTimeIso": "2026-07-06T17:00:00+02:00",
+  "endTimeIso": "2026-07-06T17:21:54.7751918+02:00",
+  "loopCount": 5,
+  "reworkEvents": [
+    "Adjusted the smoke-test negative case to assert the expected nonzero CLI rejection instead of allowing execFileSync to throw.",
+    "Added dist placeholders and used approved escalation after the sandbox blocked TypeScript from creating or overwriting generated JS files.",
+    "Updated the implementation after the shared round-2 fixture and evaluator became visible: scenario output now includes states, cumulativeDistanceDelta is absolute, and histogram key order follows scenario order.",
+    "Regenerated output.json for the actual common fixture after first using a local smoke fixture while the common fixture path was unavailable.",
+    "Made dist/transition-workbench.js executable because the round-2 evaluator prefers that candidate before dist/cli.js."
+  ],
+  "toolUseNotes": [
+    "Read the SemaGraph AI kernel tool and State64 adapter compression contract before implementing the workbench.",
+    "Used SemaGraph deterministic oracle checkpoints for every common fixture scenario: alpha, beta, gamma, delta and zeta.",
+    "Kept the final transition-workbench CLI self-contained inside the run directory with no runtime dependency on the SemaGraph tool.",
+    "pnpm workspace typecheck/test commands were attempted but blocked before execution by ERR_PNPM_ABORTED_REMOVE_MODULES_DIR_NO_TTY; direct TypeScript and Vitest commands were used as non-mutating validation fallback."
+  ],
+  "semagraphCalls": [
+    {
+      "scenarioId": "alpha",
+      "command": "node ai-tools/semagraph-kernel-tool/dist/cli.js semagraph_compress_chain64 experiments/agentic-loop-benchmark/round-2/runs/semagraph/semagraph-oracle/alpha.args.json",
+      "status": "ok",
+      "observed": {
+        "orderedMutationMasks": ["M64-100000", "M64-001000", "M64-000010", "M64-010000"],
+        "netMutationMask": "M64-111010",
+        "cumulativeDistance": 4,
+        "inferenceUsed": false
+      }
+    },
+    {
+      "scenarioId": "beta",
+      "command": "node ai-tools/semagraph-kernel-tool/dist/cli.js semagraph_compress_chain64 experiments/agentic-loop-benchmark/round-2/runs/semagraph/semagraph-oracle/beta.args.json",
+      "status": "ok",
+      "observed": {
+        "orderedMutationMasks": ["M64-010000", "M64-000100", "M64-100000", "M64-000010"],
+        "netMutationMask": "M64-110110",
+        "cumulativeDistance": 4,
+        "inferenceUsed": false
+      }
+    },
+    {
+      "scenarioId": "gamma",
+      "command": "node ai-tools/semagraph-kernel-tool/dist/cli.js semagraph_compress_chain64 experiments/agentic-loop-benchmark/round-2/runs/semagraph/semagraph-oracle/gamma.args.json",
+      "status": "ok",
+      "observed": {
+        "orderedMutationMasks": ["M64-100000", "M64-010000", "M64-001000", "M64-000100", "M64-000010", "M64-000001"],
+        "netMutationMask": "M64-111111",
+        "cumulativeDistance": 6,
+        "inferenceUsed": false
+      }
+    },
+    {
+      "scenarioId": "delta",
+      "command": "node ai-tools/semagraph-kernel-tool/dist/cli.js semagraph_compress_chain64 experiments/agentic-loop-benchmark/round-2/runs/semagraph/semagraph-oracle/delta.args.json",
+      "status": "ok",
+      "observed": {
+        "orderedMutationMasks": ["M64-000100", "M64-001000"],
+        "netMutationMask": "M64-001100",
+        "cumulativeDistance": 2,
+        "inferenceUsed": false
+      }
+    },
+    {
+      "scenarioId": "zeta",
+      "command": "node ai-tools/semagraph-kernel-tool/dist/cli.js semagraph_compress_chain64 experiments/agentic-loop-benchmark/round-2/runs/semagraph/semagraph-oracle/zeta.args.json",
+      "status": "ok",
+      "observed": {
+        "orderedMutationMasks": ["M64-111111", "M64-111000", "M64-110111"],
+        "netMutationMask": "M64-110000",
+        "cumulativeDistance": 14,
+        "inferenceUsed": false
+      }
+    }
+  ],
+  "acceptanceChecks": [
+    {
+      "command": "npm.cmd run smoke",
+      "status": "passed",
+      "notes": "Build plus smoke fixture assertions passed; command required approved escalation because sandbox blocked TypeScript emit writes."
+    },
+    {
+      "command": "node dist/transition-workbench.js ../../fixtures/scenarios.json",
+      "status": "passed",
+      "notes": "Common fixture output was generated and comparable fields matched fixtures/expected-output.json."
+    },
+    {
+      "command": "npx.cmd tsc -p experiments/agentic-loop-benchmark/round-2/runs/semagraph/tsconfig.json --noEmit",
+      "status": "passed",
+      "notes": "Scoped workbench TypeScript check passed after final edits."
+    },
+    {
+      "command": "pnpm.cmd typecheck",
+      "status": "blocked",
+      "notes": "pnpm aborted before typechecking with ERR_PNPM_ABORTED_REMOVE_MODULES_DIR_NO_TTY while attempting dependency status/install handling."
+    },
+    {
+      "command": "npx.cmd tsc -p packages/kernel|packages/state64-adapter|packages/renderer-svg|ai-tools/semagraph-kernel-tool --noEmit",
+      "status": "passed",
+      "notes": "Direct TypeScript checks passed for the existing TypeScript workspaces."
+    },
+    {
+      "command": "pnpm.cmd test",
+      "status": "blocked",
+      "notes": "pnpm aborted before test execution with ERR_PNPM_ABORTED_REMOVE_MODULES_DIR_NO_TTY."
+    },
+    {
+      "command": "npx.cmd vitest run packages/kernel/tests packages/state64-adapter/tests packages/renderer-svg/tests",
+      "status": "passed",
+      "notes": "Direct Vitest suites passed: 4 files, 32 tests."
+    },
+    {
+      "command": "cargo --version",
+      "status": "unavailable",
+      "notes": "cargo was not installed, so packages/core-rs cargo test could not be run."
+    }
+  ],
+  "tokenUsage": "unavailable"
+}

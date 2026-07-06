@@ -1,0 +1,21 @@
+{
+  "scenarios": [
+    {
+      "id": "calm-ladder",
+      "states": ["S64-000000", "S64-100000", "S64-101000", "S64-101010"]
+    },
+    {
+      "id": "active-turn",
+      "states": ["S64-000000", "S64-111000", "S64-111001"]
+    },
+    {
+      "id": "volatile-return",
+      "states": ["S64-000000", "S64-111111", "S64-000000", "S64-111000"]
+    }
+  ],
+  "comparePairs": [
+    { "left": "calm-ladder", "right": "active-turn" },
+    { "left": "active-turn", "right": "volatile-return" },
+    { "left": "calm-ladder", "right": "calm-ladder" }
+  ]
+}

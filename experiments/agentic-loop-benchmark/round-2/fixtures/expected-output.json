@@ -1,0 +1,160 @@
+{
+  "scenarios": [
+    {
+      "id": "alpha",
+      "sourceStateId": "S64-000000",
+      "targetStateId": "S64-111010",
+      "states": [
+        "S64-000000",
+        "S64-100000",
+        "S64-101000",
+        "S64-101010",
+        "S64-111010"
+      ],
+      "transitionCount": 4,
+      "changedMasks": [
+        "M64-100000",
+        "M64-001000",
+        "M64-000010",
+        "M64-010000"
+      ],
+      "netMutationMask": "M64-111010",
+      "cumulativeDistance": 4,
+      "netDistance": 4,
+      "volatilityClass": "active"
+    },
+    {
+      "id": "beta",
+      "sourceStateId": "S64-000111",
+      "targetStateId": "S64-110001",
+      "states": [
+        "S64-000111",
+        "S64-010111",
+        "S64-010011",
+        "S64-110011",
+        "S64-110001"
+      ],
+      "transitionCount": 4,
+      "changedMasks": [
+        "M64-010000",
+        "M64-000100",
+        "M64-100000",
+        "M64-000010"
+      ],
+      "netMutationMask": "M64-110110",
+      "cumulativeDistance": 4,
+      "netDistance": 4,
+      "volatilityClass": "active"
+    },
+    {
+      "id": "gamma",
+      "sourceStateId": "S64-111111",
+      "targetStateId": "S64-000000",
+      "states": [
+        "S64-111111",
+        "S64-011111",
+        "S64-001111",
+        "S64-000111",
+        "S64-000011",
+        "S64-000001",
+        "S64-000000"
+      ],
+      "transitionCount": 6,
+      "changedMasks": [
+        "M64-100000",
+        "M64-010000",
+        "M64-001000",
+        "M64-000100",
+        "M64-000010",
+        "M64-000001"
+      ],
+      "netMutationMask": "M64-111111",
+      "cumulativeDistance": 6,
+      "netDistance": 6,
+      "volatilityClass": "active"
+    },
+    {
+      "id": "delta",
+      "sourceStateId": "S64-010101",
+      "targetStateId": "S64-011001",
+      "states": [
+        "S64-010101",
+        "S64-010001",
+        "S64-011001"
+      ],
+      "transitionCount": 2,
+      "changedMasks": [
+        "M64-000100",
+        "M64-001000"
+      ],
+      "netMutationMask": "M64-001100",
+      "cumulativeDistance": 2,
+      "netDistance": 2,
+      "volatilityClass": "calm"
+    },
+    {
+      "id": "zeta",
+      "sourceStateId": "S64-000000",
+      "targetStateId": "S64-110000",
+      "states": [
+        "S64-000000",
+        "S64-111111",
+        "S64-000111",
+        "S64-110000"
+      ],
+      "transitionCount": 3,
+      "changedMasks": [
+        "M64-111111",
+        "M64-111000",
+        "M64-110111"
+      ],
+      "netMutationMask": "M64-110000",
+      "cumulativeDistance": 14,
+      "netDistance": 2,
+      "volatilityClass": "volatile"
+    }
+  ],
+  "aggregate": {
+    "scenarioCount": 5,
+    "totalTransitions": 19,
+    "totalCumulativeDistance": 30,
+    "maxCumulativeDistanceScenarioId": "zeta",
+    "netMutationHistogram": {
+      "M64-111010": 1,
+      "M64-110110": 1,
+      "M64-111111": 1,
+      "M64-001100": 1,
+      "M64-110000": 1
+    }
+  },
+  "comparisons": [
+    {
+      "left": "alpha",
+      "right": "beta",
+      "sameNetMutationMask": false,
+      "cumulativeDistanceDelta": 0,
+      "sharedChangedMaskCount": 3
+    },
+    {
+      "left": "alpha",
+      "right": "delta",
+      "sameNetMutationMask": false,
+      "cumulativeDistanceDelta": 2,
+      "sharedChangedMaskCount": 1
+    },
+    {
+      "left": "gamma",
+      "right": "zeta",
+      "sameNetMutationMask": false,
+      "cumulativeDistanceDelta": 8,
+      "sharedChangedMaskCount": 0
+    },
+    {
+      "left": "beta",
+      "right": "zeta",
+      "sameNetMutationMask": false,
+      "cumulativeDistanceDelta": 10,
+      "sharedChangedMaskCount": 0
+    }
+  ]
+}

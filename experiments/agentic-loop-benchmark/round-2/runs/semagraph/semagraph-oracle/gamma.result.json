@@ -1,0 +1,12 @@
+{
+  "tool": "semagraph_compress_chain64",
+  "status": "ok",
+  "result": {
+    "sourceStateId": "S64-111111",
+    "targetStateId": "S64-000000",
+    "orderedMutationMasks": ["M64-100000", "M64-010000", "M64-001000", "M64-000100", "M64-000010", "M64-000001"],
+    "netMutationMask": "M64-111111",
+    "cumulativeDistance": 6,
+    "inferenceUsed": false
+  }
+}

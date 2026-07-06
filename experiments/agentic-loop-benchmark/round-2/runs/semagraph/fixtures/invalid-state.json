@@ -1,0 +1,9 @@
+{
+  "scenarios": [
+    {
+      "id": "bad-state",
+      "states": ["S64-000000", "S64-222222"]
+    }
+  ],
+  "comparePairs": []
+}

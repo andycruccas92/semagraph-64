@@ -1,0 +1,38 @@
+{
+  "scenarios": [
+    {
+      "id": "steady-rise",
+      "states": ["S64-000000", "S64-100000", "S64-110000", "S64-111000"]
+    },
+    {
+      "id": "active-shift",
+      "states": ["S64-010101", "S64-110101", "S64-111111", "S64-001111"]
+    },
+    {
+      "id": "wide-swing",
+      "states": ["S64-001100", "S64-111100", "S64-110011", "S64-000011"]
+    },
+    {
+      "id": "return-loop",
+      "states": ["S64-101010", "S64-101011", "S64-001011", "S64-001010"]
+    }
+  ],
+  "comparePairs": [
+    {
+      "left": "steady-rise",
+      "right": "active-shift"
+    },
+    {
+      "left": "active-shift",
+      "right": "wide-swing"
+    },
+    {
+      "left": "wide-swing",
+      "right": "return-loop"
+    },
+    {
+      "left": "steady-rise",
+      "right": "return-loop"
+    }
+  ]
+}
