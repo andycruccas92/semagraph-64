@@ -10,7 +10,7 @@ on the `main` branch only.
 Please report security issues privately rather than opening a public issue.
 
 - Preferred: use GitHub's **"Report a vulnerability"** (Security → Advisories) at
-  https://github.com/andycruccas92/semagraph/security/advisories/new
+  https://github.com/andycruccas92/semagraph-64/security/advisories/new
 - Or email: **a.cruccas92@yahoo.it** with the subject `SEMAGRAPH SECURITY`.
 
 Include a description, affected version/commit, and a minimal reproduction.

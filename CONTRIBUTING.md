@@ -54,7 +54,7 @@ can never silently diverge from the reference.
 
 ## Reporting bugs
 
-Open an issue at https://github.com/andycruccas92/semagraph/issues with a minimal
+Open an issue at https://github.com/andycruccas92/semagraph-64/issues with a minimal
 reproduction (the input trajectory or parameters, expected vs actual output).
 
 ## License
