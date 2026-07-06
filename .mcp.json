@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "semagraph": {
+      "command": "node",
+      "args": ["ai-tools/semagraph-kernel-tool/dist/mcp.js"]
+    }
+  }
+}
