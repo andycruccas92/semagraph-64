@@ -205,6 +205,7 @@ fn dispatch_tool(name: &str, args: &Json) -> Json {
         "semagraph_policy_context64" => tool_policy_context64(args),
         "semagraph_analyze_scenarios64" => tool_analyze_scenarios64(args),
         "semagraph_validate_policy_packet64" => tool_validate_policy_packet64(args),
+        "semagraph_analyze_observed_timeline64" => tool_analyze_observed_timeline64(args),
         "semagraph_verify_transition_basis" => tool_verify_transition_basis(),
         _ => Err(format!("Unknown SemaGraph tool: {name}")),
     };
@@ -481,6 +482,64 @@ fn tool_validate_policy_packet64(args: &Json) -> Result<Json, String> {
         ("expected", expected),
         ("inferenceUsed", Json::Bool(false)),
     ]))
+}
+
+fn tool_analyze_observed_timeline64(args: &Json) -> Result<Json, String> {
+    let timeline_id = get_string(args, "id")?;
+    let objective = optional_string(args, "objective")?;
+    let anchor_rule_version = optional_string(args, "anchorRuleVersion")?;
+    let snapshots = get_array(args, "snapshots")?;
+    if snapshots.len() < 2 {
+        return Err("observed timeline requires at least two snapshots".to_string());
+    }
+
+    let mut anchors = Vec::with_capacity(snapshots.len());
+    for snapshot in snapshots {
+        anchors.push(anchor_snapshot_json(snapshot)?);
+    }
+
+    let mut states = Vec::with_capacity(anchors.len());
+    for anchor in &anchors {
+        let state_id = get_string(anchor, "stateId")?;
+        states.push(state_id.to_string());
+    }
+
+    let scenario_input = ScenarioInput {
+        id: timeline_id.to_string(),
+        states,
+        objective: objective.map(str::to_string),
+    };
+    let scenario_report = analyze_scenario(&scenario_input)?;
+    let transition_packet =
+        build_policy_workbench_packet(&[scenario_input], &[], &BTreeSet::new())?;
+    let selected_action = selected_action(&scenario_report.policy_readiness);
+    let selected_priority = policy_priority(&scenario_report.volatility_class);
+
+    let mut fields = vec![
+        ("timelineId", string(timeline_id)),
+        ("source", string("rust-mcp-observed-timeline")),
+        ("anchors", Json::Array(anchors.clone())),
+        ("transitionPacket", transition_packet),
+        (
+            "finalOutput",
+            obj(vec![
+                ("finalStateId", string(&scenario_report.target_state_id)),
+                ("triggerSignature", string(&scenario_report.signature)),
+                ("selectedAction", string(selected_action)),
+                ("selectedPriority", string(selected_priority)),
+                ("inferenceUsed", Json::Bool(false)),
+            ]),
+        ),
+        (
+            "choiceReconstruction",
+            choice_reconstruction_json(&anchors, &scenario_report, selected_action)?,
+        ),
+        ("inferenceUsed", Json::Bool(false)),
+    ];
+    if let Some(version) = anchor_rule_version {
+        fields.insert(1, ("anchorRuleVersion", string(version)));
+    }
+    Ok(obj(fields))
 }
 
 fn parse_workbench_args(args: &Json) -> Result<WorkbenchArgs, String> {
@@ -828,6 +887,139 @@ fn policy_queue_item_json(report: &ScenarioReport) -> Json {
     ])
 }
 
+fn anchor_snapshot_json(snapshot: &Json) -> Result<Json, String> {
+    let snapshot_id = get_string(snapshot, "id")?;
+    let observations = get_array(snapshot, "observations")?;
+    let anchored = tool_anchor_state64(&obj(vec![(
+        "observations",
+        Json::Array(observations.to_vec()),
+    )]))?;
+    let raw_decisions = get_array(&anchored, "decisions")?;
+    let decisions = raw_decisions
+        .iter()
+        .map(anchor_decision_json)
+        .collect::<Result<Vec<_>, _>>()?;
+
+    Ok(obj(vec![
+        ("snapshotId", string(snapshot_id)),
+        ("stateId", get_field(&anchored, "stateId")?.clone()),
+        ("stateNumber", get_field(&anchored, "stateNumber")?.clone()),
+        ("binary", get_field(&anchored, "binary")?.clone()),
+        ("decisions", Json::Array(decisions)),
+        ("anchorMode", get_field(&anchored, "anchorMode")?.clone()),
+        (
+            "inferenceUsed",
+            get_field(&anchored, "inferenceUsed")?.clone(),
+        ),
+    ]))
+}
+
+fn anchor_decision_json(decision: &Json) -> Result<Json, String> {
+    let mut fields = vec![
+        ("position", get_field(decision, "position")?.clone()),
+        ("key", get_field(decision, "key")?.clone()),
+        ("operator", get_field(decision, "operator")?.clone()),
+        ("value", get_field(decision, "value")?.clone()),
+        ("threshold", get_field(decision, "threshold")?.clone()),
+        ("result", get_field(decision, "result")?.clone()),
+        ("trueBit", get_field(decision, "trueBit")?.clone()),
+        ("falseBit", get_field(decision, "falseBit")?.clone()),
+        ("selectedBit", get_field(decision, "bit")?.clone()),
+    ];
+    if let Some(unit) = decision.get("unit") {
+        fields.push(("unit", unit.clone()));
+    }
+    if let Some(source) = decision.get("source") {
+        fields.push(("source", source.clone()));
+    }
+    Ok(obj(fields))
+}
+
+fn choice_reconstruction_json(
+    anchors: &[Json],
+    scenario: &ScenarioReport,
+    selected_action: &str,
+) -> Result<Json, String> {
+    Ok(obj(vec![
+        (
+            "anchorChoices",
+            Json::Array(
+                anchors
+                    .iter()
+                    .map(|anchor| {
+                        Ok(obj(vec![
+                            ("snapshotId", get_field(anchor, "snapshotId")?.clone()),
+                            ("stateId", get_field(anchor, "stateId")?.clone()),
+                            ("decisions", get_field(anchor, "decisions")?.clone()),
+                        ]))
+                    })
+                    .collect::<Result<Vec<_>, String>>()?,
+            ),
+        ),
+        ("transitionChoices", transition_choices_json(anchors)?),
+        (
+            "outputChoices",
+            Json::Array(vec![
+                obj(vec![
+                    ("choice", string("state chain")),
+                    (
+                        "selected",
+                        Json::Array(scenario.states.iter().map(|state| string(state)).collect()),
+                    ),
+                    ("basis", string("anchored snapshot states")),
+                ]),
+                obj(vec![
+                    ("choice", string("transition signature")),
+                    ("selected", string(&scenario.signature)),
+                    (
+                        "basis",
+                        string("ordered mutation masks and net mutation mask"),
+                    ),
+                ]),
+                obj(vec![
+                    ("choice", string("final action")),
+                    ("selected", string(selected_action)),
+                    (
+                        "basis",
+                        string(&format!(
+                            "policyReadiness={}; volatilityClass={}",
+                            scenario.policy_readiness, scenario.volatility_class
+                        )),
+                    ),
+                ]),
+            ]),
+        ),
+    ]))
+}
+
+fn transition_choices_json(anchors: &[Json]) -> Result<Json, String> {
+    let mut choices = Vec::with_capacity(anchors.len().saturating_sub(1));
+    for pair in anchors.windows(2) {
+        let from_snapshot_id = get_string(&pair[0], "snapshotId")?;
+        let to_snapshot_id = get_string(&pair[1], "snapshotId")?;
+        let source_state_id = get_string(&pair[0], "stateId")?;
+        let target_state_id = get_string(&pair[1], "stateId")?;
+        let source = state_id_to_number(source_state_id)?;
+        let target = state_id_to_number(target_state_id)?;
+        let entry = lookup_transition64(source, target)
+            .map_err(|_| "transition lookup failed".to_string())?;
+        choices.push(obj(vec![
+            ("fromSnapshotId", string(from_snapshot_id)),
+            ("toSnapshotId", string(to_snapshot_id)),
+            ("sourceStateId", string(source_state_id)),
+            ("targetStateId", string(target_state_id)),
+            ("mutationMask", string(&mask_id(entry.mutation_mask))),
+            ("distance", Json::Number(entry.distance as i64)),
+            (
+                "regimeClass",
+                string(REGIME_CLASS_NAMES[entry.regime_class as usize]),
+            ),
+            ("choice", string("lookup deterministic State64 transition")),
+        ]));
+    }
+    Ok(Json::Array(choices))
+}
+
 fn dominant_regime_class(regime_stats: &BTreeMap<String, (u32, u32)>) -> Result<String, String> {
     let mut ranked = regime_stats.iter().collect::<Vec<_>>();
     ranked.sort_by(
@@ -867,6 +1059,14 @@ fn policy_priority(volatility_class: &str) -> &'static str {
         "calm" => "low",
         "active" => "normal",
         _ => "high",
+    }
+}
+
+fn selected_action(policy_readiness: &str) -> &'static str {
+    match policy_readiness {
+        "escalate" => "escalate",
+        "review" => "review",
+        _ => "monitor",
     }
 }
 
@@ -1150,6 +1350,11 @@ fn tool_definitions() -> Vec<Json> {
             validate_policy_packet_schema(),
         ),
         tool_definition(
+            "semagraph_analyze_observed_timeline64",
+            "Anchor observed snapshots, compress the resulting State64 timeline, and return deterministic final output plus per-bit and transition choice reconstruction in one MCP call. Use this for agent tasks that start from observations rather than preassigned states.",
+            observed_timeline_schema(),
+        ),
+        tool_definition(
             "semagraph_verify_transition_basis",
             "Verify that the Rust-backed 64 x 64 direct transition basis is complete and deterministic.",
             obj(vec![
@@ -1182,51 +1387,52 @@ fn anchor_schema() -> Json {
                     ("type", string("array")),
                     ("minItems", Json::Number(6)),
                     ("maxItems", Json::Number(6)),
-                    (
-                        "items",
-                        obj(vec![
-                            ("type", string("object")),
-                            ("additionalProperties", Json::Bool(false)),
-                            (
-                                "required",
-                                Json::Array(vec![
-                                    string("key"),
-                                    string("value"),
-                                    string("operator"),
-                                    string("threshold"),
-                                ]),
-                            ),
-                            (
-                                "properties",
-                                obj(vec![
-                                    ("key", obj(vec![("type", string("string"))])),
-                                    ("value", scalar_schema()),
-                                    (
-                                        "operator",
-                                        obj(vec![
-                                            ("type", string("string")),
-                                            (
-                                                "enum",
-                                                Json::Array(
-                                                    ["eq", "neq", "gt", "gte", "lt", "lte"]
-                                                        .iter()
-                                                        .map(|value| string(value))
-                                                        .collect(),
-                                                ),
-                                            ),
-                                        ]),
-                                    ),
-                                    ("threshold", scalar_schema()),
-                                    ("trueBit", bit_schema()),
-                                    ("falseBit", bit_schema()),
-                                    ("unit", obj(vec![("type", string("string"))])),
-                                    ("source", obj(vec![("type", string("string"))])),
-                                ]),
-                            ),
-                        ]),
-                    ),
+                    ("items", observation_schema()),
                 ]),
             )]),
+        ),
+    ])
+}
+
+fn observation_schema() -> Json {
+    obj(vec![
+        ("type", string("object")),
+        ("additionalProperties", Json::Bool(false)),
+        (
+            "required",
+            Json::Array(vec![
+                string("key"),
+                string("value"),
+                string("operator"),
+                string("threshold"),
+            ]),
+        ),
+        (
+            "properties",
+            obj(vec![
+                ("key", obj(vec![("type", string("string"))])),
+                ("value", scalar_schema()),
+                (
+                    "operator",
+                    obj(vec![
+                        ("type", string("string")),
+                        (
+                            "enum",
+                            Json::Array(
+                                ["eq", "neq", "gt", "gte", "lt", "lte"]
+                                    .iter()
+                                    .map(|value| string(value))
+                                    .collect(),
+                            ),
+                        ),
+                    ]),
+                ),
+                ("threshold", scalar_schema()),
+                ("trueBit", bit_schema()),
+                ("falseBit", bit_schema()),
+                ("unit", obj(vec![("type", string("string"))])),
+                ("source", obj(vec![("type", string("string"))])),
+            ]),
         ),
     ])
 }
@@ -1382,6 +1588,59 @@ fn validate_policy_packet_schema() -> Json {
         );
     }
     schema
+}
+
+fn observed_timeline_schema() -> Json {
+    obj(vec![
+        ("type", string("object")),
+        ("additionalProperties", Json::Bool(false)),
+        (
+            "required",
+            Json::Array(vec![string("id"), string("snapshots")]),
+        ),
+        (
+            "properties",
+            obj(vec![
+                ("id", obj(vec![("type", string("string"))])),
+                ("objective", obj(vec![("type", string("string"))])),
+                ("anchorRuleVersion", obj(vec![("type", string("string"))])),
+                (
+                    "snapshots",
+                    obj(vec![
+                        ("type", string("array")),
+                        ("minItems", Json::Number(2)),
+                        ("items", observed_snapshot_schema()),
+                    ]),
+                ),
+            ]),
+        ),
+    ])
+}
+
+fn observed_snapshot_schema() -> Json {
+    obj(vec![
+        ("type", string("object")),
+        ("additionalProperties", Json::Bool(false)),
+        (
+            "required",
+            Json::Array(vec![string("id"), string("observations")]),
+        ),
+        (
+            "properties",
+            obj(vec![
+                ("id", obj(vec![("type", string("string"))])),
+                (
+                    "observations",
+                    obj(vec![
+                        ("type", string("array")),
+                        ("minItems", Json::Number(6)),
+                        ("maxItems", Json::Number(6)),
+                        ("items", observation_schema()),
+                    ]),
+                ),
+            ]),
+        ),
+    ])
 }
 
 fn scenario_input_schema() -> Json {

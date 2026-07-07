@@ -460,6 +460,34 @@ async function runMcp(input) {
   }
 }
 
+async function runMcpSingleCall(input) {
+  const binary = findMcpBinary();
+  const client = new McpClient(binary);
+  const started = performance.now();
+  try {
+    await client.request("initialize", {
+      protocolVersion: "2024-11-05",
+      capabilities: {},
+      clientInfo: { name: "round-6-anchor-choice-reconstruction-single-call", version: "0.1.0" }
+    });
+    const tools = await client.request("tools/list");
+    const toolNames = tools?.result?.tools?.map((tool) => tool.name) ?? [];
+    if (!toolNames.includes("semagraph_analyze_observed_timeline64")) {
+      throw new Error("MCP tool missing: semagraph_analyze_observed_timeline64");
+    }
+    const output = await client.tool("semagraph_analyze_observed_timeline64", input);
+    return {
+      output,
+      durationMs: performance.now() - started,
+      mcpCallCount: 1,
+      mcpBinary: binary,
+      stderr: client.stderr.trim()
+    };
+  } finally {
+    await client.close();
+  }
+}
+
 async function invalidMcpCheck(input) {
   const binary = findMcpBinary();
   const client = new McpClient(binary);
@@ -472,6 +500,25 @@ async function invalidMcpCheck(input) {
     const response = await client.request("tools/call", {
       name: "semagraph_anchor_state64",
       arguments: { observations: input.snapshots[0].observations }
+    });
+    return response?.result?.structuredContent?.status === "rejected";
+  } finally {
+    await client.close();
+  }
+}
+
+async function invalidMcpSingleCallCheck(input) {
+  const binary = findMcpBinary();
+  const client = new McpClient(binary);
+  try {
+    await client.request("initialize", {
+      protocolVersion: "2024-11-05",
+      capabilities: {},
+      clientInfo: { name: "round-6-invalid-single-call-check", version: "0.1.0" }
+    });
+    const response = await client.request("tools/call", {
+      name: "semagraph_analyze_observed_timeline64",
+      arguments: input
     });
     return response?.result?.structuredContent?.status === "rejected";
   } finally {
@@ -545,10 +592,13 @@ ${report.results
 
 ## Interpretation
 
-The updated Rust MCP path uses \`semagraph_anchor_state64\` for every snapshot,
-\`semagraph_analyze_scenarios64\` for the anchored chain, and
-\`semagraph_validate_policy_packet64\` before output reconstruction. The useful
-signal is whether the MCP path preserves the same anchor decisions and output
+The multi-call Rust MCP path uses \`semagraph_anchor_state64\` for every
+snapshot, \`semagraph_analyze_scenarios64\` for the anchored chain, and
+\`semagraph_validate_policy_packet64\` before output reconstruction.
+
+The single-call Rust MCP path uses \`semagraph_analyze_observed_timeline64\`,
+which moves the full deterministic workflow behind one tool boundary. The useful
+signal is whether the MCP paths preserve the same anchor decisions and output
 basis as the local baseline while making those choices auditable through tool
 results.
 `;
@@ -559,6 +609,7 @@ mkdirSync(outputsDir, { recursive: true });
 
 const baseline = runBaseline(fixture);
 const mcp = await runMcp(fixture);
+const mcpSingleCall = await runMcpSingleCall(fixture);
 const expected = { ...baseline.output, source: "expected" };
 const invalidBaselinePassed = (() => {
   try {
@@ -569,12 +620,15 @@ const invalidBaselinePassed = (() => {
   }
 })();
 const invalidMcpPassed = await invalidMcpCheck(invalidFixture);
+const invalidMcpSingleCallPassed = await invalidMcpSingleCallCheck(invalidFixture);
 
 writeFileSync(resolve(outputsDir, "baseline-output.json"), `${JSON.stringify(baseline.output, null, 2)}\n`);
 writeFileSync(resolve(outputsDir, "rust-mcp-updated-output.json"), `${JSON.stringify(mcp.output, null, 2)}\n`);
+writeFileSync(resolve(outputsDir, "rust-mcp-single-call-output.json"), `${JSON.stringify(mcpSingleCall.output, null, 2)}\n`);
 
 const baselineQuality = quality(baseline.output, expected);
 const mcpQuality = quality(mcp.output, expected);
+const mcpSingleCallQuality = quality(mcpSingleCall.output, expected);
 const report = {
   benchmark: "round-6-complex-anchor-choice-reconstruction",
   generatedAt: new Date().toISOString(),
@@ -598,6 +652,16 @@ const report = {
       mcpCallCount: mcp.mcpCallCount,
       mcpBinary: mcp.mcpBinary,
       stderr: mcp.stderr
+    },
+    {
+      variant: "rust-mcp-single-call",
+      correct: mcpSingleCallQuality.passed === mcpSingleCallQuality.total && invalidMcpSingleCallPassed,
+      quality: mcpSingleCallQuality,
+      invalidInputPassed: invalidMcpSingleCallPassed,
+      durationMs: mcpSingleCall.durationMs,
+      mcpCallCount: mcpSingleCall.mcpCallCount,
+      mcpBinary: mcpSingleCall.mcpBinary,
+      stderr: mcpSingleCall.stderr
     }
   ]
 };

@@ -1,8 +1,11 @@
 # Round 6 Complex Anchor Choice Reconstruction
 
-This benchmark compares a local JavaScript baseline with the updated Rust MCP
-surface on complex observed-state anchoring and deterministic choice
-reconstruction.
+This benchmark compares a local JavaScript baseline with both updated Rust MCP
+surfaces on complex observed-state anchoring and deterministic choice
+reconstruction:
+
+- multi-call MCP: anchor snapshots, analyze scenario, validate packet;
+- single-call MCP: analyze the full observed timeline through one tool.
 
 The fixture intentionally uses:
 

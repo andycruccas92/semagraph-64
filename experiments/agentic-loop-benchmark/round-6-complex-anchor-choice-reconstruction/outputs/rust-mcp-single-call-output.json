@@ -1,0 +1,813 @@
+{
+  "anchorRuleVersion": "anchor-round6-v1",
+  "anchors": [
+    {
+      "anchorMode": "deterministic_observed_parameters",
+      "binary": "000111",
+      "decisions": [
+        {
+          "falseBit": 1,
+          "key": "error_rate",
+          "operator": "lte",
+          "position": 1,
+          "result": true,
+          "selectedBit": 0,
+          "source": "metrics.api",
+          "threshold": 0.1,
+          "trueBit": 0,
+          "unit": "ratio",
+          "value": 0.08
+        },
+        {
+          "falseBit": 0,
+          "key": "queue_depth",
+          "operator": "gt",
+          "position": 2,
+          "result": false,
+          "selectedBit": 0,
+          "source": "queue.primary",
+          "threshold": 50,
+          "trueBit": 1,
+          "unit": "jobs",
+          "value": 42
+        },
+        {
+          "falseBit": 0,
+          "key": "fallback_active",
+          "operator": "eq",
+          "position": 3,
+          "result": false,
+          "selectedBit": 0,
+          "source": "runtime.flags",
+          "threshold": true,
+          "trueBit": 1,
+          "value": false
+        },
+        {
+          "falseBit": 0,
+          "key": "region",
+          "operator": "eq",
+          "position": 4,
+          "result": true,
+          "selectedBit": 1,
+          "source": "deployment.meta",
+          "threshold": "eu",
+          "trueBit": 1,
+          "value": "eu"
+        },
+        {
+          "falseBit": 0,
+          "key": "approvals",
+          "operator": "gte",
+          "position": 5,
+          "result": true,
+          "selectedBit": 1,
+          "source": "change.board",
+          "threshold": 2,
+          "trueBit": 1,
+          "unit": "count",
+          "value": 3
+        },
+        {
+          "falseBit": 1,
+          "key": "drift_score",
+          "operator": "lt",
+          "position": 6,
+          "result": false,
+          "selectedBit": 1,
+          "source": "drift.monitor",
+          "threshold": 0.2,
+          "trueBit": 0,
+          "unit": "ratio",
+          "value": 0.22
+        }
+      ],
+      "inferenceUsed": false,
+      "snapshotId": "t0-stable",
+      "stateId": "S64-000111",
+      "stateNumber": 7
+    },
+    {
+      "anchorMode": "deterministic_observed_parameters",
+      "binary": "111100",
+      "decisions": [
+        {
+          "falseBit": 1,
+          "key": "error_rate",
+          "operator": "lte",
+          "position": 1,
+          "result": false,
+          "selectedBit": 1,
+          "source": "metrics.api",
+          "threshold": 0.1,
+          "trueBit": 0,
+          "unit": "ratio",
+          "value": 0.16
+        },
+        {
+          "falseBit": 0,
+          "key": "queue_depth",
+          "operator": "gt",
+          "position": 2,
+          "result": true,
+          "selectedBit": 1,
+          "source": "queue.primary",
+          "threshold": 50,
+          "trueBit": 1,
+          "unit": "jobs",
+          "value": 71
+        },
+        {
+          "falseBit": 0,
+          "key": "fallback_active",
+          "operator": "eq",
+          "position": 3,
+          "result": true,
+          "selectedBit": 1,
+          "source": "runtime.flags",
+          "threshold": true,
+          "trueBit": 1,
+          "value": true
+        },
+        {
+          "falseBit": 0,
+          "key": "region",
+          "operator": "eq",
+          "position": 4,
+          "result": true,
+          "selectedBit": 1,
+          "source": "deployment.meta",
+          "threshold": "eu",
+          "trueBit": 1,
+          "value": "eu"
+        },
+        {
+          "falseBit": 0,
+          "key": "approvals",
+          "operator": "gte",
+          "position": 5,
+          "result": false,
+          "selectedBit": 0,
+          "source": "change.board",
+          "threshold": 2,
+          "trueBit": 1,
+          "unit": "count",
+          "value": 1
+        },
+        {
+          "falseBit": 1,
+          "key": "drift_score",
+          "operator": "lt",
+          "position": 6,
+          "result": true,
+          "selectedBit": 0,
+          "source": "drift.monitor",
+          "threshold": 0.2,
+          "trueBit": 0,
+          "unit": "ratio",
+          "value": 0.19
+        }
+      ],
+      "inferenceUsed": false,
+      "snapshotId": "t1-pressure",
+      "stateId": "S64-111100",
+      "stateNumber": 60
+    },
+    {
+      "anchorMode": "deterministic_observed_parameters",
+      "binary": "111011",
+      "decisions": [
+        {
+          "falseBit": 1,
+          "key": "error_rate",
+          "operator": "lte",
+          "position": 1,
+          "result": false,
+          "selectedBit": 1,
+          "source": "metrics.api",
+          "threshold": 0.1,
+          "trueBit": 0,
+          "unit": "ratio",
+          "value": 0.11
+        },
+        {
+          "falseBit": 0,
+          "key": "queue_depth",
+          "operator": "gt",
+          "position": 2,
+          "result": true,
+          "selectedBit": 1,
+          "source": "queue.primary",
+          "threshold": 50,
+          "trueBit": 1,
+          "unit": "jobs",
+          "value": 64
+        },
+        {
+          "falseBit": 0,
+          "key": "fallback_active",
+          "operator": "eq",
+          "position": 3,
+          "result": true,
+          "selectedBit": 1,
+          "source": "runtime.flags",
+          "threshold": true,
+          "trueBit": 1,
+          "value": true
+        },
+        {
+          "falseBit": 0,
+          "key": "region",
+          "operator": "eq",
+          "position": 4,
+          "result": false,
+          "selectedBit": 0,
+          "source": "deployment.meta",
+          "threshold": "eu",
+          "trueBit": 1,
+          "value": "us"
+        },
+        {
+          "falseBit": 0,
+          "key": "approvals",
+          "operator": "gte",
+          "position": 5,
+          "result": true,
+          "selectedBit": 1,
+          "source": "change.board",
+          "threshold": 2,
+          "trueBit": 1,
+          "unit": "count",
+          "value": 4
+        },
+        {
+          "falseBit": 1,
+          "key": "drift_score",
+          "operator": "lt",
+          "position": 6,
+          "result": false,
+          "selectedBit": 1,
+          "source": "drift.monitor",
+          "threshold": 0.2,
+          "trueBit": 0,
+          "unit": "ratio",
+          "value": 0.27
+        }
+      ],
+      "inferenceUsed": false,
+      "snapshotId": "t2-reroute",
+      "stateId": "S64-111011",
+      "stateNumber": 59
+    },
+    {
+      "anchorMode": "deterministic_observed_parameters",
+      "binary": "000111",
+      "decisions": [
+        {
+          "falseBit": 1,
+          "key": "error_rate",
+          "operator": "lte",
+          "position": 1,
+          "result": true,
+          "selectedBit": 0,
+          "source": "metrics.api",
+          "threshold": 0.1,
+          "trueBit": 0,
+          "unit": "ratio",
+          "value": 0.05
+        },
+        {
+          "falseBit": 0,
+          "key": "queue_depth",
+          "operator": "gt",
+          "position": 2,
+          "result": false,
+          "selectedBit": 0,
+          "source": "queue.primary",
+          "threshold": 50,
+          "trueBit": 1,
+          "unit": "jobs",
+          "value": 38
+        },
+        {
+          "falseBit": 0,
+          "key": "fallback_active",
+          "operator": "eq",
+          "position": 3,
+          "result": false,
+          "selectedBit": 0,
+          "source": "runtime.flags",
+          "threshold": true,
+          "trueBit": 1,
+          "value": false
+        },
+        {
+          "falseBit": 0,
+          "key": "region",
+          "operator": "eq",
+          "position": 4,
+          "result": true,
+          "selectedBit": 1,
+          "source": "deployment.meta",
+          "threshold": "eu",
+          "trueBit": 1,
+          "value": "eu"
+        },
+        {
+          "falseBit": 0,
+          "key": "approvals",
+          "operator": "gte",
+          "position": 5,
+          "result": true,
+          "selectedBit": 1,
+          "source": "change.board",
+          "threshold": 2,
+          "trueBit": 1,
+          "unit": "count",
+          "value": 2
+        },
+        {
+          "falseBit": 1,
+          "key": "drift_score",
+          "operator": "lt",
+          "position": 6,
+          "result": false,
+          "selectedBit": 1,
+          "source": "drift.monitor",
+          "threshold": 0.2,
+          "trueBit": 0,
+          "unit": "ratio",
+          "value": 0.31
+        }
+      ],
+      "inferenceUsed": false,
+      "snapshotId": "t3-recovered",
+      "stateId": "S64-000111",
+      "stateNumber": 7
+    }
+  ],
+  "choiceReconstruction": {
+    "anchorChoices": [
+      {
+        "decisions": [
+          {
+            "falseBit": 1,
+            "key": "error_rate",
+            "operator": "lte",
+            "position": 1,
+            "result": true,
+            "selectedBit": 0,
+            "source": "metrics.api",
+            "threshold": 0.1,
+            "trueBit": 0,
+            "unit": "ratio",
+            "value": 0.08
+          },
+          {
+            "falseBit": 0,
+            "key": "queue_depth",
+            "operator": "gt",
+            "position": 2,
+            "result": false,
+            "selectedBit": 0,
+            "source": "queue.primary",
+            "threshold": 50,
+            "trueBit": 1,
+            "unit": "jobs",
+            "value": 42
+          },
+          {
+            "falseBit": 0,
+            "key": "fallback_active",
+            "operator": "eq",
+            "position": 3,
+            "result": false,
+            "selectedBit": 0,
+            "source": "runtime.flags",
+            "threshold": true,
+            "trueBit": 1,
+            "value": false
+          },
+          {
+            "falseBit": 0,
+            "key": "region",
+            "operator": "eq",
+            "position": 4,
+            "result": true,
+            "selectedBit": 1,
+            "source": "deployment.meta",
+            "threshold": "eu",
+            "trueBit": 1,
+            "value": "eu"
+          },
+          {
+            "falseBit": 0,
+            "key": "approvals",
+            "operator": "gte",
+            "position": 5,
+            "result": true,
+            "selectedBit": 1,
+            "source": "change.board",
+            "threshold": 2,
+            "trueBit": 1,
+            "unit": "count",
+            "value": 3
+          },
+          {
+            "falseBit": 1,
+            "key": "drift_score",
+            "operator": "lt",
+            "position": 6,
+            "result": false,
+            "selectedBit": 1,
+            "source": "drift.monitor",
+            "threshold": 0.2,
+            "trueBit": 0,
+            "unit": "ratio",
+            "value": 0.22
+          }
+        ],
+        "snapshotId": "t0-stable",
+        "stateId": "S64-000111"
+      },
+      {
+        "decisions": [
+          {
+            "falseBit": 1,
+            "key": "error_rate",
+            "operator": "lte",
+            "position": 1,
+            "result": false,
+            "selectedBit": 1,
+            "source": "metrics.api",
+            "threshold": 0.1,
+            "trueBit": 0,
+            "unit": "ratio",
+            "value": 0.16
+          },
+          {
+            "falseBit": 0,
+            "key": "queue_depth",
+            "operator": "gt",
+            "position": 2,
+            "result": true,
+            "selectedBit": 1,
+            "source": "queue.primary",
+            "threshold": 50,
+            "trueBit": 1,
+            "unit": "jobs",
+            "value": 71
+          },
+          {
+            "falseBit": 0,
+            "key": "fallback_active",
+            "operator": "eq",
+            "position": 3,
+            "result": true,
+            "selectedBit": 1,
+            "source": "runtime.flags",
+            "threshold": true,
+            "trueBit": 1,
+            "value": true
+          },
+          {
+            "falseBit": 0,
+            "key": "region",
+            "operator": "eq",
+            "position": 4,
+            "result": true,
+            "selectedBit": 1,
+            "source": "deployment.meta",
+            "threshold": "eu",
+            "trueBit": 1,
+            "value": "eu"
+          },
+          {
+            "falseBit": 0,
+            "key": "approvals",
+            "operator": "gte",
+            "position": 5,
+            "result": false,
+            "selectedBit": 0,
+            "source": "change.board",
+            "threshold": 2,
+            "trueBit": 1,
+            "unit": "count",
+            "value": 1
+          },
+          {
+            "falseBit": 1,
+            "key": "drift_score",
+            "operator": "lt",
+            "position": 6,
+            "result": true,
+            "selectedBit": 0,
+            "source": "drift.monitor",
+            "threshold": 0.2,
+            "trueBit": 0,
+            "unit": "ratio",
+            "value": 0.19
+          }
+        ],
+        "snapshotId": "t1-pressure",
+        "stateId": "S64-111100"
+      },
+      {
+        "decisions": [
+          {
+            "falseBit": 1,
+            "key": "error_rate",
+            "operator": "lte",
+            "position": 1,
+            "result": false,
+            "selectedBit": 1,
+            "source": "metrics.api",
+            "threshold": 0.1,
+            "trueBit": 0,
+            "unit": "ratio",
+            "value": 0.11
+          },
+          {
+            "falseBit": 0,
+            "key": "queue_depth",
+            "operator": "gt",
+            "position": 2,
+            "result": true,
+            "selectedBit": 1,
+            "source": "queue.primary",
+            "threshold": 50,
+            "trueBit": 1,
+            "unit": "jobs",
+            "value": 64
+          },
+          {
+            "falseBit": 0,
+            "key": "fallback_active",
+            "operator": "eq",
+            "position": 3,
+            "result": true,
+            "selectedBit": 1,
+            "source": "runtime.flags",
+            "threshold": true,
+            "trueBit": 1,
+            "value": true
+          },
+          {
+            "falseBit": 0,
+            "key": "region",
+            "operator": "eq",
+            "position": 4,
+            "result": false,
+            "selectedBit": 0,
+            "source": "deployment.meta",
+            "threshold": "eu",
+            "trueBit": 1,
+            "value": "us"
+          },
+          {
+            "falseBit": 0,
+            "key": "approvals",
+            "operator": "gte",
+            "position": 5,
+            "result": true,
+            "selectedBit": 1,
+            "source": "change.board",
+            "threshold": 2,
+            "trueBit": 1,
+            "unit": "count",
+            "value": 4
+          },
+          {
+            "falseBit": 1,
+            "key": "drift_score",
+            "operator": "lt",
+            "position": 6,
+            "result": false,
+            "selectedBit": 1,
+            "source": "drift.monitor",
+            "threshold": 0.2,
+            "trueBit": 0,
+            "unit": "ratio",
+            "value": 0.27
+          }
+        ],
+        "snapshotId": "t2-reroute",
+        "stateId": "S64-111011"
+      },
+      {
+        "decisions": [
+          {
+            "falseBit": 1,
+            "key": "error_rate",
+            "operator": "lte",
+            "position": 1,
+            "result": true,
+            "selectedBit": 0,
+            "source": "metrics.api",
+            "threshold": 0.1,
+            "trueBit": 0,
+            "unit": "ratio",
+            "value": 0.05
+          },
+          {
+            "falseBit": 0,
+            "key": "queue_depth",
+            "operator": "gt",
+            "position": 2,
+            "result": false,
+            "selectedBit": 0,
+            "source": "queue.primary",
+            "threshold": 50,
+            "trueBit": 1,
+            "unit": "jobs",
+            "value": 38
+          },
+          {
+            "falseBit": 0,
+            "key": "fallback_active",
+            "operator": "eq",
+            "position": 3,
+            "result": false,
+            "selectedBit": 0,
+            "source": "runtime.flags",
+            "threshold": true,
+            "trueBit": 1,
+            "value": false
+          },
+          {
+            "falseBit": 0,
+            "key": "region",
+            "operator": "eq",
+            "position": 4,
+            "result": true,
+            "selectedBit": 1,
+            "source": "deployment.meta",
+            "threshold": "eu",
+            "trueBit": 1,
+            "value": "eu"
+          },
+          {
+            "falseBit": 0,
+            "key": "approvals",
+            "operator": "gte",
+            "position": 5,
+            "result": true,
+            "selectedBit": 1,
+            "source": "change.board",
+            "threshold": 2,
+            "trueBit": 1,
+            "unit": "count",
+            "value": 2
+          },
+          {
+            "falseBit": 1,
+            "key": "drift_score",
+            "operator": "lt",
+            "position": 6,
+            "result": false,
+            "selectedBit": 1,
+            "source": "drift.monitor",
+            "threshold": 0.2,
+            "trueBit": 0,
+            "unit": "ratio",
+            "value": 0.31
+          }
+        ],
+        "snapshotId": "t3-recovered",
+        "stateId": "S64-000111"
+      }
+    ],
+    "outputChoices": [
+      {
+        "basis": "anchored snapshot states",
+        "choice": "state chain",
+        "selected": [
+          "S64-000111",
+          "S64-111100",
+          "S64-111011",
+          "S64-000111"
+        ]
+      },
+      {
+        "basis": "ordered mutation masks and net mutation mask",
+        "choice": "transition signature",
+        "selected": "C64:S64-000111>S64-000111|M:M64-111011.M64-000111.M64-111100|N:M64-000000"
+      },
+      {
+        "basis": "policyReadiness=escalate; volatilityClass=volatile",
+        "choice": "final action",
+        "selected": "escalate"
+      }
+    ],
+    "transitionChoices": [
+      {
+        "choice": "lookup deterministic State64 transition",
+        "distance": 5,
+        "fromSnapshotId": "t0-stable",
+        "mutationMask": "M64-111011",
+        "regimeClass": "near_total_inversion",
+        "sourceStateId": "S64-000111",
+        "targetStateId": "S64-111100",
+        "toSnapshotId": "t1-pressure"
+      },
+      {
+        "choice": "lookup deterministic State64 transition",
+        "distance": 3,
+        "fromSnapshotId": "t1-pressure",
+        "mutationMask": "M64-000111",
+        "regimeClass": "cross_module_regime_shift",
+        "sourceStateId": "S64-111100",
+        "targetStateId": "S64-111011",
+        "toSnapshotId": "t2-reroute"
+      },
+      {
+        "choice": "lookup deterministic State64 transition",
+        "distance": 4,
+        "fromSnapshotId": "t2-reroute",
+        "mutationMask": "M64-111100",
+        "regimeClass": "near_total_inversion",
+        "sourceStateId": "S64-111011",
+        "targetStateId": "S64-000111",
+        "toSnapshotId": "t3-recovered"
+      }
+    ]
+  },
+  "finalOutput": {
+    "finalStateId": "S64-000111",
+    "inferenceUsed": false,
+    "selectedAction": "escalate",
+    "selectedPriority": "high",
+    "triggerSignature": "C64:S64-000111>S64-000111|M:M64-111011.M64-000111.M64-111100|N:M64-000000"
+  },
+  "inferenceUsed": false,
+  "source": "rust-mcp-observed-timeline",
+  "timelineId": "round-6-anchor-timeline",
+  "transitionPacket": {
+    "aggregate": {
+      "averageCumulativeDistance": 12,
+      "dominantRegimeHistogram": {
+        "near_total_inversion": 1
+      },
+      "maxCumulativeDistanceScenarioIds": [
+        "round-6-anchor-timeline"
+      ],
+      "netMutationHistogram": {
+        "M64-000000": 1
+      },
+      "scenarioCount": 1,
+      "totalCumulativeDistance": 12,
+      "totalTransitions": 3,
+      "volatilityHistogram": {
+        "volatile": 1
+      }
+    },
+    "comparisons": [],
+    "inferenceUsed": false,
+    "policyQueue": [
+      {
+        "allowedActions": [
+          "monitor",
+          "review",
+          "escalate"
+        ],
+        "forbiddenActions": [
+          "do not infer observations",
+          "do not mutate State64 ids",
+          "do not override deterministic signatures"
+        ],
+        "objective": "reconstruct deterministic anchor and transition choices for an operational output",
+        "priority": "high",
+        "reviewRequired": true,
+        "scenarioId": "round-6-anchor-timeline",
+        "triggerSignature": "C64:S64-000111>S64-000111|M:M64-111011.M64-000111.M64-111100|N:M64-000000"
+      }
+    ],
+    "scenarios": [
+      {
+        "cumulativeDistance": 12,
+        "dominantRegimeClass": "near_total_inversion",
+        "id": "round-6-anchor-timeline",
+        "netDistance": 0,
+        "netMutationMask": "M64-000000",
+        "orderedMutationMasks": [
+          "M64-111011",
+          "M64-000111",
+          "M64-111100"
+        ],
+        "policyReadiness": "escalate",
+        "signature": "C64:S64-000111>S64-000111|M:M64-111011.M64-000111.M64-111100|N:M64-000000",
+        "sourceStateId": "S64-000111",
+        "states": [
+          "S64-000111",
+          "S64-111100",
+          "S64-111011",
+          "S64-000111"
+        ],
+        "summary": "round-6-anchor-timeline: S64-000111 to S64-000111; volatile; cumulative distance 12.",
+        "targetStateId": "S64-000111",
+        "transitionCount": 3,
+        "volatilityClass": "volatile"
+      }
+    ]
+  }
+}

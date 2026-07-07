@@ -10,8 +10,9 @@ node experiments/agentic-loop-benchmark/round-6-complex-anchor-choice-reconstruc
 
 | Variant | Correct | Quality | Invalid Input | Duration | MCP Calls |
 | --- | --- | ---: | --- | ---: | ---: |
-| `baseline-js-local` | yes | 4/4 | passed | 0.938 ms | 0 |
-| `rust-mcp-updated` | yes | 4/4 | passed | 9.797 ms | 6 |
+| `baseline-js-local` | yes | 4/4 | passed | 0.825 ms | 0 |
+| `rust-mcp-updated` | yes | 4/4 | passed | 15.277 ms | 6 |
+| `rust-mcp-single-call` | yes | 4/4 | passed | 11.109 ms | 1 |
 
 ## What Is Being Tested
 
@@ -23,9 +24,12 @@ node experiments/agentic-loop-benchmark/round-6-complex-anchor-choice-reconstruc
 
 ## Interpretation
 
-The updated Rust MCP path uses `semagraph_anchor_state64` for every snapshot,
-`semagraph_analyze_scenarios64` for the anchored chain, and
-`semagraph_validate_policy_packet64` before output reconstruction. The useful
-signal is whether the MCP path preserves the same anchor decisions and output
+The multi-call Rust MCP path uses `semagraph_anchor_state64` for every
+snapshot, `semagraph_analyze_scenarios64` for the anchored chain, and
+`semagraph_validate_policy_packet64` before output reconstruction.
+
+The single-call Rust MCP path uses `semagraph_analyze_observed_timeline64`,
+which moves the full deterministic workflow behind one tool boundary. The useful
+signal is whether the MCP paths preserve the same anchor decisions and output
 basis as the local baseline while making those choices auditable through tool
 results.
