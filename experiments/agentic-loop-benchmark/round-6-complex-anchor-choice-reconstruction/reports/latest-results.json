@@ -1,0 +1,68 @@
+{
+  "benchmark": "round-6-complex-anchor-choice-reconstruction",
+  "generatedAt": "2026-07-07T12:35:01.730Z",
+  "fixture": "fixtures/anchor-timeline.json",
+  "invalidFixture": "fixtures/invalid-anchor-timeline.json",
+  "results": [
+    {
+      "variant": "baseline-js-local",
+      "correct": true,
+      "quality": {
+        "passed": 4,
+        "total": 4,
+        "checks": [
+          {
+            "name": "anchors",
+            "passed": true
+          },
+          {
+            "name": "transitionPacket",
+            "passed": true
+          },
+          {
+            "name": "finalOutput",
+            "passed": true
+          },
+          {
+            "name": "choiceReconstruction",
+            "passed": true
+          }
+        ]
+      },
+      "invalidInputPassed": true,
+      "durationMs": 0.9380000000000024,
+      "mcpCallCount": 0
+    },
+    {
+      "variant": "rust-mcp-updated",
+      "correct": true,
+      "quality": {
+        "passed": 4,
+        "total": 4,
+        "checks": [
+          {
+            "name": "anchors",
+            "passed": true
+          },
+          {
+            "name": "transitionPacket",
+            "passed": true
+          },
+          {
+            "name": "finalOutput",
+            "passed": true
+          },
+          {
+            "name": "choiceReconstruction",
+            "passed": true
+          }
+        ]
+      },
+      "invalidInputPassed": true,
+      "durationMs": 9.796599999999998,
+      "mcpCallCount": 6,
+      "mcpBinary": "C:\\Dev\\semagraph-64\\packages\\target\\debug\\semagraph-mcp.exe",
+      "stderr": ""
+    }
+  ]
+}

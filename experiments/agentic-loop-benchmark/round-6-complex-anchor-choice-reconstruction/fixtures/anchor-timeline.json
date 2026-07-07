@@ -1,0 +1,51 @@
+{
+  "id": "round-6-anchor-timeline",
+  "anchorRuleVersion": "anchor-round6-v1",
+  "objective": "reconstruct deterministic anchor and transition choices for an operational output",
+  "snapshots": [
+    {
+      "id": "t0-stable",
+      "observations": [
+        { "key": "error_rate", "value": 0.08, "operator": "lte", "threshold": 0.1, "trueBit": 0, "falseBit": 1, "unit": "ratio", "source": "metrics.api" },
+        { "key": "queue_depth", "value": 42, "operator": "gt", "threshold": 50, "unit": "jobs", "source": "queue.primary" },
+        { "key": "fallback_active", "value": false, "operator": "eq", "threshold": true, "source": "runtime.flags" },
+        { "key": "region", "value": "eu", "operator": "eq", "threshold": "eu", "source": "deployment.meta" },
+        { "key": "approvals", "value": 3, "operator": "gte", "threshold": 2, "unit": "count", "source": "change.board" },
+        { "key": "drift_score", "value": 0.22, "operator": "lt", "threshold": 0.2, "trueBit": 0, "falseBit": 1, "unit": "ratio", "source": "drift.monitor" }
+      ]
+    },
+    {
+      "id": "t1-pressure",
+      "observations": [
+        { "key": "error_rate", "value": 0.16, "operator": "lte", "threshold": 0.1, "trueBit": 0, "falseBit": 1, "unit": "ratio", "source": "metrics.api" },
+        { "key": "queue_depth", "value": 71, "operator": "gt", "threshold": 50, "unit": "jobs", "source": "queue.primary" },
+        { "key": "fallback_active", "value": true, "operator": "eq", "threshold": true, "source": "runtime.flags" },
+        { "key": "region", "value": "eu", "operator": "eq", "threshold": "eu", "source": "deployment.meta" },
+        { "key": "approvals", "value": 1, "operator": "gte", "threshold": 2, "unit": "count", "source": "change.board" },
+        { "key": "drift_score", "value": 0.19, "operator": "lt", "threshold": 0.2, "trueBit": 0, "falseBit": 1, "unit": "ratio", "source": "drift.monitor" }
+      ]
+    },
+    {
+      "id": "t2-reroute",
+      "observations": [
+        { "key": "error_rate", "value": 0.11, "operator": "lte", "threshold": 0.1, "trueBit": 0, "falseBit": 1, "unit": "ratio", "source": "metrics.api" },
+        { "key": "queue_depth", "value": 64, "operator": "gt", "threshold": 50, "unit": "jobs", "source": "queue.primary" },
+        { "key": "fallback_active", "value": true, "operator": "eq", "threshold": true, "source": "runtime.flags" },
+        { "key": "region", "value": "us", "operator": "eq", "threshold": "eu", "source": "deployment.meta" },
+        { "key": "approvals", "value": 4, "operator": "gte", "threshold": 2, "unit": "count", "source": "change.board" },
+        { "key": "drift_score", "value": 0.27, "operator": "lt", "threshold": 0.2, "trueBit": 0, "falseBit": 1, "unit": "ratio", "source": "drift.monitor" }
+      ]
+    },
+    {
+      "id": "t3-recovered",
+      "observations": [
+        { "key": "error_rate", "value": 0.05, "operator": "lte", "threshold": 0.1, "trueBit": 0, "falseBit": 1, "unit": "ratio", "source": "metrics.api" },
+        { "key": "queue_depth", "value": 38, "operator": "gt", "threshold": 50, "unit": "jobs", "source": "queue.primary" },
+        { "key": "fallback_active", "value": false, "operator": "eq", "threshold": true, "source": "runtime.flags" },
+        { "key": "region", "value": "eu", "operator": "eq", "threshold": "eu", "source": "deployment.meta" },
+        { "key": "approvals", "value": 2, "operator": "gte", "threshold": 2, "unit": "count", "source": "change.board" },
+        { "key": "drift_score", "value": 0.31, "operator": "lt", "threshold": 0.2, "trueBit": 0, "falseBit": 1, "unit": "ratio", "source": "drift.monitor" }
+      ]
+    }
+  ]
+}

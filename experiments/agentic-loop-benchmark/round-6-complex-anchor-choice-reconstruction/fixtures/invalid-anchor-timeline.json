@@ -1,0 +1,17 @@
+{
+  "id": "round-6-invalid-anchor-timeline",
+  "anchorRuleVersion": "anchor-round6-v1",
+  "objective": "invalid anchor fixture should be rejected",
+  "snapshots": [
+    {
+      "id": "bad-missing-rule",
+      "observations": [
+        { "key": "error_rate", "value": 0.08, "operator": "lte", "threshold": 0.1 },
+        { "key": "queue_depth", "value": 42, "operator": "gt", "threshold": 50 },
+        { "key": "fallback_active", "value": false, "operator": "eq", "threshold": true },
+        { "key": "region", "value": "eu", "operator": "eq", "threshold": "eu" },
+        { "key": "approvals", "value": 3, "operator": "gte", "threshold": 2 }
+      ]
+    }
+  ]
+}
