@@ -1,0 +1,126 @@
+{
+  "variant": "rust-mcp-upgraded",
+  "semagraphRuntime": "rust-mcp",
+  "semagraphCalls": [
+    {
+      "phase": "valid-fixture-acceptance",
+      "transport": "stdio JSON-RPC framed MCP",
+      "server": "semagraph",
+      "command": "cargo run --quiet --manifest-path packages/Cargo.toml --bin semagraph-mcp",
+      "tool": "semagraph_analyze_scenarios64",
+      "requestId": 1,
+      "argumentsSummary": {
+        "scenarioIds": [
+          "calm-zero",
+          "alpha-ladder",
+          "beta-return",
+          "gamma-inversion",
+          "delta-cross",
+          "epsilon-loop"
+        ],
+        "comparePairCount": 4,
+        "excludePolicyScenarioIds": [
+          "calm-zero"
+        ]
+      },
+      "deterministicBoundary": "Rust MCP produced scenario reports, aggregate metrics, comparisons, policy queue fields, mutation masks, distances, and signatures before any handoff.",
+      "resultSummary": {
+        "scenarioCount": 6,
+        "totalTransitions": 18,
+        "totalCumulativeDistance": 27,
+        "policyQueueScenarioIds": [
+          "alpha-ladder",
+          "beta-return",
+          "gamma-inversion",
+          "delta-cross",
+          "epsilon-loop"
+        ],
+        "inferenceUsed": false
+      }
+    },
+    {
+      "phase": "final-packet-validation",
+      "transport": "stdio JSON-RPC framed MCP",
+      "server": "semagraph",
+      "command": "cargo run --quiet --manifest-path packages/Cargo.toml --bin semagraph-mcp",
+      "tool": "semagraph_validate_policy_packet64",
+      "requestId": 1,
+      "argumentsSummary": {
+        "scenarioIds": [
+          "calm-zero",
+          "alpha-ladder",
+          "beta-return",
+          "gamma-inversion",
+          "delta-cross",
+          "epsilon-loop"
+        ],
+        "comparePairCount": 4,
+        "excludePolicyScenarioIds": [
+          "calm-zero"
+        ],
+        "packetSections": [
+          "scenarios",
+          "aggregate",
+          "comparisons",
+          "policyQueue",
+          "inferenceUsed"
+        ]
+      },
+      "deterministicBoundary": "Rust MCP recomputed the expected packet and compared it to the CLI-produced packet.",
+      "resultSummary": {
+        "valid": true,
+        "errorCount": 0,
+        "inferenceUsed": false
+      }
+    }
+  ],
+  "loopCount": 1,
+  "reworkEvents": [
+    {
+      "event": "sandbox-build-output-retry",
+      "detail": "Initial build and dist directory creation were denied by the sandbox with EPERM inside the owned run directory; reran the same build with escalation to emit dist files."
+    },
+    {
+      "event": "sandbox-cargo-target-retry",
+      "detail": "Initial MCP-backed CLI and validator runs were denied access to the owned Cargo target directory; reran the same commands with escalation while keeping CARGO_TARGET_DIR under the rust-mcp-upgraded run directory."
+    }
+  ],
+  "acceptanceChecks": [
+    {
+      "command": "npm.cmd run typecheck",
+      "result": "passed"
+    },
+    {
+      "command": "npm.cmd run build",
+      "result": "passed after sandbox escalation for dist writes inside the owned run directory"
+    },
+    {
+      "command": "node dist/policy-transition-workbench.js C:\\Dev\\semagraph-64\\experiments\\agentic-loop-benchmark\\round-5-complex-feature-rework\\fixtures\\scenarios.json",
+      "result": "passed after sandbox escalation for Cargo target access; called semagraph_analyze_scenarios64 and emitted scenarios, aggregate, comparisons, policyQueue, and inferenceUsed=false"
+    },
+    {
+      "command": "node dist/policy-transition-workbench.js C:\\Dev\\semagraph-64\\experiments\\agentic-loop-benchmark\\round-5-complex-feature-rework\\fixtures\\invalid-scenarios.json",
+      "result": "passed; exited 1 and rejected invalid canonical State64 id S64-10000X before MCP transition processing"
+    },
+    {
+      "command": "node dist/validate-produced-packet.js C:\\Dev\\semagraph-64\\experiments\\agentic-loop-benchmark\\round-5-complex-feature-rework\\fixtures\\scenarios.json output.json",
+      "result": "passed after sandbox escalation for Cargo target access; semagraph_validate_policy_packet64 returned valid=true with no errors"
+    },
+    {
+      "command": "node -e <read-only evaluator-style public field comparison>",
+      "result": "passed; scenarios, aggregate, comparisons, and policyQueue matched fixtures/expected-output.json with sorted-key deep equality"
+    },
+    {
+      "command": "$env:CARGO_TARGET_DIR = \"...\\runs\\rust-mcp-upgraded\\.cargo-target-core-test\"; cargo test --manifest-path packages/core-rs/Cargo.toml",
+      "result": "passed; 16 Rust tests passed across unit, parity, and shape parity suites"
+    },
+    {
+      "command": "pnpm.cmd -r typecheck",
+      "result": "attempted but not completed; pnpm 11.7.0 aborted on dependency install/modules purge preflight with no TTY, and proceeding would risk shared workspace dependency changes outside the owned run directory"
+    },
+    {
+      "command": "pnpm.cmd -r test",
+      "result": "not run because pnpm workspace preflight for typecheck attempted dependency mutation outside the owned run scope"
+    }
+  ]
+}

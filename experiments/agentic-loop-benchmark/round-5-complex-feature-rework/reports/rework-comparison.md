@@ -1,9 +1,11 @@
 # Round 5 Complex Feature Rework Comparison
 
-Generated after two independent worker runs:
+Generated after three worker runs:
 
 - `no-mcp`: implemented deterministic State64/Q6 math locally.
 - `rust-mcp`: used the Rust MCP server for deterministic compression facts.
+- `rust-mcp-upgraded`: used the Rust MCP server for a deterministic workbench
+  packet and then validated the produced packet through MCP before handoff.
 
 ## Task
 
@@ -15,10 +17,11 @@ states, zero-distance transitions, loopback movement, and the
 
 ## Final Evaluator Result
 
-| Variant | Correct | Quality | Invalid Input | Loop Count | Rework Events | SemaGraph Calls |
-| --- | --- | ---: | --- | ---: | ---: | ---: |
-| `no-mcp` | yes | 5/5 | passed | 1 | 0 | 0 |
-| `rust-mcp` | yes | 5/5 | passed | 3 | 3 | 7 |
+| Variant | Correct | Quality | Invalid Input | Loop Count | Rework Events | Functional Rework | SemaGraph Calls |
+| --- | --- | ---: | --- | ---: | ---: | ---: | ---: |
+| `no-mcp` | yes | 5/5 | passed | 1 | 0 | 0 | 0 |
+| `rust-mcp` | yes | 5/5 | passed | 3 | 3 | 3 | 7 |
+| `rust-mcp-upgraded` | yes | 5/5 | passed | 1 | 2 | 0 | 2 |
 
 ## First-Pass Observation
 
@@ -33,6 +36,11 @@ The MCP calls correctly supplied deterministic compression facts such as ordered
 mutation masks, net mutation masks, cumulative distances, and signatures. The
 remaining failures were spec-following errors outside the deterministic kernel.
 
+The upgraded MCP run delivered correctly on the first functional pass. Its two
+recorded rework events were sandbox retries for `dist/` writes and Cargo target
+access, not evaluator-driven corrections to scenario math, comparisons, or
+policy queue shape.
+
 ## Rework Needed
 
 The `rust-mcp` worker required evaluator-driven rework to:
@@ -44,17 +52,27 @@ The `rust-mcp` worker required evaluator-driven rework to:
 - set `allowedActions` exactly to `["monitor", "review", "escalate"]`;
 - set `reviewRequired` to `true` for every queued scenario.
 
+The `rust-mcp-upgraded` worker avoided that class of rework by calling:
+
+- `semagraph_analyze_scenarios64` for scenarios, aggregate metrics,
+  comparisons, policy queue fields, mutation masks, distances, and signatures;
+- `semagraph_validate_policy_packet64` before handoff, which returned
+  `valid=true` with no errors.
+
 ## Interpretation
 
-This run does not support the simple claim that MCP automatically reduces rework
-for all feature work. It shows a sharper boundary:
+The first MCP run did not support the simple claim that MCP automatically
+reduces rework for all feature work. The upgraded run shows the sharper
+boundary:
 
 - MCP protected the deterministic chain-compression facts.
 - The agent still had to read and obey the feature contract around reporting and
-  policy queue shape.
-- In this single paired run, the no-MCP worker finished correctly with fewer
-  recorded rework events.
+  policy queue shape when only low-level compression tools were available.
+- When the MCP exposed the deterministic workbench contract directly and
+  provided a validator, the upgraded worker finished with no functional
+  evaluator rework.
 
 The useful conclusion is that SemaGraph MCP is valuable as an authoritative
-deterministic kernel boundary, but rework reduction depends on whether the
-dominant failure mode is deterministic math or general spec compliance.
+deterministic kernel boundary. Rework reduction becomes much more visible when
+the MCP surface matches the agent task level: not only `compress this chain`,
+but `produce and validate the deterministic packet this feature must preserve`.

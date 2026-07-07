@@ -5,7 +5,7 @@
 //! tools/call. All State64 transition and chain work is delegated to
 //! `semagraph-core-rs`; no inference, storage, or network access is performed.
 
-use std::collections::BTreeMap;
+use std::collections::{BTreeMap, BTreeSet};
 use std::io::{self, BufRead, Write};
 use std::process::ExitCode;
 
@@ -203,6 +203,8 @@ fn dispatch_tool(name: &str, args: &Json) -> Json {
         "semagraph_lookup_transition64" => tool_lookup_transition64(args),
         "semagraph_compress_chain64" => tool_compress_chain64(args),
         "semagraph_policy_context64" => tool_policy_context64(args),
+        "semagraph_analyze_scenarios64" => tool_analyze_scenarios64(args),
+        "semagraph_validate_policy_packet64" => tool_validate_policy_packet64(args),
         "semagraph_verify_transition_basis" => tool_verify_transition_basis(),
         _ => Err(format!("Unknown SemaGraph tool: {name}")),
     };
@@ -400,6 +402,494 @@ fn tool_policy_context64(args: &Json) -> Result<Json, String> {
     ]))
 }
 
+#[derive(Clone)]
+struct ScenarioInput {
+    id: String,
+    states: Vec<String>,
+    objective: Option<String>,
+}
+
+#[derive(Clone)]
+struct ScenarioReport {
+    id: String,
+    source_state_id: String,
+    target_state_id: String,
+    states: Vec<String>,
+    transition_count: usize,
+    ordered_mutation_masks: Vec<String>,
+    net_mutation_mask: String,
+    cumulative_distance: u32,
+    net_distance: u32,
+    dominant_regime_class: String,
+    volatility_class: String,
+    policy_readiness: String,
+    signature: String,
+    summary: String,
+    objective: Option<String>,
+}
+
+struct ComparePair {
+    left: String,
+    right: String,
+}
+
+fn tool_analyze_scenarios64(args: &Json) -> Result<Json, String> {
+    let (scenarios, compare_pairs, excluded_policy_ids) = parse_workbench_args(args)?;
+    build_policy_workbench_packet(&scenarios, &compare_pairs, &excluded_policy_ids)
+}
+
+fn tool_validate_policy_packet64(args: &Json) -> Result<Json, String> {
+    let packet = get_field(args, "packet")?;
+    let (scenarios, compare_pairs, excluded_policy_ids) = parse_workbench_args(args)?;
+    let expected = build_policy_workbench_packet(&scenarios, &compare_pairs, &excluded_policy_ids)?;
+    let mut errors = Vec::new();
+
+    for key in ["scenarios", "aggregate", "comparisons", "policyQueue"] {
+        let actual_value = packet.get(key).unwrap_or(&Json::Null);
+        let expected_value = expected.get(key).unwrap_or(&Json::Null);
+        if !json_semantic_equal(actual_value, expected_value) {
+            errors.push(obj(vec![
+                ("path", string(&format!("/{key}"))),
+                ("expected", expected_value.clone()),
+                ("actual", actual_value.clone()),
+            ]));
+        }
+    }
+
+    Ok(obj(vec![
+        ("valid", Json::Bool(errors.is_empty())),
+        ("errors", Json::Array(errors)),
+        ("expected", expected),
+        ("inferenceUsed", Json::Bool(false)),
+    ]))
+}
+
+fn parse_workbench_args(
+    args: &Json,
+) -> Result<(Vec<ScenarioInput>, Vec<ComparePair>, BTreeSet<String>), String> {
+    let scenario_values = get_array(args, "scenarios")?;
+    if scenario_values.is_empty() {
+        return Err("scenarios must contain at least one scenario".to_string());
+    }
+
+    let mut scenarios = Vec::with_capacity(scenario_values.len());
+    for scenario in scenario_values {
+        let id = get_string(scenario, "id")?.to_string();
+        let state_values = get_array(scenario, "states")?;
+        if state_values.len() < 2 {
+            return Err(format!("scenario {id} requires at least two states"));
+        }
+        let mut states = Vec::with_capacity(state_values.len());
+        for state_value in state_values {
+            let Some(state_id) = state_value.as_str() else {
+                return Err(format!(
+                    "scenario {id} states must contain State64 id strings"
+                ));
+            };
+            state_id_to_number(state_id)?;
+            states.push(state_id.to_string());
+        }
+        let objective = optional_string(scenario, "objective")?.map(str::to_string);
+        scenarios.push(ScenarioInput {
+            id,
+            states,
+            objective,
+        });
+    }
+
+    let mut compare_pairs = Vec::new();
+    if let Some(pair_values) = optional_array(args, "comparePairs")? {
+        for pair in pair_values {
+            compare_pairs.push(ComparePair {
+                left: get_string(pair, "left")?.to_string(),
+                right: get_string(pair, "right")?.to_string(),
+            });
+        }
+    }
+
+    let excluded_policy_ids = optional_string_array(args, "excludePolicyScenarioIds")?
+        .unwrap_or_default()
+        .into_iter()
+        .collect();
+
+    Ok((scenarios, compare_pairs, excluded_policy_ids))
+}
+
+fn build_policy_workbench_packet(
+    scenario_inputs: &[ScenarioInput],
+    compare_pairs: &[ComparePair],
+    excluded_policy_ids: &BTreeSet<String>,
+) -> Result<Json, String> {
+    let mut reports = Vec::with_capacity(scenario_inputs.len());
+    for scenario in scenario_inputs {
+        reports.push(analyze_scenario(scenario)?);
+    }
+
+    let mut by_id = BTreeMap::new();
+    for report in &reports {
+        by_id.insert(report.id.clone(), report.clone());
+    }
+
+    Ok(obj(vec![
+        (
+            "scenarios",
+            Json::Array(reports.iter().map(scenario_report_json).collect()),
+        ),
+        ("aggregate", aggregate_json(&reports)),
+        (
+            "comparisons",
+            Json::Array(
+                compare_pairs
+                    .iter()
+                    .map(|pair| comparison_json(pair, &by_id))
+                    .collect::<Result<Vec<_>, _>>()?,
+            ),
+        ),
+        (
+            "policyQueue",
+            Json::Array(
+                reports
+                    .iter()
+                    .filter(|report| !excluded_policy_ids.contains(&report.id))
+                    .map(policy_queue_item_json)
+                    .collect(),
+            ),
+        ),
+        ("inferenceUsed", Json::Bool(false)),
+    ]))
+}
+
+fn analyze_scenario(scenario: &ScenarioInput) -> Result<ScenarioReport, String> {
+    let state_numbers = scenario
+        .states
+        .iter()
+        .map(|state| state_id_to_number(state))
+        .collect::<Result<Vec<_>, _>>()?;
+    let compression =
+        compress_chain64(&state_numbers).map_err(|_| "chain compression failed".to_string())?;
+
+    let mut ordered_mutation_masks = Vec::with_capacity(state_numbers.len() - 1);
+    let mut cumulative_distance = 0u32;
+    let mut regime_stats: BTreeMap<String, (u32, u32)> = BTreeMap::new();
+    for pair in state_numbers.windows(2) {
+        let entry = lookup_transition64(pair[0], pair[1])
+            .map_err(|_| "transition lookup failed".to_string())?;
+        let regime_class = REGIME_CLASS_NAMES[entry.regime_class as usize].to_string();
+        ordered_mutation_masks.push(mask_id(entry.mutation_mask));
+        cumulative_distance += entry.distance as u32;
+        let stat = regime_stats.entry(regime_class).or_insert((0, 0));
+        stat.0 += 1;
+        stat.1 += entry.distance as u32;
+    }
+
+    let dominant_regime_class = dominant_regime_class(&regime_stats)?;
+    let source_state_id = scenario.states[0].clone();
+    let target_state_id = scenario.states[scenario.states.len() - 1].clone();
+    let net_mutation_mask = mask_id(compression.net_mutation_mask);
+    let net_distance = compression.net_mutation_mask.count_ones();
+    let volatility_class = volatility_class(cumulative_distance).to_string();
+    let policy_readiness = policy_readiness(&volatility_class).to_string();
+    let signature = format!(
+        "C64:{}>{}|M:{}|N:{}",
+        source_state_id,
+        target_state_id,
+        ordered_mutation_masks.join("."),
+        net_mutation_mask
+    );
+    let summary = format!(
+        "{}: {} to {}; {}; cumulative distance {}.",
+        scenario.id, source_state_id, target_state_id, volatility_class, cumulative_distance
+    );
+
+    Ok(ScenarioReport {
+        id: scenario.id.clone(),
+        source_state_id,
+        target_state_id,
+        states: scenario.states.clone(),
+        transition_count: ordered_mutation_masks.len(),
+        ordered_mutation_masks,
+        net_mutation_mask,
+        cumulative_distance,
+        net_distance,
+        dominant_regime_class,
+        volatility_class,
+        policy_readiness,
+        signature,
+        summary,
+        objective: scenario.objective.clone(),
+    })
+}
+
+fn scenario_report_json(report: &ScenarioReport) -> Json {
+    obj(vec![
+        ("id", string(&report.id)),
+        ("sourceStateId", string(&report.source_state_id)),
+        ("targetStateId", string(&report.target_state_id)),
+        (
+            "states",
+            Json::Array(report.states.iter().map(|state| string(state)).collect()),
+        ),
+        (
+            "transitionCount",
+            Json::Number(report.transition_count as i64),
+        ),
+        (
+            "orderedMutationMasks",
+            Json::Array(
+                report
+                    .ordered_mutation_masks
+                    .iter()
+                    .map(|mask| string(mask))
+                    .collect(),
+            ),
+        ),
+        ("netMutationMask", string(&report.net_mutation_mask)),
+        (
+            "cumulativeDistance",
+            Json::Number(report.cumulative_distance as i64),
+        ),
+        ("netDistance", Json::Number(report.net_distance as i64)),
+        ("dominantRegimeClass", string(&report.dominant_regime_class)),
+        ("volatilityClass", string(&report.volatility_class)),
+        ("policyReadiness", string(&report.policy_readiness)),
+        ("signature", string(&report.signature)),
+        ("summary", string(&report.summary)),
+    ])
+}
+
+fn aggregate_json(reports: &[ScenarioReport]) -> Json {
+    let total_transitions: usize = reports.iter().map(|report| report.transition_count).sum();
+    let total_cumulative_distance: u32 = reports
+        .iter()
+        .map(|report| report.cumulative_distance)
+        .sum();
+    let average_cumulative_distance =
+        round3(total_cumulative_distance as f64 / reports.len() as f64);
+    let max_cumulative_distance = reports
+        .iter()
+        .map(|report| report.cumulative_distance)
+        .max()
+        .unwrap_or(0);
+
+    obj(vec![
+        ("scenarioCount", Json::Number(reports.len() as i64)),
+        ("totalTransitions", Json::Number(total_transitions as i64)),
+        (
+            "totalCumulativeDistance",
+            Json::Number(total_cumulative_distance as i64),
+        ),
+        (
+            "averageCumulativeDistance",
+            Json::Float(average_cumulative_distance),
+        ),
+        (
+            "maxCumulativeDistanceScenarioIds",
+            Json::Array(
+                reports
+                    .iter()
+                    .filter(|report| report.cumulative_distance == max_cumulative_distance)
+                    .map(|report| string(&report.id))
+                    .collect(),
+            ),
+        ),
+        (
+            "volatilityHistogram",
+            histogram_json(
+                reports
+                    .iter()
+                    .map(|report| report.volatility_class.as_str()),
+            ),
+        ),
+        (
+            "dominantRegimeHistogram",
+            histogram_json(
+                reports
+                    .iter()
+                    .map(|report| report.dominant_regime_class.as_str()),
+            ),
+        ),
+        (
+            "netMutationHistogram",
+            histogram_json(
+                reports
+                    .iter()
+                    .map(|report| report.net_mutation_mask.as_str()),
+            ),
+        ),
+    ])
+}
+
+fn comparison_json(
+    pair: &ComparePair,
+    by_id: &BTreeMap<String, ScenarioReport>,
+) -> Result<Json, String> {
+    let left = by_id
+        .get(&pair.left)
+        .ok_or_else(|| format!("unknown comparison left scenario: {}", pair.left))?;
+    let right = by_id
+        .get(&pair.right)
+        .ok_or_else(|| format!("unknown comparison right scenario: {}", pair.right))?;
+    let left_masks = left
+        .ordered_mutation_masks
+        .iter()
+        .cloned()
+        .collect::<BTreeSet<_>>();
+    let left_states = left.states.iter().cloned().collect::<BTreeSet<_>>();
+    let shared_ordered_mutation_mask_count = right
+        .ordered_mutation_masks
+        .iter()
+        .filter(|mask| left_masks.contains(*mask))
+        .count();
+    let shared_state_count = right
+        .states
+        .iter()
+        .filter(|state| left_states.contains(*state))
+        .count();
+    let cumulative_distance_delta =
+        left.cumulative_distance.abs_diff(right.cumulative_distance) as i64;
+
+    Ok(obj(vec![
+        ("left", string(&pair.left)),
+        ("right", string(&pair.right)),
+        (
+            "sameNetMutationMask",
+            Json::Bool(left.net_mutation_mask == right.net_mutation_mask),
+        ),
+        (
+            "sameDominantRegimeClass",
+            Json::Bool(left.dominant_regime_class == right.dominant_regime_class),
+        ),
+        (
+            "sameVolatilityClass",
+            Json::Bool(left.volatility_class == right.volatility_class),
+        ),
+        (
+            "cumulativeDistanceDelta",
+            Json::Number(cumulative_distance_delta),
+        ),
+        (
+            "sharedOrderedMutationMaskCount",
+            Json::Number(shared_ordered_mutation_mask_count as i64),
+        ),
+        ("sharedStateCount", Json::Number(shared_state_count as i64)),
+    ]))
+}
+
+fn policy_queue_item_json(report: &ScenarioReport) -> Json {
+    obj(vec![
+        ("scenarioId", string(&report.id)),
+        ("triggerSignature", string(&report.signature)),
+        (
+            "objective",
+            string(report.objective.as_deref().unwrap_or("")),
+        ),
+        (
+            "priority",
+            string(policy_priority(&report.volatility_class)),
+        ),
+        (
+            "allowedActions",
+            Json::Array(vec![
+                string("monitor"),
+                string("review"),
+                string("escalate"),
+            ]),
+        ),
+        (
+            "forbiddenActions",
+            Json::Array(vec![
+                string("do not infer observations"),
+                string("do not mutate State64 ids"),
+                string("do not override deterministic signatures"),
+            ]),
+        ),
+        ("reviewRequired", Json::Bool(true)),
+    ])
+}
+
+fn dominant_regime_class(regime_stats: &BTreeMap<String, (u32, u32)>) -> Result<String, String> {
+    let mut ranked = regime_stats.iter().collect::<Vec<_>>();
+    ranked.sort_by(
+        |(left_name, (left_count, left_distance)), (right_name, (right_count, right_distance))| {
+            right_count
+                .cmp(left_count)
+                .then(right_distance.cmp(left_distance))
+                .then(left_name.cmp(right_name))
+        },
+    );
+    ranked
+        .first()
+        .map(|(name, _)| (*name).clone())
+        .ok_or_else(|| "scenario requires at least one transition".to_string())
+}
+
+fn volatility_class(cumulative_distance: u32) -> &'static str {
+    if cumulative_distance <= 3 {
+        "calm"
+    } else if cumulative_distance <= 7 {
+        "active"
+    } else {
+        "volatile"
+    }
+}
+
+fn policy_readiness(volatility_class: &str) -> &'static str {
+    match volatility_class {
+        "calm" => "hold",
+        "active" => "review",
+        _ => "escalate",
+    }
+}
+
+fn policy_priority(volatility_class: &str) -> &'static str {
+    match volatility_class {
+        "calm" => "low",
+        "active" => "normal",
+        _ => "high",
+    }
+}
+
+fn round3(value: f64) -> f64 {
+    (value * 1000.0).round() / 1000.0
+}
+
+fn histogram_json<'a>(values: impl Iterator<Item = &'a str>) -> Json {
+    let mut histogram = BTreeMap::new();
+    for value in values {
+        let entry = histogram.entry(value.to_string()).or_insert(0i64);
+        *entry += 1;
+    }
+    Json::Object(
+        histogram
+            .into_iter()
+            .map(|(key, count)| (key, Json::Number(count)))
+            .collect(),
+    )
+}
+
+fn json_semantic_equal(left: &Json, right: &Json) -> bool {
+    match (left, right) {
+        (Json::Number(left), Json::Float(right)) => (*left as f64 - *right).abs() < f64::EPSILON,
+        (Json::Float(left), Json::Number(right)) => (*left - *right as f64).abs() < f64::EPSILON,
+        (Json::Array(left), Json::Array(right)) => {
+            left.len() == right.len()
+                && left
+                    .iter()
+                    .zip(right.iter())
+                    .all(|(left, right)| json_semantic_equal(left, right))
+        }
+        (Json::Object(left), Json::Object(right)) => {
+            left.len() == right.len()
+                && left.iter().all(|(key, left_value)| {
+                    right
+                        .get(key)
+                        .is_some_and(|right_value| json_semantic_equal(left_value, right_value))
+                })
+        }
+        _ => left == right,
+    }
+}
+
 fn tool_verify_transition_basis() -> Result<Json, String> {
     let total = 4096i64;
     let mut verified = 0i64;
@@ -543,6 +1033,19 @@ fn get_array<'a>(json: &'a Json, key: &str) -> Result<&'a [Json], String> {
         .ok_or_else(|| format!("field {key} must be an array"))
 }
 
+fn optional_array<'a>(json: &'a Json, key: &str) -> Result<Option<&'a [Json]>, String> {
+    let Json::Object(fields) = json else {
+        return Err("expected object arguments".to_string());
+    };
+    match fields.get(key) {
+        Some(value) => value
+            .as_array()
+            .map(Some)
+            .ok_or_else(|| format!("field {key} must be an array")),
+        None => Ok(None),
+    }
+}
+
 fn optional_string<'a>(json: &'a Json, key: &str) -> Result<Option<&'a str>, String> {
     let Json::Object(fields) = json else {
         return Err("expected object arguments".to_string());
@@ -614,6 +1117,16 @@ fn tool_definitions() -> Vec<Json> {
             "semagraph_policy_context64",
             "Build a policy-synthesis context from a deterministic State64 transition chain. The LLM may write policy but must not alter observed states or signatures.",
             policy_schema(),
+        ),
+        tool_definition(
+            "semagraph_analyze_scenarios64",
+            "Build a deterministic policy-transition workbench packet for multiple State64 scenarios, including scenario reports, aggregate metrics, pair comparisons and policy queue fields. Use this instead of hand-computing masks, distances, comparisons or signatures in an agent.",
+            scenario_workbench_schema(),
+        ),
+        tool_definition(
+            "semagraph_validate_policy_packet64",
+            "Validate an agent-produced policy-transition workbench packet against deterministic State64 scenario inputs. Returns exact mismatches before handoff.",
+            validate_policy_packet_schema(),
         ),
         tool_definition(
             "semagraph_verify_transition_basis",
@@ -778,6 +1291,120 @@ fn policy_schema() -> Json {
         );
     }
     schema
+}
+
+fn scenario_workbench_schema() -> Json {
+    obj(vec![
+        ("type", string("object")),
+        ("additionalProperties", Json::Bool(false)),
+        (
+            "required",
+            Json::Array(vec![string("scenarios"), string("comparePairs")]),
+        ),
+        (
+            "properties",
+            obj(vec![
+                (
+                    "scenarios",
+                    obj(vec![
+                        ("type", string("array")),
+                        ("minItems", Json::Number(1)),
+                        ("items", scenario_input_schema()),
+                    ]),
+                ),
+                (
+                    "comparePairs",
+                    obj(vec![
+                        ("type", string("array")),
+                        ("items", compare_pair_schema()),
+                    ]),
+                ),
+                (
+                    "excludePolicyScenarioIds",
+                    obj(vec![
+                        ("type", string("array")),
+                        (
+                            "description",
+                            string(
+                                "Scenario ids to omit from deterministic policyQueue construction.",
+                            ),
+                        ),
+                        ("items", obj(vec![("type", string("string"))])),
+                    ]),
+                ),
+            ]),
+        ),
+    ])
+}
+
+fn validate_policy_packet_schema() -> Json {
+    let mut schema = scenario_workbench_schema();
+    let Some(required) = schema.get_mut("required") else {
+        return schema;
+    };
+    if let Json::Array(values) = required {
+        values.push(string("packet"));
+    }
+    let Some(properties) = schema.get_mut("properties") else {
+        return schema;
+    };
+    if let Json::Object(fields) = properties {
+        fields.insert(
+            "packet".to_string(),
+            obj(vec![
+                ("type", string("object")),
+                (
+                    "description",
+                    string("Agent-produced workbench packet to validate against deterministic scenario inputs."),
+                ),
+            ]),
+        );
+    }
+    schema
+}
+
+fn scenario_input_schema() -> Json {
+    obj(vec![
+        ("type", string("object")),
+        ("additionalProperties", Json::Bool(false)),
+        (
+            "required",
+            Json::Array(vec![string("id"), string("states")]),
+        ),
+        (
+            "properties",
+            obj(vec![
+                ("id", obj(vec![("type", string("string"))])),
+                (
+                    "states",
+                    obj(vec![
+                        ("type", string("array")),
+                        ("minItems", Json::Number(2)),
+                        ("items", state_id_schema()),
+                    ]),
+                ),
+                ("objective", obj(vec![("type", string("string"))])),
+            ]),
+        ),
+    ])
+}
+
+fn compare_pair_schema() -> Json {
+    obj(vec![
+        ("type", string("object")),
+        ("additionalProperties", Json::Bool(false)),
+        (
+            "required",
+            Json::Array(vec![string("left"), string("right")]),
+        ),
+        (
+            "properties",
+            obj(vec![
+                ("left", obj(vec![("type", string("string"))])),
+                ("right", obj(vec![("type", string("string"))])),
+            ]),
+        ),
+    ])
 }
 
 fn state_id_schema() -> Json {

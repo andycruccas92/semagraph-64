@@ -23,6 +23,11 @@ const variants = [
     name: "rust-mcp",
     runDir: resolve(roundRoot, "runs/rust-mcp"),
     cliCandidates: ["dist/policy-transition-workbench.js", "dist/cli.js"]
+  },
+  {
+    name: "rust-mcp-upgraded",
+    runDir: resolve(roundRoot, "runs/rust-mcp-upgraded"),
+    cliCandidates: ["dist/policy-transition-workbench.js", "dist/cli.js"]
   }
 ];
 
