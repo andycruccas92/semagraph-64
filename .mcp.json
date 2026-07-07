@@ -1,8 +1,15 @@
 {
   "mcpServers": {
     "semagraph": {
-      "command": "node",
-      "args": ["ai-tools/semagraph-kernel-tool/dist/mcp.js"]
+      "command": "cargo",
+      "args": [
+        "run",
+        "--quiet",
+        "--manifest-path",
+        "packages/Cargo.toml",
+        "--bin",
+        "semagraph-mcp"
+      ]
     }
   }
 }
