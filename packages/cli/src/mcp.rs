@@ -249,7 +249,12 @@ fn tool_anchor_state64(args: &Json) -> Result<Json, String> {
         let mut decision_fields = vec![
             ("position", Json::Number((index + 1) as i64)),
             ("key", string(key)),
+            ("operator", string(operator)),
+            ("value", value.clone()),
+            ("threshold", threshold.clone()),
             ("result", Json::Bool(result)),
+            ("trueBit", Json::Number(true_bit as i64)),
+            ("falseBit", Json::Number(false_bit as i64)),
             ("bit", Json::Number(bit as i64)),
         ];
         if let Some(source) = optional_string(observation, "source")? {
@@ -433,15 +438,29 @@ struct ComparePair {
     right: String,
 }
 
+struct WorkbenchArgs {
+    scenarios: Vec<ScenarioInput>,
+    compare_pairs: Vec<ComparePair>,
+    excluded_policy_ids: BTreeSet<String>,
+}
+
 fn tool_analyze_scenarios64(args: &Json) -> Result<Json, String> {
-    let (scenarios, compare_pairs, excluded_policy_ids) = parse_workbench_args(args)?;
-    build_policy_workbench_packet(&scenarios, &compare_pairs, &excluded_policy_ids)
+    let workbench_args = parse_workbench_args(args)?;
+    build_policy_workbench_packet(
+        &workbench_args.scenarios,
+        &workbench_args.compare_pairs,
+        &workbench_args.excluded_policy_ids,
+    )
 }
 
 fn tool_validate_policy_packet64(args: &Json) -> Result<Json, String> {
     let packet = get_field(args, "packet")?;
-    let (scenarios, compare_pairs, excluded_policy_ids) = parse_workbench_args(args)?;
-    let expected = build_policy_workbench_packet(&scenarios, &compare_pairs, &excluded_policy_ids)?;
+    let workbench_args = parse_workbench_args(args)?;
+    let expected = build_policy_workbench_packet(
+        &workbench_args.scenarios,
+        &workbench_args.compare_pairs,
+        &workbench_args.excluded_policy_ids,
+    )?;
     let mut errors = Vec::new();
 
     for key in ["scenarios", "aggregate", "comparisons", "policyQueue"] {
@@ -464,9 +483,7 @@ fn tool_validate_policy_packet64(args: &Json) -> Result<Json, String> {
     ]))
 }
 
-fn parse_workbench_args(
-    args: &Json,
-) -> Result<(Vec<ScenarioInput>, Vec<ComparePair>, BTreeSet<String>), String> {
+fn parse_workbench_args(args: &Json) -> Result<WorkbenchArgs, String> {
     let scenario_values = get_array(args, "scenarios")?;
     if scenario_values.is_empty() {
         return Err("scenarios must contain at least one scenario".to_string());
@@ -512,7 +529,11 @@ fn parse_workbench_args(
         .into_iter()
         .collect();
 
-    Ok((scenarios, compare_pairs, excluded_policy_ids))
+    Ok(WorkbenchArgs {
+        scenarios,
+        compare_pairs,
+        excluded_policy_ids,
+    })
 }
 
 fn build_policy_workbench_packet(
