@@ -1,0 +1,36 @@
+{
+  "variant": "no-mcp",
+  "semagraphRuntime": "none",
+  "semagraphCalls": [],
+  "loopCount": 1,
+  "reworkEvents": [],
+  "acceptanceChecks": [
+    {
+      "name": "typecheck",
+      "command": "npx.cmd tsc -p tsconfig.json --noEmit",
+      "status": "passed"
+    },
+    {
+      "name": "build",
+      "command": "npx.cmd tsc -p tsconfig.json",
+      "status": "passed",
+      "note": "initial sandboxed build hit EPERM writing dist; reran with approval and compiled successfully"
+    },
+    {
+      "name": "valid fixture smoke",
+      "command": "node dist/policy-transition-workbench.js fixtures/scenarios.json",
+      "status": "passed"
+    },
+    {
+      "name": "invalid fixture smoke",
+      "command": "node dist/policy-transition-workbench.js fixtures/invalid-scenarios.json",
+      "status": "passed",
+      "note": "rejected non-canonical state id with nonzero exit"
+    },
+    {
+      "name": "expected output comparison",
+      "command": "node -e <compare CLI output to fixtures/expected-output.json>",
+      "status": "passed"
+    }
+  ]
+}

@@ -1,0 +1,10 @@
+{
+  "scenarios": [
+    {
+      "id": "bad-state",
+      "states": ["S64-000000", "S64-10000X"],
+      "objective": "must reject invalid canonical state"
+    }
+  ],
+  "comparePairs": []
+}

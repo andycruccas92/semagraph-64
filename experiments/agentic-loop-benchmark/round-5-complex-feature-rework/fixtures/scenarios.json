@@ -1,0 +1,40 @@
+{
+  "scenarios": [
+    {
+      "id": "calm-zero",
+      "states": ["S64-000000", "S64-000000", "S64-000001"],
+      "objective": "confirm stable no-change handling"
+    },
+    {
+      "id": "alpha-ladder",
+      "states": ["S64-000000", "S64-100000", "S64-101000", "S64-101010"],
+      "objective": "stabilize alpha progression"
+    },
+    {
+      "id": "beta-return",
+      "states": ["S64-111111", "S64-011111", "S64-001111", "S64-011111", "S64-010111"],
+      "objective": "watch return-to-prior-state behavior"
+    },
+    {
+      "id": "gamma-inversion",
+      "states": ["S64-000000", "S64-111111", "S64-000001"],
+      "objective": "handle near total inversion after full reversal"
+    },
+    {
+      "id": "delta-cross",
+      "states": ["S64-101010", "S64-100011", "S64-110001", "S64-010001"],
+      "objective": "review cross-module transition chain"
+    },
+    {
+      "id": "epsilon-loop",
+      "states": ["S64-010101", "S64-010101", "S64-110101", "S64-010101", "S64-010001"],
+      "objective": "compress repeated states and loopback movement"
+    }
+  ],
+  "comparePairs": [
+    { "left": "alpha-ladder", "right": "delta-cross" },
+    { "left": "beta-return", "right": "epsilon-loop" },
+    { "left": "gamma-inversion", "right": "calm-zero" },
+    { "left": "alpha-ladder", "right": "epsilon-loop" }
+  ]
+}

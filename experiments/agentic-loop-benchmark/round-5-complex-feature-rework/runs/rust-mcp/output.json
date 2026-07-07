@@ -1,0 +1,309 @@
+{
+  "scenarios": [
+    {
+      "id": "calm-zero",
+      "sourceStateId": "S64-000000",
+      "targetStateId": "S64-000001",
+      "states": [
+        "S64-000000",
+        "S64-000000",
+        "S64-000001"
+      ],
+      "transitionCount": 2,
+      "orderedMutationMasks": [
+        "M64-000000",
+        "M64-000001"
+      ],
+      "netMutationMask": "M64-000001",
+      "cumulativeDistance": 1,
+      "netDistance": 1,
+      "dominantRegimeClass": "bit_adjustment",
+      "volatilityClass": "calm",
+      "policyReadiness": "hold",
+      "signature": "C64:S64-000000>S64-000001|M:M64-000000.M64-000001|N:M64-000001",
+      "summary": "calm-zero: S64-000000 to S64-000001; calm; cumulative distance 1."
+    },
+    {
+      "id": "alpha-ladder",
+      "sourceStateId": "S64-000000",
+      "targetStateId": "S64-101010",
+      "states": [
+        "S64-000000",
+        "S64-100000",
+        "S64-101000",
+        "S64-101010"
+      ],
+      "transitionCount": 3,
+      "orderedMutationMasks": [
+        "M64-100000",
+        "M64-001000",
+        "M64-000010"
+      ],
+      "netMutationMask": "M64-101010",
+      "cumulativeDistance": 3,
+      "netDistance": 3,
+      "dominantRegimeClass": "bit_adjustment",
+      "volatilityClass": "calm",
+      "policyReadiness": "hold",
+      "signature": "C64:S64-000000>S64-101010|M:M64-100000.M64-001000.M64-000010|N:M64-101010",
+      "summary": "alpha-ladder: S64-000000 to S64-101010; calm; cumulative distance 3."
+    },
+    {
+      "id": "beta-return",
+      "sourceStateId": "S64-111111",
+      "targetStateId": "S64-010111",
+      "states": [
+        "S64-111111",
+        "S64-011111",
+        "S64-001111",
+        "S64-011111",
+        "S64-010111"
+      ],
+      "transitionCount": 4,
+      "orderedMutationMasks": [
+        "M64-100000",
+        "M64-010000",
+        "M64-010000",
+        "M64-001000"
+      ],
+      "netMutationMask": "M64-101000",
+      "cumulativeDistance": 4,
+      "netDistance": 2,
+      "dominantRegimeClass": "bit_adjustment",
+      "volatilityClass": "active",
+      "policyReadiness": "review",
+      "signature": "C64:S64-111111>S64-010111|M:M64-100000.M64-010000.M64-010000.M64-001000|N:M64-101000",
+      "summary": "beta-return: S64-111111 to S64-010111; active; cumulative distance 4."
+    },
+    {
+      "id": "gamma-inversion",
+      "sourceStateId": "S64-000000",
+      "targetStateId": "S64-000001",
+      "states": [
+        "S64-000000",
+        "S64-111111",
+        "S64-000001"
+      ],
+      "transitionCount": 2,
+      "orderedMutationMasks": [
+        "M64-111111",
+        "M64-111110"
+      ],
+      "netMutationMask": "M64-000001",
+      "cumulativeDistance": 11,
+      "netDistance": 1,
+      "dominantRegimeClass": "full_bit_reversal",
+      "volatilityClass": "volatile",
+      "policyReadiness": "escalate",
+      "signature": "C64:S64-000000>S64-000001|M:M64-111111.M64-111110|N:M64-000001",
+      "summary": "gamma-inversion: S64-000000 to S64-000001; volatile; cumulative distance 11."
+    },
+    {
+      "id": "delta-cross",
+      "sourceStateId": "S64-101010",
+      "targetStateId": "S64-010001",
+      "states": [
+        "S64-101010",
+        "S64-100011",
+        "S64-110001",
+        "S64-010001"
+      ],
+      "transitionCount": 3,
+      "orderedMutationMasks": [
+        "M64-001001",
+        "M64-010010",
+        "M64-100000"
+      ],
+      "netMutationMask": "M64-111011",
+      "cumulativeDistance": 5,
+      "netDistance": 5,
+      "dominantRegimeClass": "cross_module_regime_shift",
+      "volatilityClass": "active",
+      "policyReadiness": "review",
+      "signature": "C64:S64-101010>S64-010001|M:M64-001001.M64-010010.M64-100000|N:M64-111011",
+      "summary": "delta-cross: S64-101010 to S64-010001; active; cumulative distance 5."
+    },
+    {
+      "id": "epsilon-loop",
+      "sourceStateId": "S64-010101",
+      "targetStateId": "S64-010001",
+      "states": [
+        "S64-010101",
+        "S64-010101",
+        "S64-110101",
+        "S64-010101",
+        "S64-010001"
+      ],
+      "transitionCount": 4,
+      "orderedMutationMasks": [
+        "M64-000000",
+        "M64-100000",
+        "M64-100000",
+        "M64-000100"
+      ],
+      "netMutationMask": "M64-000100",
+      "cumulativeDistance": 3,
+      "netDistance": 1,
+      "dominantRegimeClass": "bit_adjustment",
+      "volatilityClass": "calm",
+      "policyReadiness": "hold",
+      "signature": "C64:S64-010101>S64-010001|M:M64-000000.M64-100000.M64-100000.M64-000100|N:M64-000100",
+      "summary": "epsilon-loop: S64-010101 to S64-010001; calm; cumulative distance 3."
+    }
+  ],
+  "aggregate": {
+    "scenarioCount": 6,
+    "totalTransitions": 18,
+    "totalCumulativeDistance": 27,
+    "averageCumulativeDistance": 4.5,
+    "maxCumulativeDistanceScenarioIds": [
+      "gamma-inversion"
+    ],
+    "volatilityHistogram": {
+      "calm": 3,
+      "active": 2,
+      "volatile": 1
+    },
+    "dominantRegimeHistogram": {
+      "bit_adjustment": 4,
+      "full_bit_reversal": 1,
+      "cross_module_regime_shift": 1
+    },
+    "netMutationHistogram": {
+      "M64-000001": 2,
+      "M64-101010": 1,
+      "M64-101000": 1,
+      "M64-111011": 1,
+      "M64-000100": 1
+    }
+  },
+  "comparisons": [
+    {
+      "left": "alpha-ladder",
+      "right": "delta-cross",
+      "sameNetMutationMask": false,
+      "sameDominantRegimeClass": false,
+      "sameVolatilityClass": false,
+      "cumulativeDistanceDelta": 2,
+      "sharedOrderedMutationMaskCount": 1,
+      "sharedStateCount": 1
+    },
+    {
+      "left": "beta-return",
+      "right": "epsilon-loop",
+      "sameNetMutationMask": false,
+      "sameDominantRegimeClass": true,
+      "sameVolatilityClass": false,
+      "cumulativeDistanceDelta": 1,
+      "sharedOrderedMutationMaskCount": 2,
+      "sharedStateCount": 0
+    },
+    {
+      "left": "gamma-inversion",
+      "right": "calm-zero",
+      "sameNetMutationMask": true,
+      "sameDominantRegimeClass": false,
+      "sameVolatilityClass": false,
+      "cumulativeDistanceDelta": 10,
+      "sharedOrderedMutationMaskCount": 0,
+      "sharedStateCount": 3
+    },
+    {
+      "left": "alpha-ladder",
+      "right": "epsilon-loop",
+      "sameNetMutationMask": false,
+      "sameDominantRegimeClass": true,
+      "sameVolatilityClass": true,
+      "cumulativeDistanceDelta": 0,
+      "sharedOrderedMutationMaskCount": 2,
+      "sharedStateCount": 0
+    }
+  ],
+  "policyQueue": [
+    {
+      "scenarioId": "alpha-ladder",
+      "triggerSignature": "C64:S64-000000>S64-101010|M:M64-100000.M64-001000.M64-000010|N:M64-101010",
+      "objective": "stabilize alpha progression",
+      "priority": "low",
+      "allowedActions": [
+        "monitor",
+        "review",
+        "escalate"
+      ],
+      "forbiddenActions": [
+        "do not infer observations",
+        "do not mutate State64 ids",
+        "do not override deterministic signatures"
+      ],
+      "reviewRequired": true
+    },
+    {
+      "scenarioId": "beta-return",
+      "triggerSignature": "C64:S64-111111>S64-010111|M:M64-100000.M64-010000.M64-010000.M64-001000|N:M64-101000",
+      "objective": "watch return-to-prior-state behavior",
+      "priority": "normal",
+      "allowedActions": [
+        "monitor",
+        "review",
+        "escalate"
+      ],
+      "forbiddenActions": [
+        "do not infer observations",
+        "do not mutate State64 ids",
+        "do not override deterministic signatures"
+      ],
+      "reviewRequired": true
+    },
+    {
+      "scenarioId": "gamma-inversion",
+      "triggerSignature": "C64:S64-000000>S64-000001|M:M64-111111.M64-111110|N:M64-000001",
+      "objective": "handle near total inversion after full reversal",
+      "priority": "high",
+      "allowedActions": [
+        "monitor",
+        "review",
+        "escalate"
+      ],
+      "forbiddenActions": [
+        "do not infer observations",
+        "do not mutate State64 ids",
+        "do not override deterministic signatures"
+      ],
+      "reviewRequired": true
+    },
+    {
+      "scenarioId": "delta-cross",
+      "triggerSignature": "C64:S64-101010>S64-010001|M:M64-001001.M64-010010.M64-100000|N:M64-111011",
+      "objective": "review cross-module transition chain",
+      "priority": "normal",
+      "allowedActions": [
+        "monitor",
+        "review",
+        "escalate"
+      ],
+      "forbiddenActions": [
+        "do not infer observations",
+        "do not mutate State64 ids",
+        "do not override deterministic signatures"
+      ],
+      "reviewRequired": true
+    },
+    {
+      "scenarioId": "epsilon-loop",
+      "triggerSignature": "C64:S64-010101>S64-010001|M:M64-000000.M64-100000.M64-100000.M64-000100|N:M64-000100",
+      "objective": "compress repeated states and loopback movement",
+      "priority": "low",
+      "allowedActions": [
+        "monitor",
+        "review",
+        "escalate"
+      ],
+      "forbiddenActions": [
+        "do not infer observations",
+        "do not mutate State64 ids",
+        "do not override deterministic signatures"
+      ],
+      "reviewRequired": true
+    }
+  ]
+}

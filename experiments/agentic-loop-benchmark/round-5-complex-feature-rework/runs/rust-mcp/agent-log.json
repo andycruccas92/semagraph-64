@@ -1,0 +1,182 @@
+{
+  "variant": "rust-mcp",
+  "semagraphRuntime": "rust-mcp",
+  "semagraphCalls": [
+    {
+      "phase": "valid-fixture-smoke",
+      "transport": "stdio JSON-RPC framed MCP batch",
+      "command": "cargo run --quiet --manifest-path packages/Cargo.toml --bin semagraph-mcp",
+      "tool": "semagraph_verify_transition_basis",
+      "requestId": 1,
+      "arguments": {},
+      "deterministicBoundary": "Rust MCP verified the 64 x 64 direct transition basis before scenario policy synthesis.",
+      "resultSummary": {
+        "verified": 4096,
+        "total": 4096,
+        "ok": true,
+        "inferenceUsed": false
+      }
+    },
+    {
+      "phase": "valid-fixture-smoke",
+      "transport": "stdio JSON-RPC framed MCP batch",
+      "command": "cargo run --quiet --manifest-path packages/Cargo.toml --bin semagraph-mcp",
+      "tool": "semagraph_compress_chain64",
+      "requestId": 2,
+      "scenarioId": "calm-zero",
+      "arguments": {
+        "states": ["S64-000000", "S64-000000", "S64-000001"]
+      },
+      "resultSummary": {
+        "orderedMutationMasks": ["M64-000000", "M64-000001"],
+        "netMutationMask": "M64-000001",
+        "cumulativeDistance": 1,
+        "signature": "C64:S64-000000>S64-000001|M:M64-000000.M64-000001|N:M64-000001",
+        "inferenceUsed": false
+      }
+    },
+    {
+      "phase": "valid-fixture-smoke",
+      "transport": "stdio JSON-RPC framed MCP batch",
+      "command": "cargo run --quiet --manifest-path packages/Cargo.toml --bin semagraph-mcp",
+      "tool": "semagraph_compress_chain64",
+      "requestId": 3,
+      "scenarioId": "alpha-ladder",
+      "arguments": {
+        "states": ["S64-000000", "S64-100000", "S64-101000", "S64-101010"]
+      },
+      "resultSummary": {
+        "orderedMutationMasks": ["M64-100000", "M64-001000", "M64-000010"],
+        "netMutationMask": "M64-101010",
+        "cumulativeDistance": 3,
+        "signature": "C64:S64-000000>S64-101010|M:M64-100000.M64-001000.M64-000010|N:M64-101010",
+        "inferenceUsed": false
+      }
+    },
+    {
+      "phase": "valid-fixture-smoke",
+      "transport": "stdio JSON-RPC framed MCP batch",
+      "command": "cargo run --quiet --manifest-path packages/Cargo.toml --bin semagraph-mcp",
+      "tool": "semagraph_compress_chain64",
+      "requestId": 4,
+      "scenarioId": "beta-return",
+      "arguments": {
+        "states": ["S64-111111", "S64-011111", "S64-001111", "S64-011111", "S64-010111"]
+      },
+      "resultSummary": {
+        "orderedMutationMasks": ["M64-100000", "M64-010000", "M64-010000", "M64-001000"],
+        "netMutationMask": "M64-101000",
+        "cumulativeDistance": 4,
+        "signature": "C64:S64-111111>S64-010111|M:M64-100000.M64-010000.M64-010000.M64-001000|N:M64-101000",
+        "inferenceUsed": false
+      }
+    },
+    {
+      "phase": "valid-fixture-smoke",
+      "transport": "stdio JSON-RPC framed MCP batch",
+      "command": "cargo run --quiet --manifest-path packages/Cargo.toml --bin semagraph-mcp",
+      "tool": "semagraph_compress_chain64",
+      "requestId": 5,
+      "scenarioId": "gamma-inversion",
+      "arguments": {
+        "states": ["S64-000000", "S64-111111", "S64-000001"]
+      },
+      "resultSummary": {
+        "orderedMutationMasks": ["M64-111111", "M64-111110"],
+        "netMutationMask": "M64-000001",
+        "cumulativeDistance": 11,
+        "signature": "C64:S64-000000>S64-000001|M:M64-111111.M64-111110|N:M64-000001",
+        "inferenceUsed": false
+      }
+    },
+    {
+      "phase": "valid-fixture-smoke",
+      "transport": "stdio JSON-RPC framed MCP batch",
+      "command": "cargo run --quiet --manifest-path packages/Cargo.toml --bin semagraph-mcp",
+      "tool": "semagraph_compress_chain64",
+      "requestId": 6,
+      "scenarioId": "delta-cross",
+      "arguments": {
+        "states": ["S64-101010", "S64-100011", "S64-110001", "S64-010001"]
+      },
+      "resultSummary": {
+        "orderedMutationMasks": ["M64-001001", "M64-010010", "M64-100000"],
+        "netMutationMask": "M64-111011",
+        "cumulativeDistance": 5,
+        "signature": "C64:S64-101010>S64-010001|M:M64-001001.M64-010010.M64-100000|N:M64-111011",
+        "inferenceUsed": false
+      }
+    },
+    {
+      "phase": "valid-fixture-smoke",
+      "transport": "stdio JSON-RPC framed MCP batch",
+      "command": "cargo run --quiet --manifest-path packages/Cargo.toml --bin semagraph-mcp",
+      "tool": "semagraph_compress_chain64",
+      "requestId": 7,
+      "scenarioId": "epsilon-loop",
+      "arguments": {
+        "states": ["S64-010101", "S64-010101", "S64-110101", "S64-010101", "S64-010001"]
+      },
+      "resultSummary": {
+        "orderedMutationMasks": ["M64-000000", "M64-100000", "M64-100000", "M64-000100"],
+        "netMutationMask": "M64-000100",
+        "cumulativeDistance": 3,
+        "signature": "C64:S64-010101>S64-010001|M:M64-000000.M64-100000.M64-100000.M64-000100|N:M64-000100",
+        "inferenceUsed": false
+      }
+    }
+  ],
+  "loopCount": 3,
+  "reworkEvents": [
+    {
+      "event": "build-output-sandbox-retry",
+      "detail": "Initial non-escalated npm run build passed type analysis but could not create/overwrite dist due EPERM; reran the same build with approval to emit dist inside the assigned rust-mcp scope."
+    },
+    {
+      "event": "deterministic-echo-validation-tightening",
+      "detail": "Added a check that Rust MCP compression returns the same ordered state chain supplied by the input before policy queue synthesis."
+    },
+    {
+      "event": "round-5-evaluator-targeted-rework",
+      "detail": "Adjusted evaluator-facing output only: exact scenario summary format, absolute cumulativeDistanceDelta, right-duplicate-preserving shared mask/state counts, fixed allowedActions [monitor, review, escalate], and reviewRequired=true for every queued scenario."
+    }
+  ],
+  "acceptanceChecks": [
+    {
+      "command": "npm.cmd run typecheck",
+      "result": "passed"
+    },
+    {
+      "command": "npm.cmd run build",
+      "result": "passed after approved sandbox retry for dist write"
+    },
+    {
+      "command": "node dist/policy-transition-workbench.js C:\\Dev\\semagraph-64\\experiments\\agentic-loop-benchmark\\round-5-complex-feature-rework\\fixtures\\scenarios.json",
+      "result": "passed; emitted scenarios, aggregate, comparisons, and policyQueue; Rust MCP basis verification ok and six chain compressions returned inferenceUsed=false"
+    },
+    {
+      "command": "node dist/policy-transition-workbench.js C:\\Dev\\semagraph-64\\experiments\\agentic-loop-benchmark\\round-5-complex-feature-rework\\fixtures\\invalid-scenarios.json",
+      "result": "passed; exited 1 and rejected invalid canonical State64 id S64-10000X before transition processing"
+    },
+    {
+      "command": "cargo test --manifest-path packages/core-rs/Cargo.toml",
+      "result": "not run; task write scope forbids modifying shared package build artifacts outside the rust-mcp run directory"
+    },
+    {
+      "command": "npm.cmd run typecheck",
+      "result": "passed after evaluator-targeted rework"
+    },
+    {
+      "command": "npm.cmd run build",
+      "result": "passed after approved sandbox retry for dist overwrite"
+    },
+    {
+      "command": "node dist/policy-transition-workbench.js C:\\Dev\\semagraph-64\\experiments\\agentic-loop-benchmark\\round-5-complex-feature-rework\\fixtures\\scenarios.json",
+      "result": "passed after evaluator-targeted rework; spot-checked summaries, absolute deltas, duplicate-preserving right-side shared counts, fixed allowedActions, and reviewRequired=true"
+    },
+    {
+      "command": "node dist/policy-transition-workbench.js C:\\Dev\\semagraph-64\\experiments\\agentic-loop-benchmark\\round-5-complex-feature-rework\\fixtures\\invalid-scenarios.json",
+      "result": "passed after evaluator-targeted rework; exited 1 and rejected invalid canonical State64 id S64-10000X before transition processing"
+    }
+  ]
+}
