@@ -14,6 +14,10 @@ keywords = ["state-machine", "trajectory", "deterministic", "compression"]
 name = "semagraph"
 path = "src/main.rs"
 
+[[bin]]
+name = "semagraph-mcp"
+path = "src/mcp.rs"
+
 # DESIGN-NOTE: the CLI deliberately has no third-party dependencies. Argument
 # parsing and JSON emission are hand-rolled so the binary keeps the project's
 # zero-runtime-dependency promise and stays trivially auditable. The only
