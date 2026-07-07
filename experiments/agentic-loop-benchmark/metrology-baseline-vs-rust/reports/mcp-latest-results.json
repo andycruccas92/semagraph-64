@@ -1,0 +1,280 @@
+{
+  "benchmark": "rust-mcp-metrology",
+  "generatedAt": "2026-07-07T11:01:56.025Z",
+  "config": {
+    "sampleSize": 128,
+    "repeats": 9,
+    "warmups": 3,
+    "inprocessIterations": 10000,
+    "sampleStrategy": "stratified round-robin over mutation distances 0..6"
+  },
+  "environment": {
+    "node": "v24.13.0",
+    "platform": "win32",
+    "arch": "x64",
+    "mcpBinary": "C:\\Dev\\semagraph-64\\packages\\target\\release\\semagraph-mcp.exe"
+  },
+  "measurements": [
+    {
+      "name": "baseline-js-inprocess",
+      "boundary": "in-process-lower-bound",
+      "valid": true,
+      "validationFailures": [],
+      "repeats": 9,
+      "warmups": 3,
+      "callsPerRepeat": 1280000,
+      "totalCalls": 11520000,
+      "totalMs": {
+        "min": 1219.1452,
+        "median": 1392.8368,
+        "mean": 1369.954589,
+        "p95": 1514.8414,
+        "max": 1514.8414,
+        "stdev": 85.884574,
+        "mad": 68.8118,
+        "cv": 0.062692
+      },
+      "perCallMs": {
+        "min": 0.000952,
+        "median": 0.001088,
+        "mean": 0.00107,
+        "p95": 0.001183,
+        "max": 0.001183,
+        "stdev": 0.000067,
+        "mad": 0.000054,
+        "cv": 0.062692
+      },
+      "samples": [
+        {
+          "sample": 0,
+          "calls": 1280000,
+          "totalMs": 1282.9758,
+          "perCallMs": 0.001002
+        },
+        {
+          "sample": 1,
+          "calls": 1280000,
+          "totalMs": 1514.8414,
+          "perCallMs": 0.001183
+        },
+        {
+          "sample": 2,
+          "calls": 1280000,
+          "totalMs": 1404.136,
+          "perCallMs": 0.001097
+        },
+        {
+          "sample": 3,
+          "calls": 1280000,
+          "totalMs": 1323.8298,
+          "perCallMs": 0.001034
+        },
+        {
+          "sample": 4,
+          "calls": 1280000,
+          "totalMs": 1327.6064,
+          "perCallMs": 0.001037
+        },
+        {
+          "sample": 5,
+          "calls": 1280000,
+          "totalMs": 1392.8368,
+          "perCallMs": 0.001088
+        },
+        {
+          "sample": 6,
+          "calls": 1280000,
+          "totalMs": 1461.6486,
+          "perCallMs": 0.001142
+        },
+        {
+          "sample": 7,
+          "calls": 1280000,
+          "totalMs": 1402.5713,
+          "perCallMs": 0.001096
+        },
+        {
+          "sample": 8,
+          "calls": 1280000,
+          "totalMs": 1219.1452,
+          "perCallMs": 0.000952
+        }
+      ]
+    },
+    {
+      "name": "baseline-node-cli",
+      "boundary": "cli-per-transition",
+      "valid": true,
+      "validationFailures": [],
+      "repeats": 9,
+      "warmups": 3,
+      "callsPerRepeat": 128,
+      "totalCalls": 1152,
+      "totalMs": {
+        "min": 6794.0231,
+        "median": 7258.6879,
+        "mean": 7321.927722,
+        "p95": 8048.3324,
+        "max": 8048.3324,
+        "stdev": 449.069151,
+        "mad": 381.2192,
+        "cv": 0.061332
+      },
+      "perCallMs": {
+        "min": 53.078305,
+        "median": 56.708499,
+        "mean": 57.20256,
+        "p95": 62.877597,
+        "max": 62.877597,
+        "stdev": 3.508353,
+        "mad": 2.978275,
+        "cv": 0.061332
+      },
+      "samples": [
+        {
+          "sample": 0,
+          "calls": 128,
+          "totalMs": 7943.1445,
+          "perCallMs": 62.055816
+        },
+        {
+          "sample": 1,
+          "calls": 128,
+          "totalMs": 8048.3324,
+          "perCallMs": 62.877597
+        },
+        {
+          "sample": 2,
+          "calls": 128,
+          "totalMs": 7299.0877,
+          "perCallMs": 57.024123
+        },
+        {
+          "sample": 3,
+          "calls": 128,
+          "totalMs": 7728.4101,
+          "perCallMs": 60.378204
+        },
+        {
+          "sample": 4,
+          "calls": 128,
+          "totalMs": 7056.0922,
+          "perCallMs": 55.12572
+        },
+        {
+          "sample": 5,
+          "calls": 128,
+          "totalMs": 6877.4687,
+          "perCallMs": 53.730224
+        },
+        {
+          "sample": 6,
+          "calls": 128,
+          "totalMs": 6794.0231,
+          "perCallMs": 53.078305
+        },
+        {
+          "sample": 7,
+          "calls": 128,
+          "totalMs": 6892.1029,
+          "perCallMs": 53.844554
+        },
+        {
+          "sample": 8,
+          "calls": 128,
+          "totalMs": 7258.6879,
+          "perCallMs": 56.708499
+        }
+      ]
+    },
+    {
+      "name": "semagraph-rs-mcp",
+      "boundary": "persistent-mcp-stdio-tools-call",
+      "valid": true,
+      "validationFailures": [],
+      "repeats": 9,
+      "warmups": 3,
+      "callsPerRepeat": 128,
+      "totalCalls": 1152,
+      "totalMs": {
+        "min": 16.884,
+        "median": 21.2819,
+        "mean": 21.473733,
+        "p95": 25.295,
+        "max": 25.295,
+        "stdev": 2.764914,
+        "mad": 2.6832,
+        "cv": 0.128758
+      },
+      "perCallMs": {
+        "min": 0.131906,
+        "median": 0.166265,
+        "mean": 0.167764,
+        "p95": 0.197617,
+        "max": 0.197617,
+        "stdev": 0.021601,
+        "mad": 0.020963,
+        "cv": 0.128758
+      },
+      "samples": [
+        {
+          "sample": 0,
+          "calls": 128,
+          "totalMs": 24.7016,
+          "perCallMs": 0.192981
+        },
+        {
+          "sample": 1,
+          "calls": 128,
+          "totalMs": 25.295,
+          "perCallMs": 0.197617
+        },
+        {
+          "sample": 2,
+          "calls": 128,
+          "totalMs": 23.9651,
+          "perCallMs": 0.187227
+        },
+        {
+          "sample": 3,
+          "calls": 128,
+          "totalMs": 18.2426,
+          "perCallMs": 0.14252
+        },
+        {
+          "sample": 4,
+          "calls": 128,
+          "totalMs": 22.6088,
+          "perCallMs": 0.176631
+        },
+        {
+          "sample": 5,
+          "calls": 128,
+          "totalMs": 19.3683,
+          "perCallMs": 0.151315
+        },
+        {
+          "sample": 6,
+          "calls": 128,
+          "totalMs": 21.2819,
+          "perCallMs": 0.166265
+        },
+        {
+          "sample": 7,
+          "calls": 128,
+          "totalMs": 20.9163,
+          "perCallMs": 0.163409
+        },
+        {
+          "sample": 8,
+          "calls": 128,
+          "totalMs": 16.884,
+          "perCallMs": 0.131906
+        }
+      ],
+      "serverStartupMs": 4.8894,
+      "binary": "C:\\Dev\\semagraph-64\\packages\\target\\release\\semagraph-mcp.exe",
+      "stderr": ""
+    }
+  ]
+}

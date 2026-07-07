@@ -1,0 +1,1701 @@
+{
+  "benchmark": "round-4-standard-agentic-mcp",
+  "generatedAt": "2026-07-07T11:10:08.831Z",
+  "fixture": "fixtures/work-items.json",
+  "config": {
+    "repeats": 25,
+    "warmups": 5
+  },
+  "environment": {
+    "node": "v24.13.0",
+    "platform": "win32",
+    "arch": "x64",
+    "mcpBinary": "C:\\Dev\\semagraph-64\\packages\\target\\release\\semagraph-mcp.exe"
+  },
+  "mcpStartupMs": 7.6899,
+  "results": [
+    {
+      "name": "no-mcp",
+      "boundary": "scripted-worker-no-mcp",
+      "deterministicAuthority": "local-js-rules",
+      "valid": true,
+      "qualityFailures": [],
+      "repeats": 25,
+      "warmups": 5,
+      "samples": [
+        {
+          "sample": 0,
+          "durationMs": 0.0602,
+          "deterministicFactsMs": 0.0141,
+          "assemblyMs": 0.0446,
+          "semagraphCallCount": 0
+        },
+        {
+          "sample": 1,
+          "durationMs": 0.0505,
+          "deterministicFactsMs": 0.0143,
+          "assemblyMs": 0.0347,
+          "semagraphCallCount": 0
+        },
+        {
+          "sample": 2,
+          "durationMs": 0.0625,
+          "deterministicFactsMs": 0.0135,
+          "assemblyMs": 0.0475,
+          "semagraphCallCount": 0
+        },
+        {
+          "sample": 3,
+          "durationMs": 0.0836,
+          "deterministicFactsMs": 0.016,
+          "assemblyMs": 0.0622,
+          "semagraphCallCount": 0
+        },
+        {
+          "sample": 4,
+          "durationMs": 0.0583,
+          "deterministicFactsMs": 0.0137,
+          "assemblyMs": 0.0331,
+          "semagraphCallCount": 0
+        },
+        {
+          "sample": 5,
+          "durationMs": 0.1228,
+          "deterministicFactsMs": 0.0139,
+          "assemblyMs": 0.1052,
+          "semagraphCallCount": 0
+        },
+        {
+          "sample": 6,
+          "durationMs": 0.0469,
+          "deterministicFactsMs": 0.0157,
+          "assemblyMs": 0.0292,
+          "semagraphCallCount": 0
+        },
+        {
+          "sample": 7,
+          "durationMs": 0.0465,
+          "deterministicFactsMs": 0.0129,
+          "assemblyMs": 0.032,
+          "semagraphCallCount": 0
+        },
+        {
+          "sample": 8,
+          "durationMs": 0.0649,
+          "deterministicFactsMs": 0.0218,
+          "assemblyMs": 0.0399,
+          "semagraphCallCount": 0
+        },
+        {
+          "sample": 9,
+          "durationMs": 0.0713,
+          "deterministicFactsMs": 0.04,
+          "assemblyMs": 0.0295,
+          "semagraphCallCount": 0
+        },
+        {
+          "sample": 10,
+          "durationMs": 0.0544,
+          "deterministicFactsMs": 0.0212,
+          "assemblyMs": 0.0317,
+          "semagraphCallCount": 0
+        },
+        {
+          "sample": 11,
+          "durationMs": 0.0615,
+          "deterministicFactsMs": 0.0229,
+          "assemblyMs": 0.037,
+          "semagraphCallCount": 0
+        },
+        {
+          "sample": 12,
+          "durationMs": 0.2146,
+          "deterministicFactsMs": 0.1734,
+          "assemblyMs": 0.0337,
+          "semagraphCallCount": 0
+        },
+        {
+          "sample": 13,
+          "durationMs": 0.0396,
+          "deterministicFactsMs": 0.0121,
+          "assemblyMs": 0.0256,
+          "semagraphCallCount": 0
+        },
+        {
+          "sample": 14,
+          "durationMs": 0.0383,
+          "deterministicFactsMs": 0.0113,
+          "assemblyMs": 0.026,
+          "semagraphCallCount": 0
+        },
+        {
+          "sample": 15,
+          "durationMs": 0.0383,
+          "deterministicFactsMs": 0.0121,
+          "assemblyMs": 0.0252,
+          "semagraphCallCount": 0
+        },
+        {
+          "sample": 16,
+          "durationMs": 0.0522,
+          "deterministicFactsMs": 0.0112,
+          "assemblyMs": 0.0388,
+          "semagraphCallCount": 0
+        },
+        {
+          "sample": 17,
+          "durationMs": 0.0712,
+          "deterministicFactsMs": 0.0215,
+          "assemblyMs": 0.0466,
+          "semagraphCallCount": 0
+        },
+        {
+          "sample": 18,
+          "durationMs": 0.0418,
+          "deterministicFactsMs": 0.012,
+          "assemblyMs": 0.0285,
+          "semagraphCallCount": 0
+        },
+        {
+          "sample": 19,
+          "durationMs": 0.1477,
+          "deterministicFactsMs": 0.0426,
+          "assemblyMs": 0.1025,
+          "semagraphCallCount": 0
+        },
+        {
+          "sample": 20,
+          "durationMs": 0.0612,
+          "deterministicFactsMs": 0.021,
+          "assemblyMs": 0.0386,
+          "semagraphCallCount": 0
+        },
+        {
+          "sample": 21,
+          "durationMs": 0.0558,
+          "deterministicFactsMs": 0.0132,
+          "assemblyMs": 0.0414,
+          "semagraphCallCount": 0
+        },
+        {
+          "sample": 22,
+          "durationMs": 0.0473,
+          "deterministicFactsMs": 0.0143,
+          "assemblyMs": 0.0312,
+          "semagraphCallCount": 0
+        },
+        {
+          "sample": 23,
+          "durationMs": 0.0423,
+          "deterministicFactsMs": 0.0131,
+          "assemblyMs": 0.0278,
+          "semagraphCallCount": 0
+        },
+        {
+          "sample": 24,
+          "durationMs": 0.0989,
+          "deterministicFactsMs": 0.037,
+          "assemblyMs": 0.0607,
+          "semagraphCallCount": 0
+        }
+      ],
+      "durationMs": {
+        "min": 0.0383,
+        "median": 0.0583,
+        "mean": 0.069304,
+        "p95": 0.1477,
+        "max": 0.2146,
+        "stdev": 0.039217
+      },
+      "deterministicFactsMs": {
+        "min": 0.0112,
+        "median": 0.0143,
+        "mean": 0.024592,
+        "p95": 0.0426,
+        "max": 0.1734,
+        "stdev": 0.031598
+      },
+      "assemblyMs": {
+        "min": 0.0252,
+        "median": 0.0347,
+        "mean": 0.042128,
+        "p95": 0.1025,
+        "max": 0.1052,
+        "stdev": 0.020549
+      },
+      "semagraphCallCount": 0,
+      "output": {
+        "mode": "no-mcp",
+        "deterministicBoundary": "no-semagraph-mcp",
+        "transitionCount": 16,
+        "transitions": [
+          {
+            "id": "t00",
+            "groupId": "identity",
+            "sourceStateId": "S64-000000",
+            "targetStateId": "S64-000000",
+            "mutationMask": "M64-000000",
+            "changedPositions": [],
+            "distance": 0,
+            "lowerDistance": 0,
+            "upperDistance": 0,
+            "moduleScope": "none",
+            "regimeClass": "no_change",
+            "transitionIndex": 0,
+            "inferenceUsed": false,
+            "riskBand": "low",
+            "recommendedAction": "record_no_change",
+            "summary": "t00: S64-000000 to S64-000000; no_change; distance 0."
+          },
+          {
+            "id": "t01",
+            "groupId": "single_bit",
+            "sourceStateId": "S64-000000",
+            "targetStateId": "S64-100000",
+            "mutationMask": "M64-100000",
+            "changedPositions": [
+              1
+            ],
+            "distance": 1,
+            "lowerDistance": 1,
+            "upperDistance": 0,
+            "moduleScope": "lower_only",
+            "regimeClass": "bit_adjustment",
+            "transitionIndex": 32,
+            "inferenceUsed": false,
+            "riskBand": "low",
+            "recommendedAction": "monitor_standard_transition",
+            "summary": "t01: S64-000000 to S64-100000; bit_adjustment; distance 1."
+          },
+          {
+            "id": "t02",
+            "groupId": "single_module",
+            "sourceStateId": "S64-000000",
+            "targetStateId": "S64-110000",
+            "mutationMask": "M64-110000",
+            "changedPositions": [
+              1,
+              2
+            ],
+            "distance": 2,
+            "lowerDistance": 2,
+            "upperDistance": 0,
+            "moduleScope": "lower_only",
+            "regimeClass": "module_reconfiguration",
+            "transitionIndex": 48,
+            "inferenceUsed": false,
+            "riskBand": "medium",
+            "recommendedAction": "monitor_standard_transition",
+            "summary": "t02: S64-000000 to S64-110000; module_reconfiguration; distance 2."
+          },
+          {
+            "id": "t03",
+            "groupId": "single_module",
+            "sourceStateId": "S64-000000",
+            "targetStateId": "S64-000110",
+            "mutationMask": "M64-000110",
+            "changedPositions": [
+              4,
+              5
+            ],
+            "distance": 2,
+            "lowerDistance": 0,
+            "upperDistance": 2,
+            "moduleScope": "upper_only",
+            "regimeClass": "module_reconfiguration",
+            "transitionIndex": 6,
+            "inferenceUsed": false,
+            "riskBand": "medium",
+            "recommendedAction": "monitor_standard_transition",
+            "summary": "t03: S64-000000 to S64-000110; module_reconfiguration; distance 2."
+          },
+          {
+            "id": "t04",
+            "groupId": "cross_module",
+            "sourceStateId": "S64-000000",
+            "targetStateId": "S64-101001",
+            "mutationMask": "M64-101001",
+            "changedPositions": [
+              1,
+              3,
+              6
+            ],
+            "distance": 3,
+            "lowerDistance": 2,
+            "upperDistance": 1,
+            "moduleScope": "both_modules",
+            "regimeClass": "cross_module_regime_shift",
+            "transitionIndex": 41,
+            "inferenceUsed": false,
+            "riskBand": "medium",
+            "recommendedAction": "review_cross_module_context",
+            "summary": "t04: S64-000000 to S64-101001; cross_module_regime_shift; distance 3."
+          },
+          {
+            "id": "t05",
+            "groupId": "inversion",
+            "sourceStateId": "S64-000000",
+            "targetStateId": "S64-111100",
+            "mutationMask": "M64-111100",
+            "changedPositions": [
+              1,
+              2,
+              3,
+              4
+            ],
+            "distance": 4,
+            "lowerDistance": 3,
+            "upperDistance": 1,
+            "moduleScope": "both_modules",
+            "regimeClass": "near_total_inversion",
+            "transitionIndex": 60,
+            "inferenceUsed": false,
+            "riskBand": "high",
+            "recommendedAction": "escalate_transition_review",
+            "summary": "t05: S64-000000 to S64-111100; near_total_inversion; distance 4."
+          },
+          {
+            "id": "t06",
+            "groupId": "inversion",
+            "sourceStateId": "S64-000000",
+            "targetStateId": "S64-111111",
+            "mutationMask": "M64-111111",
+            "changedPositions": [
+              1,
+              2,
+              3,
+              4,
+              5,
+              6
+            ],
+            "distance": 6,
+            "lowerDistance": 3,
+            "upperDistance": 3,
+            "moduleScope": "both_modules",
+            "regimeClass": "full_bit_reversal",
+            "transitionIndex": 63,
+            "inferenceUsed": false,
+            "riskBand": "high",
+            "recommendedAction": "escalate_transition_review",
+            "summary": "t06: S64-000000 to S64-111111; full_bit_reversal; distance 6."
+          },
+          {
+            "id": "t07",
+            "groupId": "inversion",
+            "sourceStateId": "S64-010101",
+            "targetStateId": "S64-101010",
+            "mutationMask": "M64-111111",
+            "changedPositions": [
+              1,
+              2,
+              3,
+              4,
+              5,
+              6
+            ],
+            "distance": 6,
+            "lowerDistance": 3,
+            "upperDistance": 3,
+            "moduleScope": "both_modules",
+            "regimeClass": "full_bit_reversal",
+            "transitionIndex": 1386,
+            "inferenceUsed": false,
+            "riskBand": "high",
+            "recommendedAction": "escalate_transition_review",
+            "summary": "t07: S64-010101 to S64-101010; full_bit_reversal; distance 6."
+          },
+          {
+            "id": "t08",
+            "groupId": "inversion",
+            "sourceStateId": "S64-111000",
+            "targetStateId": "S64-001111",
+            "mutationMask": "M64-110111",
+            "changedPositions": [
+              1,
+              2,
+              4,
+              5,
+              6
+            ],
+            "distance": 5,
+            "lowerDistance": 2,
+            "upperDistance": 3,
+            "moduleScope": "both_modules",
+            "regimeClass": "near_total_inversion",
+            "transitionIndex": 3599,
+            "inferenceUsed": false,
+            "riskBand": "high",
+            "recommendedAction": "escalate_transition_review",
+            "summary": "t08: S64-111000 to S64-001111; near_total_inversion; distance 5."
+          },
+          {
+            "id": "t09",
+            "groupId": "cross_module",
+            "sourceStateId": "S64-101010",
+            "targetStateId": "S64-100011",
+            "mutationMask": "M64-001001",
+            "changedPositions": [
+              3,
+              6
+            ],
+            "distance": 2,
+            "lowerDistance": 1,
+            "upperDistance": 1,
+            "moduleScope": "both_modules",
+            "regimeClass": "cross_module_regime_shift",
+            "transitionIndex": 2723,
+            "inferenceUsed": false,
+            "riskBand": "medium",
+            "recommendedAction": "monitor_standard_transition",
+            "summary": "t09: S64-101010 to S64-100011; cross_module_regime_shift; distance 2."
+          },
+          {
+            "id": "t10",
+            "groupId": "cross_module",
+            "sourceStateId": "S64-001111",
+            "targetStateId": "S64-001000",
+            "mutationMask": "M64-000111",
+            "changedPositions": [
+              4,
+              5,
+              6
+            ],
+            "distance": 3,
+            "lowerDistance": 0,
+            "upperDistance": 3,
+            "moduleScope": "upper_only",
+            "regimeClass": "cross_module_regime_shift",
+            "transitionIndex": 968,
+            "inferenceUsed": false,
+            "riskBand": "medium",
+            "recommendedAction": "review_cross_module_context",
+            "summary": "t10: S64-001111 to S64-001000; cross_module_regime_shift; distance 3."
+          },
+          {
+            "id": "t11",
+            "groupId": "cross_module",
+            "sourceStateId": "S64-110011",
+            "targetStateId": "S64-010001",
+            "mutationMask": "M64-100010",
+            "changedPositions": [
+              1,
+              5
+            ],
+            "distance": 2,
+            "lowerDistance": 1,
+            "upperDistance": 1,
+            "moduleScope": "both_modules",
+            "regimeClass": "cross_module_regime_shift",
+            "transitionIndex": 3281,
+            "inferenceUsed": false,
+            "riskBand": "medium",
+            "recommendedAction": "monitor_standard_transition",
+            "summary": "t11: S64-110011 to S64-010001; cross_module_regime_shift; distance 2."
+          },
+          {
+            "id": "t12",
+            "groupId": "single_bit",
+            "sourceStateId": "S64-011001",
+            "targetStateId": "S64-011101",
+            "mutationMask": "M64-000100",
+            "changedPositions": [
+              4
+            ],
+            "distance": 1,
+            "lowerDistance": 0,
+            "upperDistance": 1,
+            "moduleScope": "upper_only",
+            "regimeClass": "bit_adjustment",
+            "transitionIndex": 1629,
+            "inferenceUsed": false,
+            "riskBand": "low",
+            "recommendedAction": "monitor_standard_transition",
+            "summary": "t12: S64-011001 to S64-011101; bit_adjustment; distance 1."
+          },
+          {
+            "id": "t13",
+            "groupId": "cross_module",
+            "sourceStateId": "S64-100100",
+            "targetStateId": "S64-011100",
+            "mutationMask": "M64-111000",
+            "changedPositions": [
+              1,
+              2,
+              3
+            ],
+            "distance": 3,
+            "lowerDistance": 3,
+            "upperDistance": 0,
+            "moduleScope": "lower_only",
+            "regimeClass": "cross_module_regime_shift",
+            "transitionIndex": 2332,
+            "inferenceUsed": false,
+            "riskBand": "medium",
+            "recommendedAction": "review_cross_module_context",
+            "summary": "t13: S64-100100 to S64-011100; cross_module_regime_shift; distance 3."
+          },
+          {
+            "id": "t14",
+            "groupId": "single_module",
+            "sourceStateId": "S64-010010",
+            "targetStateId": "S64-111010",
+            "mutationMask": "M64-101000",
+            "changedPositions": [
+              1,
+              3
+            ],
+            "distance": 2,
+            "lowerDistance": 2,
+            "upperDistance": 0,
+            "moduleScope": "lower_only",
+            "regimeClass": "module_reconfiguration",
+            "transitionIndex": 1210,
+            "inferenceUsed": false,
+            "riskBand": "medium",
+            "recommendedAction": "monitor_standard_transition",
+            "summary": "t14: S64-010010 to S64-111010; module_reconfiguration; distance 2."
+          },
+          {
+            "id": "t15",
+            "groupId": "inversion",
+            "sourceStateId": "S64-111111",
+            "targetStateId": "S64-000001",
+            "mutationMask": "M64-111110",
+            "changedPositions": [
+              1,
+              2,
+              3,
+              4,
+              5
+            ],
+            "distance": 5,
+            "lowerDistance": 3,
+            "upperDistance": 2,
+            "moduleScope": "both_modules",
+            "regimeClass": "near_total_inversion",
+            "transitionIndex": 4033,
+            "inferenceUsed": false,
+            "riskBand": "high",
+            "recommendedAction": "escalate_transition_review",
+            "summary": "t15: S64-111111 to S64-000001; near_total_inversion; distance 5."
+          }
+        ],
+        "groups": [
+          {
+            "id": "identity",
+            "transitionCount": 1,
+            "totalDistance": 0,
+            "averageDistance": 0,
+            "maxDistance": 0,
+            "highRiskTransitionIds": [],
+            "regimeHistogram": {
+              "no_change": 1
+            },
+            "moduleScopeHistogram": {
+              "none": 1
+            }
+          },
+          {
+            "id": "single_bit",
+            "transitionCount": 2,
+            "totalDistance": 2,
+            "averageDistance": 1,
+            "maxDistance": 1,
+            "highRiskTransitionIds": [],
+            "regimeHistogram": {
+              "bit_adjustment": 2
+            },
+            "moduleScopeHistogram": {
+              "lower_only": 1,
+              "upper_only": 1
+            }
+          },
+          {
+            "id": "single_module",
+            "transitionCount": 3,
+            "totalDistance": 6,
+            "averageDistance": 2,
+            "maxDistance": 2,
+            "highRiskTransitionIds": [],
+            "regimeHistogram": {
+              "module_reconfiguration": 3
+            },
+            "moduleScopeHistogram": {
+              "lower_only": 2,
+              "upper_only": 1
+            }
+          },
+          {
+            "id": "cross_module",
+            "transitionCount": 5,
+            "totalDistance": 13,
+            "averageDistance": 2.6,
+            "maxDistance": 3,
+            "highRiskTransitionIds": [],
+            "regimeHistogram": {
+              "cross_module_regime_shift": 5
+            },
+            "moduleScopeHistogram": {
+              "both_modules": 3,
+              "upper_only": 1,
+              "lower_only": 1
+            }
+          },
+          {
+            "id": "inversion",
+            "transitionCount": 5,
+            "totalDistance": 26,
+            "averageDistance": 5.2,
+            "maxDistance": 6,
+            "highRiskTransitionIds": [
+              "t05",
+              "t06",
+              "t07",
+              "t08",
+              "t15"
+            ],
+            "regimeHistogram": {
+              "near_total_inversion": 3,
+              "full_bit_reversal": 2
+            },
+            "moduleScopeHistogram": {
+              "both_modules": 5
+            }
+          }
+        ],
+        "aggregate": {
+          "transitionCount": 16,
+          "totalDistance": 47,
+          "averageDistance": 2.938,
+          "maxDistance": 6,
+          "maxDistanceTransitionIds": [
+            "t06",
+            "t07"
+          ],
+          "riskHistogram": {
+            "low": 3,
+            "medium": 8,
+            "high": 5
+          },
+          "regimeHistogram": {
+            "no_change": 1,
+            "bit_adjustment": 2,
+            "module_reconfiguration": 3,
+            "cross_module_regime_shift": 5,
+            "near_total_inversion": 3,
+            "full_bit_reversal": 2
+          },
+          "moduleScopeHistogram": {
+            "none": 1,
+            "lower_only": 4,
+            "upper_only": 3,
+            "both_modules": 8
+          }
+        },
+        "comparisons": [
+          {
+            "left": "t01",
+            "right": "t12",
+            "sameMutationMask": false,
+            "sameRegimeClass": true,
+            "sameModuleScope": false,
+            "distanceDelta": 0,
+            "sharedChangedPositionCount": 0
+          },
+          {
+            "left": "t02",
+            "right": "t14",
+            "sameMutationMask": false,
+            "sameRegimeClass": true,
+            "sameModuleScope": true,
+            "distanceDelta": 0,
+            "sharedChangedPositionCount": 1
+          },
+          {
+            "left": "t06",
+            "right": "t07",
+            "sameMutationMask": true,
+            "sameRegimeClass": true,
+            "sameModuleScope": true,
+            "distanceDelta": 0,
+            "sharedChangedPositionCount": 6
+          },
+          {
+            "left": "t05",
+            "right": "t15",
+            "sameMutationMask": false,
+            "sameRegimeClass": true,
+            "sameModuleScope": true,
+            "distanceDelta": -1,
+            "sharedChangedPositionCount": 4
+          },
+          {
+            "left": "t09",
+            "right": "t11",
+            "sameMutationMask": false,
+            "sameRegimeClass": true,
+            "sameModuleScope": true,
+            "distanceDelta": 0,
+            "sharedChangedPositionCount": 0
+          },
+          {
+            "left": "t00",
+            "right": "t06",
+            "sameMutationMask": false,
+            "sameRegimeClass": false,
+            "sameModuleScope": false,
+            "distanceDelta": -6,
+            "sharedChangedPositionCount": 0
+          }
+        ],
+        "actionQueue": [
+          {
+            "transitionId": "t01",
+            "priority": "low",
+            "action": "monitor_standard_transition",
+            "triggerSignature": "M64-100000|bit_adjustment|d=1"
+          },
+          {
+            "transitionId": "t02",
+            "priority": "normal",
+            "action": "monitor_standard_transition",
+            "triggerSignature": "M64-110000|module_reconfiguration|d=2"
+          },
+          {
+            "transitionId": "t03",
+            "priority": "normal",
+            "action": "monitor_standard_transition",
+            "triggerSignature": "M64-000110|module_reconfiguration|d=2"
+          },
+          {
+            "transitionId": "t04",
+            "priority": "normal",
+            "action": "review_cross_module_context",
+            "triggerSignature": "M64-101001|cross_module_regime_shift|d=3"
+          },
+          {
+            "transitionId": "t05",
+            "priority": "high",
+            "action": "escalate_transition_review",
+            "triggerSignature": "M64-111100|near_total_inversion|d=4"
+          },
+          {
+            "transitionId": "t06",
+            "priority": "high",
+            "action": "escalate_transition_review",
+            "triggerSignature": "M64-111111|full_bit_reversal|d=6"
+          },
+          {
+            "transitionId": "t07",
+            "priority": "high",
+            "action": "escalate_transition_review",
+            "triggerSignature": "M64-111111|full_bit_reversal|d=6"
+          },
+          {
+            "transitionId": "t08",
+            "priority": "high",
+            "action": "escalate_transition_review",
+            "triggerSignature": "M64-110111|near_total_inversion|d=5"
+          },
+          {
+            "transitionId": "t09",
+            "priority": "normal",
+            "action": "monitor_standard_transition",
+            "triggerSignature": "M64-001001|cross_module_regime_shift|d=2"
+          },
+          {
+            "transitionId": "t10",
+            "priority": "normal",
+            "action": "review_cross_module_context",
+            "triggerSignature": "M64-000111|cross_module_regime_shift|d=3"
+          },
+          {
+            "transitionId": "t11",
+            "priority": "normal",
+            "action": "monitor_standard_transition",
+            "triggerSignature": "M64-100010|cross_module_regime_shift|d=2"
+          },
+          {
+            "transitionId": "t12",
+            "priority": "low",
+            "action": "monitor_standard_transition",
+            "triggerSignature": "M64-000100|bit_adjustment|d=1"
+          },
+          {
+            "transitionId": "t13",
+            "priority": "normal",
+            "action": "review_cross_module_context",
+            "triggerSignature": "M64-111000|cross_module_regime_shift|d=3"
+          },
+          {
+            "transitionId": "t14",
+            "priority": "normal",
+            "action": "monitor_standard_transition",
+            "triggerSignature": "M64-101000|module_reconfiguration|d=2"
+          },
+          {
+            "transitionId": "t15",
+            "priority": "high",
+            "action": "escalate_transition_review",
+            "triggerSignature": "M64-111110|near_total_inversion|d=5"
+          }
+        ],
+        "narrative": {
+          "title": "State64 transition review packet",
+          "executiveSummary": "16 transitions reviewed; 5 high-priority actions.",
+          "reviewNotes": [
+            "No observations were inferred.",
+            "State64 ids and mutation masks remain canonical.",
+            "Deterministic facts were computed locally without MCP."
+          ]
+        },
+        "timings": {
+          "deterministicFactsMs": 0.037,
+          "assemblyMs": 0.0607
+        }
+      }
+    },
+    {
+      "name": "rust-mcp",
+      "boundary": "persistent-mcp-tools-call",
+      "deterministicAuthority": "semagraph-rs-mcp",
+      "valid": true,
+      "qualityFailures": [],
+      "repeats": 25,
+      "warmups": 5,
+      "samples": [
+        {
+          "sample": 0,
+          "durationMs": 1.7636,
+          "deterministicFactsMs": 1.6996,
+          "assemblyMs": 0.0536,
+          "semagraphCallCount": 16
+        },
+        {
+          "sample": 1,
+          "durationMs": 2.5104,
+          "deterministicFactsMs": 2.3871,
+          "assemblyMs": 0.1173,
+          "semagraphCallCount": 16
+        },
+        {
+          "sample": 2,
+          "durationMs": 2.5559,
+          "deterministicFactsMs": 2.4885,
+          "assemblyMs": 0.063,
+          "semagraphCallCount": 16
+        },
+        {
+          "sample": 3,
+          "durationMs": 1.2624,
+          "deterministicFactsMs": 1.2032,
+          "assemblyMs": 0.0561,
+          "semagraphCallCount": 16
+        },
+        {
+          "sample": 4,
+          "durationMs": 3.0157,
+          "deterministicFactsMs": 2.9589,
+          "assemblyMs": 0.0531,
+          "semagraphCallCount": 16
+        },
+        {
+          "sample": 5,
+          "durationMs": 2.5569,
+          "deterministicFactsMs": 2.4995,
+          "assemblyMs": 0.0535,
+          "semagraphCallCount": 16
+        },
+        {
+          "sample": 6,
+          "durationMs": 2.2684,
+          "deterministicFactsMs": 2.1374,
+          "assemblyMs": 0.0988,
+          "semagraphCallCount": 16
+        },
+        {
+          "sample": 7,
+          "durationMs": 3.3334,
+          "deterministicFactsMs": 3.2609,
+          "assemblyMs": 0.0682,
+          "semagraphCallCount": 16
+        },
+        {
+          "sample": 8,
+          "durationMs": 2.437,
+          "deterministicFactsMs": 2.361,
+          "assemblyMs": 0.0726,
+          "semagraphCallCount": 16
+        },
+        {
+          "sample": 9,
+          "durationMs": 3.078,
+          "deterministicFactsMs": 2.9724,
+          "assemblyMs": 0.1001,
+          "semagraphCallCount": 16
+        },
+        {
+          "sample": 10,
+          "durationMs": 3.0276,
+          "deterministicFactsMs": 2.9667,
+          "assemblyMs": 0.0569,
+          "semagraphCallCount": 16
+        },
+        {
+          "sample": 11,
+          "durationMs": 2.4838,
+          "deterministicFactsMs": 2.4287,
+          "assemblyMs": 0.0516,
+          "semagraphCallCount": 16
+        },
+        {
+          "sample": 12,
+          "durationMs": 2.6715,
+          "deterministicFactsMs": 2.6041,
+          "assemblyMs": 0.0635,
+          "semagraphCallCount": 16
+        },
+        {
+          "sample": 13,
+          "durationMs": 2.6366,
+          "deterministicFactsMs": 2.5541,
+          "assemblyMs": 0.0765,
+          "semagraphCallCount": 16
+        },
+        {
+          "sample": 14,
+          "durationMs": 3.0013,
+          "deterministicFactsMs": 2.9211,
+          "assemblyMs": 0.0744,
+          "semagraphCallCount": 16
+        },
+        {
+          "sample": 15,
+          "durationMs": 3.3411,
+          "deterministicFactsMs": 3.2769,
+          "assemblyMs": 0.0598,
+          "semagraphCallCount": 16
+        },
+        {
+          "sample": 16,
+          "durationMs": 3.5256,
+          "deterministicFactsMs": 3.4319,
+          "assemblyMs": 0.0863,
+          "semagraphCallCount": 16
+        },
+        {
+          "sample": 17,
+          "durationMs": 3.6396,
+          "deterministicFactsMs": 3.5274,
+          "assemblyMs": 0.1052,
+          "semagraphCallCount": 16
+        },
+        {
+          "sample": 18,
+          "durationMs": 3.4781,
+          "deterministicFactsMs": 3.3829,
+          "assemblyMs": 0.086,
+          "semagraphCallCount": 16
+        },
+        {
+          "sample": 19,
+          "durationMs": 3.656,
+          "deterministicFactsMs": 3.5116,
+          "assemblyMs": 0.1119,
+          "semagraphCallCount": 16
+        },
+        {
+          "sample": 20,
+          "durationMs": 3.9269,
+          "deterministicFactsMs": 3.832,
+          "assemblyMs": 0.0872,
+          "semagraphCallCount": 16
+        },
+        {
+          "sample": 21,
+          "durationMs": 3.7616,
+          "deterministicFactsMs": 3.6565,
+          "assemblyMs": 0.0973,
+          "semagraphCallCount": 16
+        },
+        {
+          "sample": 22,
+          "durationMs": 4.8145,
+          "deterministicFactsMs": 4.7141,
+          "assemblyMs": 0.0932,
+          "semagraphCallCount": 16
+        },
+        {
+          "sample": 23,
+          "durationMs": 3.992,
+          "deterministicFactsMs": 3.9208,
+          "assemblyMs": 0.0661,
+          "semagraphCallCount": 16
+        },
+        {
+          "sample": 24,
+          "durationMs": 3.7227,
+          "deterministicFactsMs": 3.608,
+          "assemblyMs": 0.1063,
+          "semagraphCallCount": 16
+        }
+      ],
+      "durationMs": {
+        "min": 1.2624,
+        "median": 3.0276,
+        "mean": 3.058424,
+        "p95": 3.992,
+        "max": 4.8145,
+        "stdev": 0.755548
+      },
+      "deterministicFactsMs": {
+        "min": 1.2032,
+        "median": 2.9667,
+        "mean": 2.972212,
+        "p95": 3.9208,
+        "max": 4.7141,
+        "stdev": 0.746426
+      },
+      "assemblyMs": {
+        "min": 0.0516,
+        "median": 0.0744,
+        "mean": 0.07834,
+        "p95": 0.1119,
+        "max": 0.1173,
+        "stdev": 0.020454
+      },
+      "semagraphCallCount": 400,
+      "output": {
+        "mode": "rust-mcp",
+        "deterministicBoundary": "semagraph-rs-mcp",
+        "transitionCount": 16,
+        "transitions": [
+          {
+            "id": "t00",
+            "groupId": "identity",
+            "sourceStateId": "S64-000000",
+            "targetStateId": "S64-000000",
+            "mutationMask": "M64-000000",
+            "changedPositions": [],
+            "distance": 0,
+            "lowerDistance": 0,
+            "upperDistance": 0,
+            "moduleScope": "none",
+            "regimeClass": "no_change",
+            "transitionIndex": 0,
+            "inferenceUsed": false,
+            "riskBand": "low",
+            "recommendedAction": "record_no_change",
+            "summary": "t00: S64-000000 to S64-000000; no_change; distance 0."
+          },
+          {
+            "id": "t01",
+            "groupId": "single_bit",
+            "sourceStateId": "S64-000000",
+            "targetStateId": "S64-100000",
+            "mutationMask": "M64-100000",
+            "changedPositions": [
+              1
+            ],
+            "distance": 1,
+            "lowerDistance": 1,
+            "upperDistance": 0,
+            "moduleScope": "lower_only",
+            "regimeClass": "bit_adjustment",
+            "transitionIndex": 32,
+            "inferenceUsed": false,
+            "riskBand": "low",
+            "recommendedAction": "monitor_standard_transition",
+            "summary": "t01: S64-000000 to S64-100000; bit_adjustment; distance 1."
+          },
+          {
+            "id": "t02",
+            "groupId": "single_module",
+            "sourceStateId": "S64-000000",
+            "targetStateId": "S64-110000",
+            "mutationMask": "M64-110000",
+            "changedPositions": [
+              1,
+              2
+            ],
+            "distance": 2,
+            "lowerDistance": 2,
+            "upperDistance": 0,
+            "moduleScope": "lower_only",
+            "regimeClass": "module_reconfiguration",
+            "transitionIndex": 48,
+            "inferenceUsed": false,
+            "riskBand": "medium",
+            "recommendedAction": "monitor_standard_transition",
+            "summary": "t02: S64-000000 to S64-110000; module_reconfiguration; distance 2."
+          },
+          {
+            "id": "t03",
+            "groupId": "single_module",
+            "sourceStateId": "S64-000000",
+            "targetStateId": "S64-000110",
+            "mutationMask": "M64-000110",
+            "changedPositions": [
+              4,
+              5
+            ],
+            "distance": 2,
+            "lowerDistance": 0,
+            "upperDistance": 2,
+            "moduleScope": "upper_only",
+            "regimeClass": "module_reconfiguration",
+            "transitionIndex": 6,
+            "inferenceUsed": false,
+            "riskBand": "medium",
+            "recommendedAction": "monitor_standard_transition",
+            "summary": "t03: S64-000000 to S64-000110; module_reconfiguration; distance 2."
+          },
+          {
+            "id": "t04",
+            "groupId": "cross_module",
+            "sourceStateId": "S64-000000",
+            "targetStateId": "S64-101001",
+            "mutationMask": "M64-101001",
+            "changedPositions": [
+              1,
+              3,
+              6
+            ],
+            "distance": 3,
+            "lowerDistance": 2,
+            "upperDistance": 1,
+            "moduleScope": "both_modules",
+            "regimeClass": "cross_module_regime_shift",
+            "transitionIndex": 41,
+            "inferenceUsed": false,
+            "riskBand": "medium",
+            "recommendedAction": "review_cross_module_context",
+            "summary": "t04: S64-000000 to S64-101001; cross_module_regime_shift; distance 3."
+          },
+          {
+            "id": "t05",
+            "groupId": "inversion",
+            "sourceStateId": "S64-000000",
+            "targetStateId": "S64-111100",
+            "mutationMask": "M64-111100",
+            "changedPositions": [
+              1,
+              2,
+              3,
+              4
+            ],
+            "distance": 4,
+            "lowerDistance": 3,
+            "upperDistance": 1,
+            "moduleScope": "both_modules",
+            "regimeClass": "near_total_inversion",
+            "transitionIndex": 60,
+            "inferenceUsed": false,
+            "riskBand": "high",
+            "recommendedAction": "escalate_transition_review",
+            "summary": "t05: S64-000000 to S64-111100; near_total_inversion; distance 4."
+          },
+          {
+            "id": "t06",
+            "groupId": "inversion",
+            "sourceStateId": "S64-000000",
+            "targetStateId": "S64-111111",
+            "mutationMask": "M64-111111",
+            "changedPositions": [
+              1,
+              2,
+              3,
+              4,
+              5,
+              6
+            ],
+            "distance": 6,
+            "lowerDistance": 3,
+            "upperDistance": 3,
+            "moduleScope": "both_modules",
+            "regimeClass": "full_bit_reversal",
+            "transitionIndex": 63,
+            "inferenceUsed": false,
+            "riskBand": "high",
+            "recommendedAction": "escalate_transition_review",
+            "summary": "t06: S64-000000 to S64-111111; full_bit_reversal; distance 6."
+          },
+          {
+            "id": "t07",
+            "groupId": "inversion",
+            "sourceStateId": "S64-010101",
+            "targetStateId": "S64-101010",
+            "mutationMask": "M64-111111",
+            "changedPositions": [
+              1,
+              2,
+              3,
+              4,
+              5,
+              6
+            ],
+            "distance": 6,
+            "lowerDistance": 3,
+            "upperDistance": 3,
+            "moduleScope": "both_modules",
+            "regimeClass": "full_bit_reversal",
+            "transitionIndex": 1386,
+            "inferenceUsed": false,
+            "riskBand": "high",
+            "recommendedAction": "escalate_transition_review",
+            "summary": "t07: S64-010101 to S64-101010; full_bit_reversal; distance 6."
+          },
+          {
+            "id": "t08",
+            "groupId": "inversion",
+            "sourceStateId": "S64-111000",
+            "targetStateId": "S64-001111",
+            "mutationMask": "M64-110111",
+            "changedPositions": [
+              1,
+              2,
+              4,
+              5,
+              6
+            ],
+            "distance": 5,
+            "lowerDistance": 2,
+            "upperDistance": 3,
+            "moduleScope": "both_modules",
+            "regimeClass": "near_total_inversion",
+            "transitionIndex": 3599,
+            "inferenceUsed": false,
+            "riskBand": "high",
+            "recommendedAction": "escalate_transition_review",
+            "summary": "t08: S64-111000 to S64-001111; near_total_inversion; distance 5."
+          },
+          {
+            "id": "t09",
+            "groupId": "cross_module",
+            "sourceStateId": "S64-101010",
+            "targetStateId": "S64-100011",
+            "mutationMask": "M64-001001",
+            "changedPositions": [
+              3,
+              6
+            ],
+            "distance": 2,
+            "lowerDistance": 1,
+            "upperDistance": 1,
+            "moduleScope": "both_modules",
+            "regimeClass": "cross_module_regime_shift",
+            "transitionIndex": 2723,
+            "inferenceUsed": false,
+            "riskBand": "medium",
+            "recommendedAction": "monitor_standard_transition",
+            "summary": "t09: S64-101010 to S64-100011; cross_module_regime_shift; distance 2."
+          },
+          {
+            "id": "t10",
+            "groupId": "cross_module",
+            "sourceStateId": "S64-001111",
+            "targetStateId": "S64-001000",
+            "mutationMask": "M64-000111",
+            "changedPositions": [
+              4,
+              5,
+              6
+            ],
+            "distance": 3,
+            "lowerDistance": 0,
+            "upperDistance": 3,
+            "moduleScope": "upper_only",
+            "regimeClass": "cross_module_regime_shift",
+            "transitionIndex": 968,
+            "inferenceUsed": false,
+            "riskBand": "medium",
+            "recommendedAction": "review_cross_module_context",
+            "summary": "t10: S64-001111 to S64-001000; cross_module_regime_shift; distance 3."
+          },
+          {
+            "id": "t11",
+            "groupId": "cross_module",
+            "sourceStateId": "S64-110011",
+            "targetStateId": "S64-010001",
+            "mutationMask": "M64-100010",
+            "changedPositions": [
+              1,
+              5
+            ],
+            "distance": 2,
+            "lowerDistance": 1,
+            "upperDistance": 1,
+            "moduleScope": "both_modules",
+            "regimeClass": "cross_module_regime_shift",
+            "transitionIndex": 3281,
+            "inferenceUsed": false,
+            "riskBand": "medium",
+            "recommendedAction": "monitor_standard_transition",
+            "summary": "t11: S64-110011 to S64-010001; cross_module_regime_shift; distance 2."
+          },
+          {
+            "id": "t12",
+            "groupId": "single_bit",
+            "sourceStateId": "S64-011001",
+            "targetStateId": "S64-011101",
+            "mutationMask": "M64-000100",
+            "changedPositions": [
+              4
+            ],
+            "distance": 1,
+            "lowerDistance": 0,
+            "upperDistance": 1,
+            "moduleScope": "upper_only",
+            "regimeClass": "bit_adjustment",
+            "transitionIndex": 1629,
+            "inferenceUsed": false,
+            "riskBand": "low",
+            "recommendedAction": "monitor_standard_transition",
+            "summary": "t12: S64-011001 to S64-011101; bit_adjustment; distance 1."
+          },
+          {
+            "id": "t13",
+            "groupId": "cross_module",
+            "sourceStateId": "S64-100100",
+            "targetStateId": "S64-011100",
+            "mutationMask": "M64-111000",
+            "changedPositions": [
+              1,
+              2,
+              3
+            ],
+            "distance": 3,
+            "lowerDistance": 3,
+            "upperDistance": 0,
+            "moduleScope": "lower_only",
+            "regimeClass": "cross_module_regime_shift",
+            "transitionIndex": 2332,
+            "inferenceUsed": false,
+            "riskBand": "medium",
+            "recommendedAction": "review_cross_module_context",
+            "summary": "t13: S64-100100 to S64-011100; cross_module_regime_shift; distance 3."
+          },
+          {
+            "id": "t14",
+            "groupId": "single_module",
+            "sourceStateId": "S64-010010",
+            "targetStateId": "S64-111010",
+            "mutationMask": "M64-101000",
+            "changedPositions": [
+              1,
+              3
+            ],
+            "distance": 2,
+            "lowerDistance": 2,
+            "upperDistance": 0,
+            "moduleScope": "lower_only",
+            "regimeClass": "module_reconfiguration",
+            "transitionIndex": 1210,
+            "inferenceUsed": false,
+            "riskBand": "medium",
+            "recommendedAction": "monitor_standard_transition",
+            "summary": "t14: S64-010010 to S64-111010; module_reconfiguration; distance 2."
+          },
+          {
+            "id": "t15",
+            "groupId": "inversion",
+            "sourceStateId": "S64-111111",
+            "targetStateId": "S64-000001",
+            "mutationMask": "M64-111110",
+            "changedPositions": [
+              1,
+              2,
+              3,
+              4,
+              5
+            ],
+            "distance": 5,
+            "lowerDistance": 3,
+            "upperDistance": 2,
+            "moduleScope": "both_modules",
+            "regimeClass": "near_total_inversion",
+            "transitionIndex": 4033,
+            "inferenceUsed": false,
+            "riskBand": "high",
+            "recommendedAction": "escalate_transition_review",
+            "summary": "t15: S64-111111 to S64-000001; near_total_inversion; distance 5."
+          }
+        ],
+        "groups": [
+          {
+            "id": "identity",
+            "transitionCount": 1,
+            "totalDistance": 0,
+            "averageDistance": 0,
+            "maxDistance": 0,
+            "highRiskTransitionIds": [],
+            "regimeHistogram": {
+              "no_change": 1
+            },
+            "moduleScopeHistogram": {
+              "none": 1
+            }
+          },
+          {
+            "id": "single_bit",
+            "transitionCount": 2,
+            "totalDistance": 2,
+            "averageDistance": 1,
+            "maxDistance": 1,
+            "highRiskTransitionIds": [],
+            "regimeHistogram": {
+              "bit_adjustment": 2
+            },
+            "moduleScopeHistogram": {
+              "lower_only": 1,
+              "upper_only": 1
+            }
+          },
+          {
+            "id": "single_module",
+            "transitionCount": 3,
+            "totalDistance": 6,
+            "averageDistance": 2,
+            "maxDistance": 2,
+            "highRiskTransitionIds": [],
+            "regimeHistogram": {
+              "module_reconfiguration": 3
+            },
+            "moduleScopeHistogram": {
+              "lower_only": 2,
+              "upper_only": 1
+            }
+          },
+          {
+            "id": "cross_module",
+            "transitionCount": 5,
+            "totalDistance": 13,
+            "averageDistance": 2.6,
+            "maxDistance": 3,
+            "highRiskTransitionIds": [],
+            "regimeHistogram": {
+              "cross_module_regime_shift": 5
+            },
+            "moduleScopeHistogram": {
+              "both_modules": 3,
+              "upper_only": 1,
+              "lower_only": 1
+            }
+          },
+          {
+            "id": "inversion",
+            "transitionCount": 5,
+            "totalDistance": 26,
+            "averageDistance": 5.2,
+            "maxDistance": 6,
+            "highRiskTransitionIds": [
+              "t05",
+              "t06",
+              "t07",
+              "t08",
+              "t15"
+            ],
+            "regimeHistogram": {
+              "near_total_inversion": 3,
+              "full_bit_reversal": 2
+            },
+            "moduleScopeHistogram": {
+              "both_modules": 5
+            }
+          }
+        ],
+        "aggregate": {
+          "transitionCount": 16,
+          "totalDistance": 47,
+          "averageDistance": 2.938,
+          "maxDistance": 6,
+          "maxDistanceTransitionIds": [
+            "t06",
+            "t07"
+          ],
+          "riskHistogram": {
+            "low": 3,
+            "medium": 8,
+            "high": 5
+          },
+          "regimeHistogram": {
+            "no_change": 1,
+            "bit_adjustment": 2,
+            "module_reconfiguration": 3,
+            "cross_module_regime_shift": 5,
+            "near_total_inversion": 3,
+            "full_bit_reversal": 2
+          },
+          "moduleScopeHistogram": {
+            "none": 1,
+            "lower_only": 4,
+            "upper_only": 3,
+            "both_modules": 8
+          }
+        },
+        "comparisons": [
+          {
+            "left": "t01",
+            "right": "t12",
+            "sameMutationMask": false,
+            "sameRegimeClass": true,
+            "sameModuleScope": false,
+            "distanceDelta": 0,
+            "sharedChangedPositionCount": 0
+          },
+          {
+            "left": "t02",
+            "right": "t14",
+            "sameMutationMask": false,
+            "sameRegimeClass": true,
+            "sameModuleScope": true,
+            "distanceDelta": 0,
+            "sharedChangedPositionCount": 1
+          },
+          {
+            "left": "t06",
+            "right": "t07",
+            "sameMutationMask": true,
+            "sameRegimeClass": true,
+            "sameModuleScope": true,
+            "distanceDelta": 0,
+            "sharedChangedPositionCount": 6
+          },
+          {
+            "left": "t05",
+            "right": "t15",
+            "sameMutationMask": false,
+            "sameRegimeClass": true,
+            "sameModuleScope": true,
+            "distanceDelta": -1,
+            "sharedChangedPositionCount": 4
+          },
+          {
+            "left": "t09",
+            "right": "t11",
+            "sameMutationMask": false,
+            "sameRegimeClass": true,
+            "sameModuleScope": true,
+            "distanceDelta": 0,
+            "sharedChangedPositionCount": 0
+          },
+          {
+            "left": "t00",
+            "right": "t06",
+            "sameMutationMask": false,
+            "sameRegimeClass": false,
+            "sameModuleScope": false,
+            "distanceDelta": -6,
+            "sharedChangedPositionCount": 0
+          }
+        ],
+        "actionQueue": [
+          {
+            "transitionId": "t01",
+            "priority": "low",
+            "action": "monitor_standard_transition",
+            "triggerSignature": "M64-100000|bit_adjustment|d=1"
+          },
+          {
+            "transitionId": "t02",
+            "priority": "normal",
+            "action": "monitor_standard_transition",
+            "triggerSignature": "M64-110000|module_reconfiguration|d=2"
+          },
+          {
+            "transitionId": "t03",
+            "priority": "normal",
+            "action": "monitor_standard_transition",
+            "triggerSignature": "M64-000110|module_reconfiguration|d=2"
+          },
+          {
+            "transitionId": "t04",
+            "priority": "normal",
+            "action": "review_cross_module_context",
+            "triggerSignature": "M64-101001|cross_module_regime_shift|d=3"
+          },
+          {
+            "transitionId": "t05",
+            "priority": "high",
+            "action": "escalate_transition_review",
+            "triggerSignature": "M64-111100|near_total_inversion|d=4"
+          },
+          {
+            "transitionId": "t06",
+            "priority": "high",
+            "action": "escalate_transition_review",
+            "triggerSignature": "M64-111111|full_bit_reversal|d=6"
+          },
+          {
+            "transitionId": "t07",
+            "priority": "high",
+            "action": "escalate_transition_review",
+            "triggerSignature": "M64-111111|full_bit_reversal|d=6"
+          },
+          {
+            "transitionId": "t08",
+            "priority": "high",
+            "action": "escalate_transition_review",
+            "triggerSignature": "M64-110111|near_total_inversion|d=5"
+          },
+          {
+            "transitionId": "t09",
+            "priority": "normal",
+            "action": "monitor_standard_transition",
+            "triggerSignature": "M64-001001|cross_module_regime_shift|d=2"
+          },
+          {
+            "transitionId": "t10",
+            "priority": "normal",
+            "action": "review_cross_module_context",
+            "triggerSignature": "M64-000111|cross_module_regime_shift|d=3"
+          },
+          {
+            "transitionId": "t11",
+            "priority": "normal",
+            "action": "monitor_standard_transition",
+            "triggerSignature": "M64-100010|cross_module_regime_shift|d=2"
+          },
+          {
+            "transitionId": "t12",
+            "priority": "low",
+            "action": "monitor_standard_transition",
+            "triggerSignature": "M64-000100|bit_adjustment|d=1"
+          },
+          {
+            "transitionId": "t13",
+            "priority": "normal",
+            "action": "review_cross_module_context",
+            "triggerSignature": "M64-111000|cross_module_regime_shift|d=3"
+          },
+          {
+            "transitionId": "t14",
+            "priority": "normal",
+            "action": "monitor_standard_transition",
+            "triggerSignature": "M64-101000|module_reconfiguration|d=2"
+          },
+          {
+            "transitionId": "t15",
+            "priority": "high",
+            "action": "escalate_transition_review",
+            "triggerSignature": "M64-111110|near_total_inversion|d=5"
+          }
+        ],
+        "narrative": {
+          "title": "State64 transition review packet",
+          "executiveSummary": "16 transitions reviewed; 5 high-priority actions.",
+          "reviewNotes": [
+            "No observations were inferred.",
+            "State64 ids and mutation masks remain canonical.",
+            "Deterministic facts were obtained through the Rust MCP server."
+          ]
+        },
+        "timings": {
+          "deterministicFactsMs": 3.608,
+          "semagraphCallCount": 16,
+          "assemblyMs": 0.1063
+        }
+      }
+    }
+  ]
+}
