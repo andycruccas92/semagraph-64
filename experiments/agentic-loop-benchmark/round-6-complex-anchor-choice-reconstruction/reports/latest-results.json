@@ -1,6 +1,6 @@
 {
   "benchmark": "round-6-complex-anchor-choice-reconstruction",
-  "generatedAt": "2026-07-07T12:52:12.075Z",
+  "generatedAt": "2026-07-07T13:43:28.776Z",
   "fixture": "fixtures/anchor-timeline.json",
   "invalidFixture": "fixtures/invalid-anchor-timeline.json",
   "results": [
@@ -30,8 +30,25 @@
         ]
       },
       "invalidInputPassed": true,
-      "durationMs": 0.8245000000000005,
-      "mcpCallCount": 0
+      "durationMs": 2.4484999999999957,
+      "mcpCallCount": 0,
+      "tokenProxy": {
+        "input": {
+          "chars": 2941,
+          "bytes": 2941,
+          "estimatedTokens": 736
+        },
+        "output": {
+          "chars": 12063,
+          "bytes": 12063,
+          "estimatedTokens": 3016
+        },
+        "totalVisibleProxy": {
+          "chars": 15004,
+          "bytes": 15004,
+          "estimatedTokens": 3752
+        }
+      }
     },
     {
       "variant": "rust-mcp-updated",
@@ -59,8 +76,48 @@
         ]
       },
       "invalidInputPassed": true,
-      "durationMs": 15.276600000000144,
+      "durationMs": 35.92529999999988,
       "mcpCallCount": 6,
+      "tokenProxy": {
+        "input": {
+          "chars": 2941,
+          "bytes": 2941,
+          "estimatedTokens": 736
+        },
+        "output": {
+          "chars": 12062,
+          "bytes": 12062,
+          "estimatedTokens": 3016
+        },
+        "mcpPayload": {
+          "messageCount": 16,
+          "request": {
+            "chars": 5486,
+            "bytes": 5486,
+            "estimatedTokens": 1375
+          },
+          "response": {
+            "chars": 28216,
+            "bytes": 28216,
+            "estimatedTokens": 7056
+          },
+          "toolPayload": {
+            "chars": 27305,
+            "bytes": 27305,
+            "estimatedTokens": 6830
+          },
+          "total": {
+            "chars": 33702,
+            "bytes": 33702,
+            "estimatedTokens": 8431
+          }
+        },
+        "totalVisibleProxy": {
+          "chars": 48705,
+          "bytes": 48705,
+          "estimatedTokens": 12183
+        }
+      },
       "mcpBinary": "C:\\Dev\\semagraph-64\\packages\\target\\debug\\semagraph-mcp.exe",
       "stderr": ""
     },
@@ -90,8 +147,48 @@
         ]
       },
       "invalidInputPassed": true,
-      "durationMs": 11.109300000000076,
+      "durationMs": 33.940900000000056,
       "mcpCallCount": 1,
+      "tokenProxy": {
+        "input": {
+          "chars": 2941,
+          "bytes": 2941,
+          "estimatedTokens": 736
+        },
+        "output": {
+          "chars": 12094,
+          "bytes": 12094,
+          "estimatedTokens": 3024
+        },
+        "mcpPayload": {
+          "messageCount": 6,
+          "request": {
+            "chars": 3301,
+            "bytes": 3301,
+            "estimatedTokens": 827
+          },
+          "response": {
+            "chars": 44185,
+            "bytes": 44185,
+            "estimatedTokens": 11047
+          },
+          "toolPayload": {
+            "chars": 41077,
+            "bytes": 41077,
+            "estimatedTokens": 10270
+          },
+          "total": {
+            "chars": 47486,
+            "bytes": 47486,
+            "estimatedTokens": 11874
+          }
+        },
+        "totalVisibleProxy": {
+          "chars": 62521,
+          "bytes": 62521,
+          "estimatedTokens": 15634
+        }
+      },
       "mcpBinary": "C:\\Dev\\semagraph-64\\packages\\target\\debug\\semagraph-mcp.exe",
       "stderr": ""
     }

@@ -23,6 +23,21 @@ states, zero-distance transitions, loopback movement, and the
 | `rust-mcp` | yes | 5/5 | passed | 3 | 3 | 3 | 7 |
 | `rust-mcp-upgraded` | yes | 5/5 | passed | 1 | 2 | 0 | 2 |
 
+## Token Proxy
+
+These are estimates, not provider-reported model usage. The estimator is
+`ceil(chars / 4)` over serialized benchmark artifacts.
+
+| Variant | Prompt | Output | Agent Log | Total Artifact Proxy | Recorded MCP Proxy | Rework Event Proxy |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| `no-mcp` | 331 | 1666 | 210 | 2207 | 1 | 1 |
+| `rust-mcp` | 392 | 1666 | 1630 | 3688 | 955 | 187 |
+| `rust-mcp-upgraded` | 502 | 1671 | 1031 | 3204 | 377 | 121 |
+
+The useful signal is directional: the upgraded MCP prompt is slightly larger,
+but the recorded MCP/rework payload is much smaller than the granular MCP run.
+Real model token usage remains unavailable in this harness.
+
 ## First-Pass Observation
 
 The `rust-mcp` variant initially delivered but failed the evaluator with quality

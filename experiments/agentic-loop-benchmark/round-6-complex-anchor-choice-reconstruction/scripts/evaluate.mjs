@@ -20,6 +20,57 @@ function readJson(path) {
   return JSON.parse(readFileSync(path, "utf8"));
 }
 
+function tokenProxyForText(text) {
+  return {
+    chars: text.length,
+    bytes: Buffer.byteLength(text, "utf8"),
+    estimatedTokens: Math.ceil(text.length / 4)
+  };
+}
+
+function tokenProxyForValue(value) {
+  return tokenProxyForText(JSON.stringify(value));
+}
+
+function emptyTokenProxy() {
+  return { chars: 0, bytes: 0, estimatedTokens: 0 };
+}
+
+function sumTokenProxy(items) {
+  return items.reduce(
+    (sum, item) => ({
+      chars: sum.chars + item.chars,
+      bytes: sum.bytes + item.bytes,
+      estimatedTokens: sum.estimatedTokens + item.estimatedTokens
+    }),
+    emptyTokenProxy()
+  );
+}
+
+function summarizeMcpPayload(payloadLog) {
+  const request = sumTokenProxy(payloadLog.filter((item) => item.direction === "request").map((item) => item.tokenProxy));
+  const response = sumTokenProxy(payloadLog.filter((item) => item.direction === "response").map((item) => item.tokenProxy));
+  const toolPayload = sumTokenProxy(payloadLog.filter((item) => item.method === "tools/call").map((item) => item.tokenProxy));
+  return {
+    messageCount: payloadLog.length,
+    request,
+    response,
+    toolPayload,
+    total: sumTokenProxy([request, response])
+  };
+}
+
+function resultTokenProxy(input, output, mcpPayload = undefined) {
+  const inputProxy = tokenProxyForValue(input);
+  const outputProxy = tokenProxyForValue(output);
+  return {
+    input: inputProxy,
+    output: outputProxy,
+    mcpPayload,
+    totalVisibleProxy: sumTokenProxy([inputProxy, outputProxy, mcpPayload?.total ?? emptyTokenProxy()])
+  };
+}
+
 function compareValues(left, operator, right) {
   switch (operator) {
     case "eq":
@@ -311,6 +362,7 @@ class McpClient {
     this.nextId = 1;
     this.buffer = Buffer.alloc(0);
     this.pending = new Map();
+    this.payloadLog = [];
     this.stderr = "";
     this.child = spawn(binary, [], { cwd: repoRoot, stdio: ["pipe", "pipe", "pipe"] });
     this.child.stdout.on("data", (chunk) => this.onData(chunk));
@@ -337,6 +389,12 @@ class McpClient {
       const pending = this.pending.get(message.id);
       if (pending) {
         this.pending.delete(message.id);
+        this.payloadLog.push({
+          direction: "response",
+          method: pending.method,
+          tool: pending.tool,
+          tokenProxy: tokenProxyForText(body)
+        });
         pending.resolve(message);
       }
     }
@@ -347,8 +405,16 @@ class McpClient {
     this.nextId += 1;
     const payload = { jsonrpc: "2.0", id, method };
     if (params !== undefined) payload.params = params;
+    const body = JSON.stringify(payload);
+    const tool = method === "tools/call" ? params?.name : undefined;
+    this.payloadLog.push({
+      direction: "request",
+      method,
+      tool,
+      tokenProxy: tokenProxyForText(body)
+    });
     return new Promise((resolve, reject) => {
-      this.pending.set(id, { resolve, reject });
+      this.pending.set(id, { resolve, reject, method, tool });
       this.child.stdin.write(frame(payload), (error) => {
         if (error) {
           this.pending.delete(id);
@@ -452,6 +518,7 @@ async function runMcp(input) {
       output: buildOutput({ source: "rust-mcp-updated", anchors, transitionPacket }),
       durationMs: performance.now() - started,
       mcpCallCount: calls,
+      mcpPayloadTokenProxy: summarizeMcpPayload(client.payloadLog),
       mcpBinary: binary,
       stderr: client.stderr.trim()
     };
@@ -480,6 +547,7 @@ async function runMcpSingleCall(input) {
       output,
       durationMs: performance.now() - started,
       mcpCallCount: 1,
+      mcpPayloadTokenProxy: summarizeMcpPayload(client.payloadLog),
       mcpBinary: binary,
       stderr: client.stderr.trim()
     };
@@ -573,14 +641,20 @@ node experiments/agentic-loop-benchmark/round-6-complex-anchor-choice-reconstruc
 
 ## Result
 
-| Variant | Correct | Quality | Invalid Input | Duration | MCP Calls |
-| --- | --- | ---: | --- | ---: | ---: |
+| Variant | Correct | Quality | Invalid Input | Duration | MCP Calls | Est. Visible Tokens | MCP Req Tokens | MCP Resp Tokens | MCP Payload Tokens |
+| --- | --- | ---: | --- | ---: | ---: | ---: | ---: | ---: | ---: |
 ${report.results
   .map(
     (result) =>
-      `| \`${result.variant}\` | ${result.correct ? "yes" : "no"} | ${result.quality.passed}/${result.quality.total} | ${result.invalidInputPassed ? "passed" : "failed"} | ${result.durationMs.toFixed(3)} ms | ${result.mcpCallCount} |`
+      `| \`${result.variant}\` | ${result.correct ? "yes" : "no"} | ${result.quality.passed}/${result.quality.total} | ${result.invalidInputPassed ? "passed" : "failed"} | ${result.durationMs.toFixed(3)} ms | ${result.mcpCallCount} | ${result.tokenProxy.totalVisibleProxy.estimatedTokens} | ${result.tokenProxy.mcpPayload?.request.estimatedTokens ?? 0} | ${result.tokenProxy.mcpPayload?.response.estimatedTokens ?? 0} | ${result.tokenProxy.mcpPayload?.total.estimatedTokens ?? 0} |`
   )
   .join("\n")}
+
+## Token Proxy
+
+Token counts are estimates, not provider-reported usage. The estimator is
+\`ceil(chars / 4)\` over serialized benchmark artifacts and MCP JSON-RPC
+payloads.
 
 ## What Is Being Tested
 
@@ -641,7 +715,8 @@ const report = {
       quality: baselineQuality,
       invalidInputPassed: invalidBaselinePassed,
       durationMs: baseline.durationMs,
-      mcpCallCount: 0
+      mcpCallCount: 0,
+      tokenProxy: resultTokenProxy(fixture, baseline.output)
     },
     {
       variant: "rust-mcp-updated",
@@ -650,6 +725,7 @@ const report = {
       invalidInputPassed: invalidMcpPassed,
       durationMs: mcp.durationMs,
       mcpCallCount: mcp.mcpCallCount,
+      tokenProxy: resultTokenProxy(fixture, mcp.output, mcp.mcpPayloadTokenProxy),
       mcpBinary: mcp.mcpBinary,
       stderr: mcp.stderr
     },
@@ -660,6 +736,7 @@ const report = {
       invalidInputPassed: invalidMcpSingleCallPassed,
       durationMs: mcpSingleCall.durationMs,
       mcpCallCount: mcpSingleCall.mcpCallCount,
+      tokenProxy: resultTokenProxy(fixture, mcpSingleCall.output, mcpSingleCall.mcpPayloadTokenProxy),
       mcpBinary: mcpSingleCall.mcpBinary,
       stderr: mcpSingleCall.stderr
     }

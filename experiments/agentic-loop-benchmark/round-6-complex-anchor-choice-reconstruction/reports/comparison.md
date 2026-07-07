@@ -8,11 +8,17 @@ node experiments/agentic-loop-benchmark/round-6-complex-anchor-choice-reconstruc
 
 ## Result
 
-| Variant | Correct | Quality | Invalid Input | Duration | MCP Calls |
-| --- | --- | ---: | --- | ---: | ---: |
-| `baseline-js-local` | yes | 4/4 | passed | 0.825 ms | 0 |
-| `rust-mcp-updated` | yes | 4/4 | passed | 15.277 ms | 6 |
-| `rust-mcp-single-call` | yes | 4/4 | passed | 11.109 ms | 1 |
+| Variant | Correct | Quality | Invalid Input | Duration | MCP Calls | Est. Visible Tokens | MCP Req Tokens | MCP Resp Tokens | MCP Payload Tokens |
+| --- | --- | ---: | --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| `baseline-js-local` | yes | 4/4 | passed | 2.448 ms | 0 | 3752 | 0 | 0 | 0 |
+| `rust-mcp-updated` | yes | 4/4 | passed | 35.925 ms | 6 | 12183 | 1375 | 7056 | 8431 |
+| `rust-mcp-single-call` | yes | 4/4 | passed | 33.941 ms | 1 | 15634 | 827 | 11047 | 11874 |
+
+## Token Proxy
+
+Token counts are estimates, not provider-reported usage. The estimator is
+`ceil(chars / 4)` over serialized benchmark artifacts and MCP JSON-RPC
+payloads.
 
 ## What Is Being Tested
 

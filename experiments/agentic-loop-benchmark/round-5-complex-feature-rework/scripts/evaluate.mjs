@@ -17,17 +17,20 @@ const variants = [
   {
     name: "no-mcp",
     runDir: resolve(roundRoot, "runs/no-mcp"),
-    cliCandidates: ["dist/policy-transition-workbench.js", "dist/cli.js"]
+    cliCandidates: ["dist/policy-transition-workbench.js", "dist/cli.js"],
+    promptPath: resolve(roundRoot, "prompts/no-mcp-agent.md")
   },
   {
     name: "rust-mcp",
     runDir: resolve(roundRoot, "runs/rust-mcp"),
-    cliCandidates: ["dist/policy-transition-workbench.js", "dist/cli.js"]
+    cliCandidates: ["dist/policy-transition-workbench.js", "dist/cli.js"],
+    promptPath: resolve(roundRoot, "prompts/rust-mcp-agent.md")
   },
   {
     name: "rust-mcp-upgraded",
     runDir: resolve(roundRoot, "runs/rust-mcp-upgraded"),
-    cliCandidates: ["dist/policy-transition-workbench.js", "dist/cli.js"]
+    cliCandidates: ["dist/policy-transition-workbench.js", "dist/cli.js"],
+    promptPath: resolve(roundRoot, "prompts/rust-mcp-upgraded-agent.md")
   }
 ];
 
@@ -47,6 +50,56 @@ function readJson(path) {
 function maybeReadJson(path) {
   if (!existsSync(path)) return undefined;
   return readJson(path);
+}
+
+function maybeReadText(path) {
+  if (!path || !existsSync(path)) return "";
+  return readFileSync(path, "utf8");
+}
+
+function tokenProxyForText(text) {
+  return {
+    chars: text.length,
+    bytes: Buffer.byteLength(text, "utf8"),
+    estimatedTokens: Math.ceil(text.length / 4)
+  };
+}
+
+function tokenProxyForValue(value) {
+  return tokenProxyForText(JSON.stringify(value ?? null));
+}
+
+function emptyTokenProxy() {
+  return { chars: 0, bytes: 0, estimatedTokens: 0 };
+}
+
+function sumTokenProxy(items) {
+  return items.reduce(
+    (sum, item) => ({
+      chars: sum.chars + item.chars,
+      bytes: sum.bytes + item.bytes,
+      estimatedTokens: sum.estimatedTokens + item.estimatedTokens
+    }),
+    emptyTokenProxy()
+  );
+}
+
+function estimateVariantTokenProxy(variant, log, output) {
+  const prompt = tokenProxyForText(maybeReadText(variant.promptPath));
+  const agentLog = log ? tokenProxyForValue(log) : emptyTokenProxy();
+  const outputProxy = output ? tokenProxyForValue(output) : emptyTokenProxy();
+  const semagraphCalls = Array.isArray(log?.semagraphCalls) ? tokenProxyForValue(log.semagraphCalls) : emptyTokenProxy();
+  const reworkEvents = Array.isArray(log?.reworkEvents) ? tokenProxyForValue(log.reworkEvents) : emptyTokenProxy();
+  return {
+    estimator: "ceil(chars / 4)",
+    prompt,
+    output: outputProxy,
+    agentLog,
+    semagraphCalls,
+    reworkEvents,
+    totalArtifactProxy: sumTokenProxy([prompt, outputProxy, agentLog]),
+    totalMcpRecordedProxy: semagraphCalls
+  };
 }
 
 function assertStateId(state) {
@@ -351,6 +404,7 @@ function evaluateVariant(variant, expected) {
   const quality = qualityScore(output, expected);
   const invalidInput = invalidInputCheck(variant);
   const dur = durationMs(log);
+  const tokenProxy = estimateVariantTokenProxy(variant, log, output);
   return {
     variant: variant.name,
     delivered: existsSync(variant.runDir),
@@ -370,6 +424,7 @@ function evaluateVariant(variant, expected) {
     semagraphCalls: log?.semagraphCalls,
     tokenUsage: log?.tokenUsage ?? "unavailable",
     tokenUsageAvailable: typeof log?.tokenUsage === "object",
+    tokenProxy,
     acceptanceChecks: log?.acceptanceChecks
   };
 }

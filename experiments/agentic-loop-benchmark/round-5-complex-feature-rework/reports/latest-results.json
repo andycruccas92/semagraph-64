@@ -1,6 +1,6 @@
 {
   "benchmark": "round-5-complex-feature-rework",
-  "generatedAt": "2026-07-07T12:18:13.974Z",
+  "generatedAt": "2026-07-07T13:43:32.518Z",
   "fixture": "fixtures/scenarios.json",
   "invalidFixture": "fixtures/invalid-scenarios.json",
   "strict": true,
@@ -50,6 +50,44 @@
       "semagraphCalls": [],
       "tokenUsage": "unavailable",
       "tokenUsageAvailable": false,
+      "tokenProxy": {
+        "estimator": "ceil(chars / 4)",
+        "prompt": {
+          "chars": 1321,
+          "bytes": 1321,
+          "estimatedTokens": 331
+        },
+        "output": {
+          "chars": 6661,
+          "bytes": 6661,
+          "estimatedTokens": 1666
+        },
+        "agentLog": {
+          "chars": 838,
+          "bytes": 838,
+          "estimatedTokens": 210
+        },
+        "semagraphCalls": {
+          "chars": 2,
+          "bytes": 2,
+          "estimatedTokens": 1
+        },
+        "reworkEvents": {
+          "chars": 2,
+          "bytes": 2,
+          "estimatedTokens": 1
+        },
+        "totalArtifactProxy": {
+          "chars": 8820,
+          "bytes": 8820,
+          "estimatedTokens": 2207
+        },
+        "totalMcpRecordedProxy": {
+          "chars": 2,
+          "bytes": 2,
+          "estimatedTokens": 1
+        }
+      },
       "acceptanceChecks": [
         {
           "name": "typecheck",
@@ -316,6 +354,44 @@
       ],
       "tokenUsage": "unavailable",
       "tokenUsageAvailable": false,
+      "tokenProxy": {
+        "estimator": "ceil(chars / 4)",
+        "prompt": {
+          "chars": 1565,
+          "bytes": 1565,
+          "estimatedTokens": 392
+        },
+        "output": {
+          "chars": 6661,
+          "bytes": 6661,
+          "estimatedTokens": 1666
+        },
+        "agentLog": {
+          "chars": 6517,
+          "bytes": 6517,
+          "estimatedTokens": 1630
+        },
+        "semagraphCalls": {
+          "chars": 3819,
+          "bytes": 3819,
+          "estimatedTokens": 955
+        },
+        "reworkEvents": {
+          "chars": 748,
+          "bytes": 748,
+          "estimatedTokens": 187
+        },
+        "totalArtifactProxy": {
+          "chars": 14743,
+          "bytes": 14743,
+          "estimatedTokens": 3688
+        },
+        "totalMcpRecordedProxy": {
+          "chars": 3819,
+          "bytes": 3819,
+          "estimatedTokens": 955
+        }
+      },
       "acceptanceChecks": [
         {
           "command": "npm.cmd run typecheck",
@@ -481,6 +557,44 @@
       ],
       "tokenUsage": "unavailable",
       "tokenUsageAvailable": false,
+      "tokenProxy": {
+        "estimator": "ceil(chars / 4)",
+        "prompt": {
+          "chars": 2006,
+          "bytes": 2006,
+          "estimatedTokens": 502
+        },
+        "output": {
+          "chars": 6683,
+          "bytes": 6683,
+          "estimatedTokens": 1671
+        },
+        "agentLog": {
+          "chars": 4122,
+          "bytes": 4122,
+          "estimatedTokens": 1031
+        },
+        "semagraphCalls": {
+          "chars": 1507,
+          "bytes": 1507,
+          "estimatedTokens": 377
+        },
+        "reworkEvents": {
+          "chars": 482,
+          "bytes": 482,
+          "estimatedTokens": 121
+        },
+        "totalArtifactProxy": {
+          "chars": 12811,
+          "bytes": 12811,
+          "estimatedTokens": 3204
+        },
+        "totalMcpRecordedProxy": {
+          "chars": 1507,
+          "bytes": 1507,
+          "estimatedTokens": 377
+        }
+      },
       "acceptanceChecks": [
         {
           "command": "npm.cmd run typecheck",
