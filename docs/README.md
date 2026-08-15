@@ -15,5 +15,6 @@ Three documents, one concern each:
 
 See also, at the repository root: [`../README.md`](../README.md),
 [`../TOOL_DESCRIPTION.md`](../TOOL_DESCRIPTION.md) (the machine-readable CLI
-contract), and [`../paper/overleaf/main.tex`](../paper/overleaf/main.tex) (the
-explanatory paper).
+contract), and
+[`../paper/overleaf/from_semantic_mobility_to_formal_representation_en.tex`](../paper/overleaf/from_semantic_mobility_to_formal_representation_en.tex)
+(the canonical research paper source).

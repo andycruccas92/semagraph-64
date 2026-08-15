@@ -1,12 +1,46 @@
 # Validation
 
+## Paper and repository alignment audit (2026-08-15)
+
+The revised canonical source is
+`paper/overleaf/from_semantic_mobility_to_formal_representation_en.tex`.
+
+Executed checks:
+
+```bash
+pnpm -r typecheck
+pnpm -r --workspace-concurrency=1 test
+npx tsc -p tsconfig.validation.json --noEmit
+cargo test --manifest-path packages/Cargo.toml --workspace
+```
+
+Results:
+
+- all five TypeScript workspace projects and the root integration configuration
+  passed typecheck;
+- all 46 TypeScript tests passed (kernel 19, mathematical anchors 9, State64
+  adapter 13, AI tools 3, renderer 2);
+- all Rust workspace tests passed, including exhaustive parity over the 4096
+  direct transitions and the seeded trajectory-shape fixture;
+- the LaTeX source has 24 cited bibliography entries, no missing or unused
+  entries, and balanced braces;
+- a repository-wide text scan found no remaining references to the removed
+  historical source system;
+- the existing 14-page PDF was visually and textually inspected and found to be
+  an older revision without the paper's expanded intellectual-lineage section.
+  It was removed rather than presented as equivalent to the canonical source.
+
+A local LaTeX compiler is not installed, so this audit does not produce a
+replacement PDF. The canonical `.tex` source should be compiled in Overleaf or a
+TeX environment before the next PDF release.
+
 ## v0.8 generated validation
 
 Environment:
 
 - Node.js, pnpm, TypeScript, Vitest, and Rust/Cargo were available.
-- pdfLaTeX was not installed, so `paper/overleaf/main.tex` was updated and
-  cross-checked as source but no v0.8 compiled PDF was generated locally.
+- pdfLaTeX was not installed, so the then-current LaTeX paper source was
+  cross-checked but no v0.8 compiled PDF was generated in that validation run.
 
 Executed checks:
 

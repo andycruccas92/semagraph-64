@@ -1,142 +1,138 @@
-# semagraph
+# SemaGraph-64
 
-The deterministic finite-state and trajectory-compression terminal of an
-explicit formalization pipeline:
+SemaGraph-64 is a reference implementation for moving from semantically mobile
+domain language to explicit mathematical structure and then to deterministic,
+auditable computation.
+
+Its central boundary is simple: a human or language model may propose how a
+phenomenon should be represented, but only an explicit, versioned and registered
+mathematical contract may produce an authoritative computational state.
 
 ```text
-phenomenon → observation → semantic interpretation
-  → mathematical anchoring → predicate projection
-  → State64 → trajectory → downstream inference/decision
+phenomenon
+  -> observation and evidence
+  -> semantic hypotheses
+  -> mathematical anchor (X_d -> M_d)
+  -> registered projection (M_d -> B^6)
+  -> State64 / Q6
+  -> transition and trajectory compression
+  -> downstream inference or decision
 ```
 
-SemaGraph does not interpret reality or discover the correct ontology for a
-domain. It records a declared, versioned mathematical representation and then
-operates on the resulting six-bit state alphabet (64 states, 4096 direct
-transitions). The Rust hot path remains branchless, cache-resident, and free of
-domain semantics.
+The mathematical model is an operational representation under declared
+assumptions. It is not asserted to be the true ontology of the phenomenon.
 
-The repository now contains two deliberately separate layers:
+## Mathematical anchoring
 
-- `@semagraph/math-anchors` validates `X_d → M_d` formalization contracts,
-  assumptions, scope, units, evidence, immutable registration, and replay;
-- `@semagraph/state64-adapter` applies the registered six-predicate projection
-  and creates canonical `S64-[01]{6}` states before the unchanged kernel takes
-  over.
+For a domain `d`, an anchor declares an admissible observation domain `X_d`, a
+mathematical structure `M_d`, and a deterministic formalization map:
 
-## Install
+```text
+phi_d : X_d -> M_d
+```
+
+A registered projection version `R` evaluates six declared predicates:
+
+```text
+P_R : M_d -> B^6
+A_(d,R) = P_R o phi_d : X_d -> B^6
+```
+
+The contract retains its assumptions, validity scope, variables, relations,
+units, observation bindings, evidence requirements and provenance. Natural-
+language labels are descriptive metadata only: two relations called
+"distance" need not share a mathematical structure, while differently named
+relations may still be structurally comparable.
+
+Candidate anchors remain non-authoritative. Registration is explicit and
+immutable, historical versions remain replayable, and missing observations or
+evidence are rejected rather than inferred.
+
+## State64 terminal
+
+The registered projection produces an element of `Q6 = {0,1}^6`, represented by
+the canonical identifier `S64-[01]{6}`. The finite kernel then operates only on
+that six-bit state:
+
+- mutation mask: `m(s,t) = s XOR t`, canonically `M64-[01]{6}`;
+- Hamming distance: `d(s,t) = popcount(s XOR t)`;
+- complete direct transition basis: `64 x 64 = 4096` ordered pairs;
+- ordered chain signatures and run-collapsed trajectory shapes;
+- explicit lossy projections such as endpoints and net mutation.
+
+Six bits are a deliberately small experimental terminal, not a universality
+claim. State64 does not contain the phenomenon, the evidence or the full
+mathematical model; it contains six declared binary distinctions produced under
+one registered contract.
+
+## What the repository implements
+
+| Paper layer | Repository surface | Authority boundary |
+|---|---|---|
+| Candidate and registered mathematical anchors | [`packages/math-anchors`](packages/math-anchors/) | TypeScript validates structure, immutable versions, evidence and replay; it never chooses an ontology. |
+| `M_d -> B^6` projection | [`packages/state64-adapter`](packages/state64-adapter/) | Only registered anchors may create authoritative State64 records. |
+| State64 transitions and trajectories | [`packages/kernel`](packages/kernel/) | TypeScript is the reference specification. |
+| Machine-near finite kernel and CLI | [`packages/core-rs`](packages/core-rs/) and [`packages/cli`](packages/cli/) | Rust receives validated states only and is parity-checked against TypeScript. |
+| Deterministic AI integration | [`ai-tools/semagraph-kernel-tool`](ai-tools/semagraph-kernel-tool/) | Models may propose candidates and consume results; they cannot register anchors, invent evidence or mutate structural outputs. |
+| Research evaluation | [`experiments/agentic-loop-benchmark`](experiments/agentic-loop-benchmark/) | Benchmarks test declared hypotheses; they do not turn them into established general results. |
+
+The legacy `deterministic_observed_parameters` path remains available for direct
+predicate anchoring. It is kept distinct from
+`deterministic_mathematical_anchor` and is never silently promoted to it.
+
+## Quick start
+
+TypeScript requires Node.js 22 and pnpm 9:
 
 ```bash
-cargo install semagraph        # from crates.io (when published)
+pnpm install
+pnpm -r build
+pnpm -r typecheck
+pnpm -r test
 ```
 
-Or download a prebuilt binary from the releases page and run it directly — it is
-statically linked with no runtime dependencies:
+Build and test the Rust workspace with a stable toolchain:
 
 ```bash
-chmod +x semagraph && ./semagraph --help
+cargo build --manifest-path packages/Cargo.toml --release -p semagraph
+cargo test --manifest-path packages/Cargo.toml --workspace
 ```
 
-Build from source in this repo:
+The CLI binary is written to `packages/target/release/semagraph`. Its stable JSON
+contract and examples are documented in
+[`TOOL_DESCRIPTION.md`](TOOL_DESCRIPTION.md).
 
-```bash
-cargo build --release -p semagraph   # binary at target/release/semagraph
-```
+## Paper and technical documentation
 
-## Examples
+The conceptual framework, intellectual lineage, limits and research hypotheses
+are developed in the canonical paper source:
 
-Classify one transition (human-readable by default):
+- [*From Semantic Mobility to Formal Representation: Mathematical Anchoring and Epistemic Provenance in Computational Knowledge Systems*](paper/overleaf/from_semantic_mobility_to_formal_representation_en.tex)
 
-```text
-$ semagraph classify 5 2
-source:       5  (000101)
-target:       2  (000010)
-mask:         7  (000111)
-distance:     3
-lower_dist:   0
-upper_dist:   3
-scope:        upper_only
-regime:       cross_module_regime_shift
-index:        322
-packed:       346240610437
-```
+The live technical documentation is split by concern:
 
-Compress a trajectory into its canonical signature:
+- [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) - engineering rationale and
+  layer boundaries;
+- [`docs/FORMAL-MODEL.md`](docs/FORMAL-MODEL.md) - formal specification and
+  invariants;
+- [`docs/DECISIONS.md`](docs/DECISIONS.md) - consolidated architecture decisions;
+- [`VALIDATION.md`](VALIDATION.md) - executed checks and parity evidence.
 
-```text
-$ semagraph compress 0 1 1 3
-path:           0 → 1 → 1 → 3
-length:         4 states, 3 transitions
-net_mutation:   3  (011)
-cumulative_d:   2
-endpoint:       0 → 3  (code 3)
-shape:          0 1 3
-dwell:          1 2 1
-exact_key:      P3:0.1.1.3
-shape_key:      S3:0.1.3
-dwell_sig:      D3:1.2.1
-```
+Worked cross-domain examples are under [`examples/`](examples/), including a
+three-domain proof that unrelated domains can share the same finite terminal
+without sharing an ontology.
 
-Process an ensemble as NDJSON (one trajectory per input line, one result per
-output line):
+## Explicit non-claims
 
-```text
-$ printf '[0,1,3]\n[0,1,1,3]\n[0,2,3]\n' | semagraph batch
-{"path":[0,1,3],"length":{"states":3,"transitions":2},"net_mutation":3,"cumulative_distance":2,"endpoint":{"source":0,"target":3,"code":3},"shape":[0,1,3],"dwell":[1,1,1],"exact_key":"P3:0.1.3","shape_key":"S3:0.1.3","dwell_signature":"D3:1.1.1"}
-{"path":[0,1,1,3],"length":{"states":4,"transitions":3},"net_mutation":3,"cumulative_distance":2,"endpoint":{"source":0,"target":3,"code":3},"shape":[0,1,3],"dwell":[1,2,1],"exact_key":"P3:0.1.1.3","shape_key":"S3:0.1.3","dwell_signature":"D3:1.2.1"}
-{"path":[0,2,3],"length":{"states":3,"transitions":2},"net_mutation":3,"cumulative_distance":2,"endpoint":{"source":0,"target":3,"code":3},"shape":[0,2,3],"dwell":[1,1,1],"exact_key":"P3:0.2.3","shape_key":"S3:0.2.3","dwell_signature":"D3:1.1.1"}
-```
-
-Add `--json` to any command for machine-readable output. Data goes to stdout,
-errors to stderr, exit code 0 on success.
-
-## What it is / what it is not
-
-It is:
-
-- an explicit boundary between semantic interpretation, declared mathematics,
-  and finite State64 processing;
-- a deterministic classifier and compressor for trajectories over 64 states;
-- branchless and cache-resident in its hot path;
-- offline, with no runtime dependencies and no telemetry.
-
-It is not:
-
-- a universal knowledge engine or a universal ontology;
-- a mechanism for selecting a mathematical anchor from ambiguous candidates;
-- an inference engine — it never interprets what a regime or shape means;
-- a statistical solver, a physics engine, or a general programming language;
-- a reconstructor of trajectories from endpoints (endpoints are lossy).
-
-## For AI agent use
-
-The primary consumer is an automated agent parsing `--json` output. The exact
-input/output contract, the anti-inference boundary, and the collapse-factor
-table are in [TOOL_DESCRIPTION.md](TOOL_DESCRIPTION.md). Read that before wiring
-the tool into an agent loop.
-
-## Architecture
-
-The design rationale — why six bits, why branchless, where it sits in the memory
-hierarchy, and what is delegated to a language model — is in
-[docs/ARCHITECTURE.md](docs/ARCHITECTURE.md).
-
-## Domain examples
-
-Worked examples translate the tool into the language of specific fields. See the
-[`examples/`](examples/) folder:
-
-- [`stochastic-simulation.md`](examples/stochastic-simulation.md) — the origin
-  use case: grouping simulation rollouts by canonical shape.
-- [`regime-switching-montecarlo.md`](examples/regime-switching-montecarlo.md) —
-  path-dependent instruments and non-ergodic Monte Carlo.
-- [`quantum-signal-analysis.md`](examples/quantum-signal-analysis.md) — classical
-  analysis of measurement-shot sequences from quantum hardware.
-- [`decision-making-deep-uncertainty.md`](examples/decision-making-deep-uncertainty.md)
-  — quantized organizational decision trajectories.
-- [`math-anchors/cross-domain-proof.md`](examples/math-anchors/cross-domain-proof.md)
-  — engineering, organizational, and information/probabilistic formalizations
-  sharing the same deterministic terminal without sharing an ontology.
+SemaGraph-64 is not a universal ontology, an inference engine, a mechanism for
+automatically selecting among ambiguous candidate anchors, a replacement for
+domain measurement or statistical modeling, or a proof that arbitrary phenomena
+can be represented adequately in six bits. Kernel determinism establishes
+replayable computation under a contract; it does not establish that the contract
+is true or adequate for every task. The mathematical-anchor package validates
+contracts, bindings and finite predicate projections; it is not a general solver
+for every mathematical structure named by its vocabulary.
 
 ## License
 
-Apache 2.0. See [LICENSE](LICENSE).
+Apache 2.0. See [`LICENSE`](LICENSE).

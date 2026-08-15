@@ -3,19 +3,27 @@
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
 \usepackage[english]{babel}
-\usepackage{amsmath,amssymb,amsfonts,amsthm}
+\usepackage{amsmath,amsthm}
+\usepackage{newtxtext,newtxmath}
 \usepackage{geometry}
 \usepackage{booktabs}
 \usepackage{array}
 \usepackage{longtable}
 \usepackage{microtype}
-\usepackage{xcolor}
 \usepackage{hyperref}
 \usepackage{enumitem}
+\usepackage{setspace}
 
-\geometry{margin=2.45cm}
-\hypersetup{colorlinks=true,linkcolor=black,urlcolor=blue,citecolor=black}
-\setlist{nosep}
+\geometry{top=2.5cm,bottom=2.5cm,left=2.65cm,right=2.65cm}
+\hypersetup{hidelinks}
+\setstretch{1.06}
+\setlist{nosep,leftmargin=*}
+\setlength{\parindent}{1.15em}
+\setlength{\parskip}{0pt}
+\setlength{\emergencystretch}{2em}
+\clubpenalty=10000
+\widowpenalty=10000
+\displaywidowpenalty=10000
 
 \newtheorem{definition}{Definition}
 \newtheorem{proposition}{Proposition}
@@ -30,33 +38,34 @@
 \newcommand{\Comp}{\mathcal{C}}
 \newcolumntype{P}[1]{>{\raggedright\arraybackslash}p{#1}}
 
-\title{From Semantic Mobility to Formal Representation\\[4pt]
-\large Mathematical Anchoring and Epistemic Provenance in Computational Knowledge Systems\\[3pt]}
+\title{From Semantic Mobility to Formal Representation\\[3pt]
+\large Mathematical Anchoring and Epistemic Provenance in Computational Knowledge Systems}
 \author{Andy Cruccas\\MARTRO Observatory}
-\date{August 2026}
+\date{}
 
 \begin{document}
 \maketitle
 
 \begin{abstract}
-Modern AI systems can process large amounts of text, evidence and intermediate reasoning, yet the reliability of a computational result still depends on a prior problem: what exactly is being represented, under which meaning, and with which assumptions. Natural-language concepts are semantically mobile. Terms such as \emph{distance}, \emph{state}, \emph{value}, \emph{similarity}, and \emph{risk} acquire different meanings across domains, while lexical similarity can invite analogies that are useful for discovery but invalid for inference. Building on representational measurement, scientific modeling, knowledge representation, formal treatments of context, provenance, and information-theoretic compression, this paper develops \emph{mathematical anchoring} as an explicit epistemic boundary for computational knowledge systems \cite{scottSuppes1958,krantz1971,davis1993,mccarthy1993,suarez2004,w3cProv2013,tishby2000}. For a domain $d$, observations in an admissible domain $X_d$ are mapped by an explicit formalization $\phi_d:X_d\rightarrow M_d$ into a declared mathematical structure $M_d$. A versioned projection $P_R:M_d\rightarrow\B^n$ may then produce a finite computational state. The mathematical structure is not asserted to be the true ontology of the phenomenon; it is an operational model whose assumptions, validity scope, units, evidence bindings and provenance remain inspectable. This separation makes it possible to distinguish semantic suggestion from formal authority, discovery from validation, and computational determinism from ontological certainty. We analyze formalization as an information-selective operation, define the equivalence classes induced by successive representations, and introduce a decision-relative criterion of representational adequacy. SemaGraph-64 is presented only as a reference architecture: a six-bit finite-state terminal that demonstrates how extreme compression can remain auditable when the chain from evidence to formal structure to predicates is preserved. The proposed contribution is therefore architectural and integrative rather than foundational in isolation: it joins established representational ideas into a governed evidence-to-authority pipeline for human--AI systems in which candidate representations may remain plural while authoritative computation is explicit, versioned and replayable.
+Computational knowledge systems increasingly combine natural-language interpretation, retrieved evidence, formal tools and deterministic downstream operations. Their reliability therefore depends not only on inference quality but also on the representational commitments that connect evidence to computation. This paper develops \emph{mathematical anchoring} as an evidence-conditioned governance boundary for that connection. An admitted observation in a domain $X_d$ may support several candidate interpretations. A registered anchor makes one mathematical representation explicit through a possibly partial formalization $\phi_d:X_d\rightharpoonup M_d$, together with assumptions, validity scope, units and evidence bindings. A versioned projection $P_R:M_d\rightarrow C_R$ may then produce the computational representation used by downstream deterministic processes; finite Boolean states are one special case. The proposal does not claim ontological truth for $M_d$, nor priority for semantic anchoring, ontology governance, provenance, versioning or task-relevant compression as separate ideas. Its narrower contribution is architectural: the mathematical formalization and projection contract themselves become governed authority-bearing objects, with lineage traceable from evidence through formal relations and projection predicates to computational state. We analyze the equivalence classes induced by formalization and projection, define task-relative representational adequacy, distinguish candidate from registered anchors, and state falsifiable hypotheses for human--AI systems. SemaGraph-64 is used only as a reference implementation of an extreme finite-state projection. The broader objective is a testable framework for preserving semantic plurality upstream while making computational authority explicit and auditable downstream.
 \end{abstract}
 
-\tableofcontents
-\bigskip
+\noindent\textbf{Keywords:} mathematical anchoring; knowledge representation; epistemic provenance; semantic governance; formal representation; human--AI systems; deterministic computation
+
+\medskip
 
 \section{Introduction: the representation problem}
-The recent increase in computational capability has changed the bottleneck of many AI-assisted workflows. A contemporary system can generate, compare and revise large numbers of intermediate hypotheses, retrieve heterogeneous evidence, and execute many reasoning loops in parallel. The limiting question is therefore increasingly not whether a model can perform more computation, but whether the objects supplied to that computation have been represented in a way that preserves the distinctions relevant to the task.
+In many AI-assisted workflows, increased computational capability shifts attention from the cost of producing intermediate reasoning to the quality of the representations on which that reasoning operates. Contemporary systems can generate alternative hypotheses, retrieve heterogeneous evidence and invoke tools repeatedly; when these operations are automated, a representational assumption can propagate through many downstream steps. The relevant question is therefore not only whether a system can compute more, but whether the objects supplied to that computation preserve the distinctions required by the declared task.
 
-This problem is older than large language models. Knowledge representation, formal logic, measurement theory and scientific modeling have long depended on the choice of what counts as an object, a relation and a valid transformation \cite{scottSuppes1958,davis1993,suarez2004}. What changes in AI systems is scale and automation. A weak representational assumption that would once have produced one poor inference can now be propagated through long tool-using or compression-heavy pipelines. Recent work on LLM context compression provides an applied example: compressed representations can remain fluent and factually plausible while changing a downstream decision supported by the original source \cite{lee2026}. Compute therefore amplifies not only correct structure but also systematic representational error.
+This problem is older than large language models. Knowledge representation, formal logic, measurement theory and scientific modeling have long depended on the choice of what counts as an object, a relation and a valid transformation \cite{scottSuppes1958,davis1993,suarez2004}. What changes in AI systems is the scale and automation with which such assumptions can be reused. A weak representational choice can be propagated through long tool-using or compression-heavy pipelines. Recent studies provide concrete examples: LLM context compression can remain fluent and broadly factual while altering a downstream decision supported by the original source \cite{lee2026}, and natural-language-to-hardware experiments report substantial performance differences across intermediate representations \cite{fu2026}. These results motivate treating representation choice as an engineering variable rather than as invisible preprocessing.
 
 The central claim of this paper is narrow:
 
 \begin{quote}
-Before knowledge can be processed deterministically, the semantics used to describe a phenomenon must be locally stabilized by an explicit representational contract.
+When a deterministic output is intended to carry domain-level epistemic authority, the representation connecting evidence to that computation should be locally fixed by an explicit and inspectable contract.
 \end{quote}
 
-We call this operation \emph{mathematical anchoring}. The purpose of an anchor is not to reveal the metaphysical essence of a phenomenon. Its purpose is to state, with enough precision to support computation, which mathematical structure is being used, which observations are admissible, which assumptions authorize the mapping, and which information is intentionally discarded.
+We call this operation \emph{mathematical anchoring}. The name is deliberately narrower than the established model-driven-engineering use of \emph{semantic anchoring}, where transformations assign precise semantics to domain-specific models by mapping them into formal semantic units \cite{chen2005infra,chen2005transform}. Here the object being governed is not primarily the semantics of a modeling language but the authorization of a mathematical representation from admitted evidence. The purpose of an anchor is not to reveal the metaphysical essence of a phenomenon. Its purpose is to state, with enough precision to support computation, which mathematical structure is being used, which observations are admissible, which assumptions authorize the mapping, and which information is intentionally discarded.
 
 The distinction matters because natural language is powerful partly because it is not rigid. A word can travel across domains and generate analogies. ``Distance'' can refer to Euclidean separation, shortest path in a graph, divergence between distributions, organizational separation, decision cost or social proximity. This semantic mobility is productive in discovery. It is dangerous in validation. Two relations can share a word without sharing mathematical properties, and two differently named relations can instantiate the same formal structure.
 
@@ -74,6 +83,13 @@ SemaGraph-64 is used later as a concrete finite-state terminal for this architec
 \section{Intellectual lineage and positioning}
 The proposal is intentionally cumulative. None of its component observations is presented as an invention ex nihilo. The relevant question is whether several established representational problems become a distinct engineering problem when semantic interpretation, mathematical modeling, computational projection, provenance and machine authority are joined in one automated pipeline.
 
+\subsection{Semantic anchoring in model-driven engineering: the closest engineering precedent}
+The closest engineering precedent uncovered in the present lineage is the semantic-anchoring program developed for domain-specific modeling languages (DSMLs). Chen, Sztipanovits and collaborators proposed anchoring DSML semantics to precisely defined and validated \emph{semantic units}, using Abstract State Machines as a common mathematical framework and model transformations as the executable semantic mapping \cite{chen2005infra,chen2005transform}. This is not a superficial terminological overlap. It already contains a source representation, an explicit transformation, a mathematically specified target semantic domain, and an engineering requirement that the mapping be precise enough to enable formal analysis.
+
+The subsequent literature also anticipates two failure modes central to the present paper. Balasubramanian and Jackson show that a semantic transformation can be \emph{forgetful}: structural constraints and details of the transformation may disappear in the target representation, producing erroneous conclusions when formal methods are applied \cite{balasubramanianJackson2009}. Lindecker et al. then treat the semantic mapping itself as an object requiring validation against separately formalized designer intentions, because a mathematically executable mapping can remain inconsistent with the meaning the language designer intended \cite{lindecker2015}. Thus, neither preservation of structure nor correctness of the semantic map may be assumed merely because the target formalism is rigorous.
+
+Mathematical anchoring should therefore be read as an extension across a different boundary, not as the invention of transformation-based anchoring. The DSML literature begins with an artifact that is already a formal model or modeling language and seeks to assign or validate its semantics in a reusable formal domain. The present framework begins with admitted evidence whose semantic interpretation may still be plural, makes the selection of a mathematical structure a governed and versioned commitment, and may then project the formal object further into a deliberately compressed computational state. Evidence bindings, competing candidate anchors, validity scope, registration authority and replay across anchor versions are first-class objects. No single common semantic unit is assumed. In short, prior semantic anchoring asks how a model acquires precise formal semantics; mathematical anchoring here asks when one candidate formalization of evidence is authorized to become computationally binding.
+
 \subsection{Representational measurement: from empirical structure to mathematical structure}
 The closest formal ancestor of the map $\phi_d:X_d\rightarrow M_d$ is the representational theory of measurement. Scott and Suppes characterize measurement as the problem of exposing the structure of empirical relations and representing that structure mathematically \cite{scottSuppes1958}. The later \emph{Foundations of Measurement} program develops this idea through representation and uniqueness theorems: a numerical representation is legitimate only relative to structural conditions in the empirical domain, and admissible transformations determine what numerical statements are meaningful \cite{krantz1971}.
 
@@ -89,12 +105,19 @@ Knowledge-representation research has long rejected the idea that a representati
 
 Formal work on context makes the dependence of truth and denotation on a declared context computationally explicit. McCarthy's context formalism treats contexts as first-class objects and introduces relations that state that a proposition holds in a particular context, together with lifting relations between contexts \cite{mccarthy1993}. These traditions already establish that meaning cannot be assumed to be globally fixed across computational settings.
 
-Mathematical anchoring differs in emphasis rather than opposition. It does not attempt to provide one global ontology or one universal context calculus. It focuses on the transition from a semantically permissive upstream layer to a locally fixed mathematical contract that is allowed to drive authoritative computation. Competing candidate anchors may therefore coexist, and ambiguity is preserved until governance or evidence licenses one or more registered interpretations.
+A particularly close architectural precedent is the DOGMA ontology-engineering approach. Jarrar and Meersman separate a reusable ontology base from explicit \emph{ontological commitments}: rules and constraints that mediate how particular applications or software agents may use that base \cite{jarrarMeersman2002}. This substantially narrows any claim that the present paper first separates shared semantics from application-specific authority.
 
-\subsection{Plural formal systems and the problem of translation}
-The theory of institutions abstracts over particular logical systems by separating signatures, sentences, models and satisfaction while requiring satisfaction to be invariant under changes of notation \cite{goguenBurstall1992}. This is a powerful precedent for reasoning across heterogeneous formalisms without privileging a single logic.
+Mathematical anchoring differs in object and granularity rather than in the general idea of commitment. It does not attempt to provide one global ontology or one universal context calculus, and its registered object need not be an ontology at all: it may be a metric space, graph, order, probability model, constraint system or another typed mathematical structure. The focus is the transition from a semantically permissive upstream layer to a locally fixed mathematical contract that is allowed to drive authoritative computation, with evidence bindings and downstream projection lineage preserved explicitly. Competing candidate anchors may therefore coexist, and ambiguity is preserved until governance or evidence licenses one or more registered interpretations.
 
-The present framework is substantially less ambitious formally, but the comparison is important. A mathematical-anchor registry should not be mistaken for a universal ontology of mathematics. Its purpose is to identify the formal system being used locally and to preserve the boundary conditions under which evidence is translated into that system. Institution theory therefore marks an upper theoretical limit: a mature implementation could eventually require principled translations among anchor languages, but such a metatheory is not assumed here.
+\subsection{Symbol grounding and perceptual anchoring: a terminological boundary}
+The word \emph{anchoring} already has an established technical history in AI. Harnad's symbol-grounding problem asks how the semantic interpretation of formal symbols can be grounded in non-symbolic representations rather than remain parasitic on external human interpretation \cite{harnad1990}. In cognitive robotics, Coradeschi and Saffiotti define \emph{anchoring} as connecting symbols and sensor data that refer to the same physical objects, including maintaining that correspondence over time \cite{coradeschiSaffiotti2003}.
+
+Mathematical anchoring addresses a different boundary. It does not solve reference, perception, or intrinsic symbol meaning. It begins after an observation has been admitted by some sensing, measurement, documentary, or semantic protocol and asks which explicit mathematical structure is authorized to represent that observation for a declared computational task. A system may therefore require perceptual grounding before mathematical anchoring, but the two operations remain logically distinct. This disambiguation is important both conceptually and terminologically: the present use of \emph{anchor} denotes a governed formalization contract, not a solution to the symbol-grounding problem.
+
+\subsection{Plural formal systems, local logics and information flow}
+The theory of institutions abstracts over particular logical systems by separating signatures, sentences, models and satisfaction while requiring satisfaction to be invariant under changes of notation \cite{goguenBurstall1992}. Barwise and Seligman's channel theory similarly treats distributed systems whose components can have different classifications and local logics, linked through structure-preserving information channels and infomorphisms \cite{barwiseSeligman1997}. These are strong precedents for reasoning across heterogeneous formal or classificatory systems without demanding one globally privileged vocabulary.
+
+The present framework is substantially less ambitious formally, but the comparison is important. A mathematical-anchor registry should not be mistaken for a universal ontology of mathematics, a general logic of information flow, or a replacement for institutional semantics. Its narrower role is to identify the formal system being used locally and to preserve the boundary conditions under which evidence is translated into that system. A mature implementation may eventually require institution-like translations or channel-theoretic mappings among anchor languages, but such a metatheory is not assumed here.
 
 \subsection{Information relevance, distortion and decision preservation}
 Information theory supplies the clearest formal language for the fact that finite representation is selective. Shannon's rate--distortion formulation asks how much a source can be compressed while satisfying a fidelity criterion \cite{shannon1959}. The Information Bottleneck reframes relevant compression as finding a compact representation of $X$ that preserves information about a target $Y$ \cite{tishby2000}. Blackwell's comparison of statistical experiments provides a complementary decision-theoretic perspective: one information structure is more informative than another when it can support at least the same attainable decision risks \cite{blackwell1953}.
@@ -102,9 +125,11 @@ Information theory supplies the clearest formal language for the fact that finit
 These results prevent an overstatement in the present work. Task-relative preservation is not new. The narrower proposal here is to apply the same discipline to explicit epistemic contracts: a projection is acceptable only relative to the inferences, rankings or decisions it is intended to support, and the representation must retain provenance sufficient to identify which formal assumptions produced it. Recent agentic work makes this concern concrete. LLM-based context compression has been shown to alter downstream financial decisions even when the compressed text remains plausible and broadly factual \cite{lee2026}; related preprint work argues for typed, source-grounded commitments in verifiable context compression \cite{trukhina2026}. These studies are not foundations of mathematical anchoring, but they illustrate why representational fidelity is becoming an engineering concern rather than only a philosophical one.
 
 \subsection{Provenance and representational authority}
-Provenance already has a mature computational vocabulary. The W3C PROV family represents entities, activities, agents and derivations so that the production history of data or artifacts can be exchanged and reasoned about \cite{w3cProv2013}. Mathematical anchoring should therefore not redefine provenance as generic lineage.
+Provenance already has a mature computational vocabulary. The W3C PROV family represents entities, activities, agents and derivations so that the production history of data or artifacts can be exchanged and reasoned about \cite{w3cProv2013}. Scientific-workflow research has gone further by making the provenance model depend on the underlying model of computation and by explicitly recording assumptions, research questions and requirements used in constructing simulation models \cite{ludascher2008,budde2021}. Thoughtflow, for example, treats models, assumptions and decisions as provenance-bearing entities and supports tracing which downstream components depend on an assumption when it changes \cite{wilkins2017}. Mathematical anchoring should therefore not redefine provenance as generic lineage, nor claim priority for recording model assumptions or decision rationales.
 
-The narrower extension proposed here is \emph{representational provenance}: preserve not only which artifact was derived from which source, but which observation binding, formalization contract, mathematical relation and predicate authorized a computational state. This makes disagreement localizable at the level of representation. Two agents can agree on evidence yet disagree on the anchor; agree on the anchor yet disagree on a predicate threshold; or agree on both and disagree only in downstream inference. The lineage of representational commitments becomes part of the computational object's authority.
+Versioning is likewise established territory. Ontology and provenance systems routinely preserve version histories, and recent work on \emph{audit-stable meaning} argues that governed decisions should remain bound to immutable semantic snapshots so that later semantic changes cannot retroactively rewrite the basis of an earlier decision \cite{meyman2026}. Recent ontology-based assurance work is closer still to the governance boundary developed here: Wen's Security Assurance Context Ontology (SACO) represents provenance and epistemic status explicitly, separates authoritative context from advisory AI-assisted reasoning, models missing information as explicit gaps, and makes authoritative context deterministically reconstructable from governed inputs \cite{wen2026}. These precedents remove any priority claim here for historical non-rewriting, authoritative/advisory separation, or deterministic reconstruction of governed semantic context as standalone ideas.
+
+The remaining distinction is narrower. In mathematical anchoring, the governed object is the domain formalization itself and its subsequent computational projection. The proposed \emph{representational provenance} therefore preserves an executable lineage from evidence through the specific observation binding and mathematical formalization contract to formal relations, projection predicates and the resulting computational state. The emphasis is not merely that an assumption was used, but that the system can identify exactly which formal consequence and state component that assumption authorized. This makes disagreement localizable at the level of representation. Two agents can agree on evidence yet disagree on the anchor; agree on the anchor yet disagree on a predicate threshold; or agree on both and disagree only in downstream inference. The lineage of representational commitments becomes part of the computational object's authority.
 
 \subsection{Position of the present contribution}
 The positioning can be summarized as follows.
@@ -113,21 +138,44 @@ The positioning can be summarized as follows.
 \toprule
 Tradition & What is inherited & What is added or re-scoped here \\
 \midrule
-Representational measurement & Empirical structure must license mathematical representation & Non-numeric mathematical targets, candidate anchors, versioned computational authority \\
-Scientific representation & Models support inference without being identical to their targets & Machine-readable contracts linking model choice to evidence and replay \\
-Knowledge representation / ontology & Explicit conceptual commitments and inferential consequences & Plural candidate semantics separated from registered mathematical authority \\
-Formal context & Meaning and truth can be context-relative & Local stabilization specifically at the semantic-to-mathematical boundary \\
-Institution theory & Plural formal systems and principled translation & Evidence-to-formalization governance rather than a general metatheory of logic \\
-Information bottleneck / rate distortion & Compression should preserve task-relevant information & Explicit preservation of epistemic and decision commitments under declared anchors \\
-Provenance & Derivation and responsibility lineage & Lineage of representational assumptions from evidence to computational state \\
+\endfirsthead
+\toprule
+Tradition & What is inherited & What is added or re-scoped here \\
+\midrule
+\endhead
+\midrule
+\multicolumn{3}{r}{\footnotesize Continued on next page} \\
+\endfoot
 \bottomrule
+\endlastfoot
+Semantic anchoring in MDE & Transformations from domain-specific models into mathematically defined semantic units; validation of the mapping itself & Evidence-conditioned, plural candidate formalizations; registration authority; optional further deterministic projection \\
+Representational measurement & Empirical structure must license mathematical representation & Non-numeric mathematical targets integrated with candidate selection, authority and replay \\
+Scientific representation & Models support inference without being identical to their targets & Machine-readable contracts linking model choice to evidence and downstream computational consequences \\
+Knowledge representation / DOGMA & Ontological commitments can mediate how applications use shared semantic resources & Commitment generalized from ontology use to typed mathematical structures with evidence and projection lineage \\
+Symbol grounding / perceptual anchoring & Relations between symbols, non-symbolic representations and physical referents & Distinct downstream problem: licensing an admitted observation into a mathematical structure \\
+Formal context & Meaning and truth can be context-relative & Local stabilization specifically at the semantic-to-mathematical boundary \\
+Institutions / channel theory & Plural formal systems, local logics and structure-preserving mappings & Evidence-to-formalization governance rather than a general metatheory of logic or information flow \\
+Information bottleneck / rate distortion & Compression should preserve task-relevant information & Explicit preservation of epistemic and decision commitments under declared anchors \\
+Model / data provenance & Derivation, assumptions, decisions, responsibility and workflow lineage & Fine-grained linkage from representational assumptions to formal relations, predicates and computational state \\
+Governed assurance context / SACO & Explicit provenance and epistemic status; authoritative/advisory separation; deterministic reconstruction from governed inputs & Mathematical formalization and downstream projection, rather than assurance context itself, are the registered authority-bearing objects \\
+Semantic versioning / audit-stable meaning & Historical decisions can be bound to immutable semantic versions & Version binding extended to the evidence--formalization--projection chain rather than semantic snapshots alone \\
 \end{longtable}
 
-The resulting novelty claim is deliberately compositional. The paper does not propose a new theory of measurement, semantics, ontology, compression or provenance in isolation. It proposes that computational knowledge systems require a governed boundary joining these concerns: semantic candidates remain revisable upstream, while authoritative computation begins only after an explicit mathematical representation has been registered together with its assumptions, validity conditions and derivation path.
+The resulting novelty claim is deliberately compositional and narrower than in earlier drafts. The paper does not claim priority for mapping representations into mathematical semantic domains, validating those mappings, separating shared semantics from application-specific commitments, separating authoritative from advisory reasoning, recording model assumptions, reconstructing governed semantic state, versioning ontologies, preserving decision-time semantics, or evaluating compression relative to a downstream task. Each of those moves has clear antecedents in the literatures above. The object proposed here is their specific composition around the mathematical formalization boundary: semantic interpretations may remain plural upstream; a candidate becomes computationally binding only when a declared mathematical structure and projection contract are registered for a task; and the resulting state can be traced through projection predicates and formal relations back to admitted evidence. This is a scoped architecture and research program, not a claim of exhaustive priority over every possible combination of these ideas.
+
+\subsection{Claim discipline}
+To keep the contribution auditable, the paper separates four kinds of statements.
+\begin{enumerate}
+    \item \textbf{Definitions and design commitments} specify what this paper means by an anchor, registration, representational authority and lineage. They are proposed conventions, not empirical discoveries.
+    \item \textbf{Analytical consequences} follow from the declared maps and finite-state constructions; for example, a non-injective map induces equivalence classes on its domain of definition and endpoint equality does not imply trajectory equality.
+    \item \textbf{Architectural prescriptions} state properties that an audit-oriented implementation should preserve, such as version binding and evidence-to-projection lineage. These are engineering proposals whose utility remains subject to evaluation.
+    \item \textbf{Empirical hypotheses} are the H1--H5 claims in Section~\ref{sec:evaluation}. No empirical confirmation of those hypotheses is claimed in this paper.
+\end{enumerate}
+This separation prevents the reference implementation, the prior literature and the proposed research program from being read as one undifferentiated novelty claim.
 
 \section{Semantic mobility and local ontology}
 \subsection{Words do not carry fixed computational meaning}
-Natural-language terms are not reliable computational types. Their meaning is constrained by context, convention, use and the surrounding system of relations; formal AI work on context and ontology has long made related dependence explicit \cite{mccarthy1993,gruber1993,guarino1998}. The same lexical token may therefore refer to different mathematical objects.
+Natural-language terms are not reliable computational types. Their meaning is constrained by context, convention, use and the surrounding system of relations; formal AI work on context and ontology has long made related dependence explicit \cite{mccarthy1993,gruber1993,guarino1998}. We use \emph{semantic mobility} descriptively for this capacity of terms and concepts to shift operative meaning across contexts and domains; it is not proposed as a new general theory of lexical semantics. The same lexical token may therefore refer to different mathematical objects. Carnap's distinction between questions internal to a linguistic framework and questions about framework choice provides an earlier philosophical precedent for treating formal commitments as framework-relative without making truth arbitrary \cite{carnap1950}.
 
 Consider ``distance.'' In different domains it may mean:
 
@@ -139,7 +187,7 @@ Consider ``distance.'' In different domains it may mean:
     \item an ordinal judgment of separation with no cardinal interpretation.
 \end{itemize}
 
-The lexical label alone does not determine which operations are valid. If a system treats all occurrences of the word as equivalent, it commits an ontological error before any logical inference begins.
+The lexical label alone does not determine which operations are valid. If a system treats all occurrences of the word as formally equivalent without an explicit justification, the representational error occurs before any downstream logical inference begins.
 
 This gives a useful distinction.
 
@@ -151,7 +199,7 @@ An inferential error occurs when a conclusion does not follow from the stipulate
 A representational error occurs when the chosen entities, relations, scales or mathematical structure fail to represent the task-relevant phenomenon adequately, even if all subsequent inferences are formally valid.
 \end{definition}
 
-Mathematics is exceptionally strong against the first error once definitions and axioms are fixed. It does not by itself eliminate the second. Measurement theory and scientific-modeling debates both expose this gap between formal validity and representational adequacy \cite{scottSuppes1958,suarez2004}. A perfectly valid derivation can operate on the wrong model.
+Formal mathematics can make the first kind of error comparatively explicit once definitions, axioms and rules of inference are fixed. It does not by itself eliminate the second. Measurement theory and scientific-modeling debates both expose this gap between formal validity and representational adequacy \cite{scottSuppes1958,suarez2004}. A perfectly valid derivation can operate on the wrong model.
 
 \subsection{Relativity without total relativism}
 The claim that meaning is model-relative does not imply that truth is arbitrary. It implies that a proposition can only be evaluated after the interpretation under which its terms are used has been made explicit.
@@ -192,20 +240,20 @@ A mathematical anchor selects a declared structure
 \begin{equation}
 M_d
 \end{equation}
-and a formalization map
+and a possibly partial formalization map
 \begin{equation}
-\phi_d:X_d\rightarrow M_d.
+\phi_d:X_d\rightharpoonup M_d.
 \end{equation}
-The map may be partial: not every observation must be admissible, and insufficient evidence may block formalization.
+Its domain of definition $D_d=\operatorname{dom}(\phi_d)\subseteq X_d$ contains only observations for which the registered contract has enough admissible evidence to formalize the object.
 
 \subsection{Computational representation}
-A computational projection maps the formal representation to an object designed for deterministic processing. In the finite-state case,
+A computational projection maps the formal representation to an object designed for deterministic processing:
 \begin{equation}
-P_R:M_d\rightarrow \B^n,
+P_R:M_d\rightarrow C_R,
 \end{equation}
-where $R$ denotes a registered projection version. The composed anchor is
+where $R$ denotes a registered projection version and $C_R$ is the declared computational codomain. A finite Boolean state $C_R=\B^n$ is one special case. The composed mapping is therefore
 \begin{equation}
-A_{d,R}=P_R\circ\phi_d:X_d\rightarrow\B^n.
+A_{d,R}=P_R\circ\phi_d:X_d\rightharpoonup C_R.
 \end{equation}
 
 This chain should never be collapsed conceptually:
@@ -232,17 +280,21 @@ A minimal anchor contract contains:
     \item evidence and provenance requirements.
 \end{itemize}
 
-The contract establishes computational authority, not ontological truth. In this sense mathematical anchoring is best read as an engineering extension of representational measurement and scientific-modeling discipline rather than as a claim to have discovered a new relation between models and reality \cite{scottSuppes1958,krantz1971,suarez2004}.
+The contract establishes computational authority, not ontological truth. In this sense mathematical anchoring is best read as an engineering extension of representational measurement, model-driven semantic anchoring, ontological commitment and scientific-modeling discipline rather than as a claim to have discovered a new relation between models and reality \cite{scottSuppes1958,krantz1971,chen2005transform,jarrarMeersman2002,suarez2004}.
 
-\subsection{Candidate and registered anchors}
+\subsection{Candidate, registered anchors and representational authority}
 A central design decision is to separate candidate generation from authoritative registration.
+
+\begin{definition}[Representational authority]
+A representation has representational authority for a declared task when a governance process permits it to serve as canonical input to specified downstream computations. Authority is therefore a scoped procedural status; it does not by itself establish ontological truth or empirical adequacy outside the registered validity conditions.
+\end{definition}
 
 \begin{definition}[Candidate anchor]
 A candidate anchor is a proposed formalization generated by a human, language model or automated discovery process. It may be plausible, useful or elegant, but it is non-authoritative.
 \end{definition}
 
 \begin{definition}[Registered anchor]
-A registered anchor is a candidate that has been made explicit, versioned, structurally validated and accepted under a declared governance process. Only a registered anchor may produce authoritative deterministic states.
+A registered anchor is a candidate that has been made explicit, versioned, checked against its declared structural and admissibility criteria, and accepted under a declared governance process. Registration licenses use within that scope; empirical adequacy and model validity remain separately contestable. Only a registered anchor may produce authoritative states for the computations covered by the contract.
 \end{definition}
 
 This distinction allows exploratory reasoning to remain creative without allowing semantic speculation to mutate canonical computational state.
@@ -260,11 +312,11 @@ The word remains mobile outside the contract. Computation becomes rigid inside i
 Formalization is not a neutral transcription. It is an information-selective operation. This observation sits naturally beside rate--distortion theory and the Information Bottleneck, both of which formalize trade-offs between compactness and preservation of a declared notion of fidelity or relevance \cite{shannon1959,tishby2000}.
 
 \subsection{Equivalence classes induced by representation}
-Every map $\phi_d:X_d\rightarrow M_d$ induces an equivalence relation
+On the domain of definition $D_d=\operatorname{dom}(\phi_d)$, every formalization map induces an equivalence relation
 \begin{equation}
 x\sim_{\phi}x' \quad \Longleftrightarrow \quad \phi_d(x)=\phi_d(x').
 \end{equation}
-Observations that are distinct in $X_d$ but identical under $\phi_d$ become computationally indistinguishable at the mathematical-model layer.
+Observations that are distinct in $D_d$ but identical under $\phi_d$ become indistinguishable at the mathematical-model layer with respect to that formalization.
 
 Likewise, a projection $P_R:M_d\rightarrow\B^n$ induces
 \begin{equation}
@@ -275,7 +327,7 @@ The complete pipeline therefore creates nested equivalence classes:
 X_d \xrightarrow{\phi_d} M_d \xrightarrow{P_R} \B^n.
 \end{equation}
 
-The engineering question is not whether information is lost. Any useful compression loses information. The question is whether the lost distinctions matter for the task.
+The engineering question is therefore not whether every representation loses information: injective or lossless encodings need not do so. The relevant question for a deliberately non-injective formalization or projection is which distinctions are collapsed and whether those distinctions matter for the declared task.
 
 \subsection{Task-relative adequacy}
 Let $\mathcal{T}$ denote a set of downstream queries, predictions or decisions. A representation is adequate relative to $\mathcal{T}$ if distinctions that can change the correct result for tasks in $\mathcal{T}$ are preserved with sufficient reliability.
@@ -288,8 +340,8 @@ where $C(R)$ is representational cost. This is a research formulation, not a cla
 
 The important shift is conceptual: representational compression should be evaluated by what it preserves for inference and action, not by compactness alone. This is closely related to decision-theoretic comparisons of information structures \cite{blackwell1953}; the specific extension here is to make the representation contract and its provenance explicit objects of the system.
 
-\subsection{Information gain is not knowledge gain}
-Shannon information measures statistical uncertainty under a probability model \cite{shannon1948}. Semantic and epistemic notions of information require additional conditions; philosophical work on semantic information explicitly treats this distinction as non-trivial \cite{floridi2004}. Epistemic value is different. A random bit string may have high Shannon information while contributing almost nothing to a decision. Conversely, a short causal or structural constraint can carry enormous decision value.
+\subsection{Statistical information does not determine epistemic or decision value}
+Shannon information quantifies statistical uncertainty under a probability model \cite{shannon1948}. Semantic and epistemic notions of information require additional conditions; philosophical work on semantic information explicitly treats this distinction as non-trivial \cite{floridi2004}. Epistemic value is different. A random bit string may have high Shannon information while contributing almost nothing to a decision. Conversely, a short causal or structural constraint can carry enormous decision value.
 
 A mature epistemic system must therefore distinguish at least:
 \begin{enumerate}
@@ -299,10 +351,10 @@ A mature epistemic system must therefore distinguish at least:
     \item decision relevance to action.
 \end{enumerate}
 
-Mathematical anchoring operates between the second and third layers: it converts a semantic candidate into a structure on which explicit inference can be licensed.
+Mathematical anchoring does not itself turn information into knowledge. It supplies an explicit representation contract under which a semantic candidate may become eligible for specified formal inferences.
 
 \section{Provenance, replay and epistemic authority}
-A finite state is trustworthy only if its derivation remains inspectable. Existing provenance standards already provide a general language for entities, activities, agents and derivations \cite{w3cProv2013}. The requirement here is more specific: the authoritative lineage should also expose the representational commitments that authorized the state, supporting traversal in both directions:
+For audit-oriented or authority-bearing use, a finite state should not be treated as self-authenticating; its derivation must remain inspectable to the degree required by the declared governance standard. Existing provenance standards already provide a general language for entities, activities, agents and derivations \cite{w3cProv2013}. The requirement here is more specific: the authoritative lineage should also expose the representational commitments that authorized the state, supporting traversal in both directions:
 \begin{align}
 \text{state bit} &\rightarrow \text{predicate} \rightarrow \text{formal variable/relation} \\
 &\rightarrow \text{mathematical anchor} \rightarrow \text{observation binding} \\
@@ -312,7 +364,7 @@ A finite state is trustworthy only if its derivation remains inspectable. Existi
 This makes two properties possible.
 
 \subsection{Replayability}
-Given identical evidence, anchor version and projection version, the formalized object and computational state should be reproducible.
+For deterministic registered anchors, identical admitted evidence, anchor version and projection version should reproduce the same formalized object and computational state.
 
 \subsection{Historical non-rewriting}
 A later anchor version may reinterpret the same evidence, but it must not silently rewrite the state produced by an earlier registered version. Historical results belong to the contract under which they were generated.
@@ -328,6 +380,16 @@ Useful initial families include:
 \toprule
 Family & Example structure & Typical question licensed by the structure \\
 \midrule
+\endfirsthead
+\toprule
+Family & Example structure & Typical question licensed by the structure \\
+\midrule
+\endhead
+\midrule
+\multicolumn{3}{r}{\footnotesize Continued on next page} \\
+\endfoot
+\bottomrule
+\endlastfoot
 Metric/\newline geometric & metric, pseudometric, norm & How far apart are two objects under declared axioms? \\
 Order & partial order, total order, ranking & Is one state before, below, preferred to or dominated by another? \\
 Graph & directed graph, path, connectivity & Which dependencies, reachability relations or bottlenecks exist? \\
@@ -337,15 +399,14 @@ Constraint & feasible set, boundary, admissible region & Which configurations ar
 Decision/value & utility, cost, objective, preference relation & Which comparisons are licensed by the chosen evaluative structure? \\
 Similarity & similarity function, equivalence relation, kernel-like relation & Which objects may be grouped or compared, and under which invariances? \\
 Uncertainty & probability, intervals, bounded sets & What form of unresolved variation is being represented? \\
-\bottomrule
 \end{longtable}
 
 A lexical term does not determine one family. ``Value'' may be a scalar measurement, utility, price, ranking, or objective functional. ``State'' may be a point in a phase space, an aggregate label, a belief state or a software state. The anchor must declare which one is operative.
 
 \section{Discovery and validation in human-AI systems}
-Large language models are unusually useful at the semantically permissive part of reasoning: association, analogy, cross-domain retrieval, candidate synthesis and reformulation. Knowledge-representation research, however, has long stressed that a representation also constrains which inferences become natural or efficient \cite{davis1993}. The usefulness of generative flexibility should therefore not be confused with authority to establish the formal ontology of a task.
+Large language models can support semantically permissive operations such as association, analogy, cross-domain retrieval, candidate synthesis and reformulation. Knowledge-representation research, however, has long stressed that a representation also constrains which inferences become natural or efficient \cite{davis1993}. The usefulness of generative flexibility should therefore not be confused with authority to establish the formal ontology of a task.
 
-The same flexibility becomes dangerous when it is allowed to establish computational authority automatically. An LLM can propose that a phenomenon is well represented by a metric space, graph, partial order or probability model. It should not be able to make that representation authoritative merely by proposing it.
+The same flexibility creates a governance risk when model-generated interpretations can acquire computational authority automatically. An LLM can propose that a phenomenon is well represented by a metric space, graph, partial order or probability model. It should not be able to make that representation authoritative merely by proposing it.
 
 The architecture therefore separates two modes.
 
@@ -389,9 +450,9 @@ This distinction is epistemically important beyond the implementation: a compres
 \subsection{Why six bits are not a universality claim}
 The $Q_6$ terminal is intentionally small. It is useful as an experimental surface because compression is extreme and false equivalence is easy to study. Nothing in the framework claims that six bits are sufficient to represent arbitrary phenomena. The number of bits, predicate design and mathematical anchor are task-dependent design choices.
 
-SemaGraph therefore demonstrates a boundary condition: severe computational compression can be acceptable if the discarded distinctions are explicit, raw evidence is retained, and downstream claims remain conditional on the registered representation.
+SemaGraph therefore illustrates a boundary condition: severe computational compression can be evaluated as acceptable for declared tasks and tolerances when the discarded distinctions are explicit, source evidence is retained, and downstream claims remain conditional on the registered representation.
 
-\section{Worked conceptual examples}
+\section{Illustrative conceptual examples}
 \subsection{The word ``distance''}
 Suppose three domains use the same word.
 
@@ -401,7 +462,7 @@ Suppose three domains use the same word.
 
 \paragraph{Decision cost.} Moving from policy $a$ to policy $b$ has a transition cost. The reverse transition may have a different cost. Calling the quantity ``distance'' does not make it a metric.
 
-A language model may notice the analogy across all three. Mathematical anchoring prevents the analogy from silently importing invalid operations.
+A language model may notice the analogy across all three. A registered mathematical anchor provides a check against silently importing operations that are valid in one formalization but not another.
 
 \subsection{Different words, same structure}
 Conversely, ``precedence'', ``dominance'' and ``dependency order'' may instantiate partial orders in different domains. A structural comparison can therefore be meaningful even when the surface vocabulary differs. What matters is not shared terminology but preservation of the formal relations declared relevant.
@@ -413,7 +474,7 @@ An organizational review may describe possible actions in terms of approvals, sk
 A monitoring system may represent an observed signal by a probability distribution and information relations. A State64 projection may encode whether entropy, concentration or selected conditional relations cross declared thresholds. Again the state is authoritative only relative to the probability model and threshold contract that generated it.
 
 \section{From context engineering to epistemic systems engineering}
-Much contemporary AI practice focuses on context assembly and compression: selecting, summarizing or retaining documents, memories and tool outputs that should be placed in front of a model. This is necessary but not sufficient. Recent work shows that compression can preserve surface plausibility while changing the decision supported by the original evidence \cite{lee2026}, and emerging context frameworks increasingly treat typed, source-grounded commitments as objects that should survive compression \cite{trukhina2026}. A context can therefore contain apparently relevant evidence while still failing to distinguish observation from hypothesis, semantic label from mathematical type, or current fact from superseded interpretation.
+A substantial class of AI workflows relies on context assembly and compression: selecting, summarizing or retaining documents, memories and tool outputs for subsequent model calls. This is necessary but not sufficient for representational control. Recent preprints illustrate the concern by showing decision changes after plausible context compression and by proposing typed, source-grounded commitments that should survive compression \cite{lee2026,trukhina2026}. These contemporary examples are motivating evidence rather than foundations of the framework. A context can contain relevant evidence while still failing to distinguish observation from hypothesis, semantic label from mathematical type, or current fact from superseded interpretation.
 
 Knowledge engineering asks a deeper question: what structure should the cognitive asset have independently of a single prompt? Mathematical anchoring adds another layer: when does a semantic representation become sufficiently explicit to authorize deterministic inference?
 
@@ -424,13 +485,13 @@ The complete pipeline can be expressed as
 &\rightarrow \text{inference} \rightarrow \text{decision} \rightarrow \text{new observation}.
 \end{align}
 
-This suggests a broader research area that may be called \emph{epistemic systems engineering}: the engineering of human-machine systems that acquire, represent, formalize, compare, revise and operationalize knowledge while preserving the provenance of the assumptions that make computation possible.
+For convenience, this paper uses the descriptive label \emph{epistemic systems engineering} for the broader engineering agenda of building human--machine systems that acquire, represent, formalize, compare, revise and operationalize knowledge while preserving the provenance of the assumptions that make computation possible. The label is not advanced here as a priority claim or as an already established discipline.
 
 In such systems, knowledge engineering, decision engineering and organizational architecture become coupled. Knowledge determines what is represented; decision architecture determines which transformations from belief to action are permitted; organizational architecture determines where knowledge and decision rights reside across human and artificial agents.
 
 \section{Failure modes and limits}
 \subsection{Wrong formalization, correct computation}
-The most important failure mode is an unjustified $\phi_d$. A deterministic system can process a bad representation flawlessly. Registration and replay establish explicit authority, not truth.
+A primary failure mode is an unjustified $\phi_d$. A deterministic system can process a bad representation flawlessly. Registration and replay establish explicit authority, not truth.
 
 \subsection{False equivalence}
 Compression merges distinct objects. The system must identify which equivalence classes are created and prevent lossy summaries from being treated as full identity when the task requires distinctions they discard.
@@ -439,13 +500,13 @@ Compression merges distinct objects. The system must identify which equivalence 
 Labels attached for explanation can gradually acquire authority they were never intended to have. Mathematical structure kinds, predicate definitions and evidence bindings must remain the authoritative contract.
 
 \subsection{Premature ontology selection}
-When several anchors are plausible and evidence is insufficient, ambiguity should remain explicit. Automatic selection merely converts epistemic uncertainty into hidden system state.
+When several anchors are plausible and evidence is insufficient, ambiguity should remain explicit. Automatic selection can convert epistemic uncertainty into hidden system state if the unresolved alternatives are not retained or reported.
 
 \subsection{Formalism is not ontology}
 A successful model may support prediction or decision without establishing that its objects correspond to the ultimate ontology of the phenomenon. The framework is deliberately agnostic on that metaphysical question.
 
-\section{Research hypotheses and evaluation program}
-The framework generates empirical and engineering questions that can fail.
+\section{Research hypotheses and evaluation program}\label{sec:evaluation}
+The framework generates empirical and engineering questions that can fail. No empirical confirmation of H1--H5 is reported in this paper; they define a validation program for subsequent work.
 
 \subsection{H1: explicit anchors reduce semantic drift}
 Agentic systems using registered mathematical anchors should exhibit fewer representation-induced inconsistencies across long reasoning chains than systems relying on natural-language definitions alone, holding evidence constant.
@@ -454,13 +515,13 @@ Agentic systems using registered mathematical anchors should exhibit fewer repre
 When an output is challenged, systems retaining bit-to-predicate-to-anchor-to-evidence lineage should localize the source of disagreement more reliably than systems retaining only prompts and final states.
 
 \subsection{H3: decision-preserving compression can be measured}
-For a declared task set $\mathcal{T}$, finite projections can be evaluated by the rate at which they preserve downstream rankings or decisions relative to richer representations, extending rate--distortion, information-bottleneck and decision-fidelity ideas into an explicitly anchored pipeline \cite{shannon1959,tishby2000,lee2026}.
+For a declared task set $\mathcal{T}$, finite projections can be evaluated by the rate at which they preserve downstream rankings or decisions relative to richer representations, building on rate--distortion, information-bottleneck and decision-fidelity ideas while making the formalization contract explicit \cite{shannon1959,tishby2000,blackwell1953,lee2026}.
 
-\subsection{H4: semantic equality and structural equality diverge systematically}
-Benchmarks built around polysemous terms should demonstrate that lexical equality frequently fails to imply mathematical-anchor equality, while structurally equivalent relations can occur under different terminology.
+\subsection{H4: anchor-aware validation reduces semantic-collision errors}
+On benchmarks containing polysemous labels and structurally equivalent relations expressed with different terminology, systems that validate candidate anchors against declared mathematical contracts should commit fewer label-induced formalization errors than systems that treat lexical similarity as sufficient evidence of structural equivalence.
 
-\subsection{H5: ambiguity preservation outperforms forced anchor selection under sparse evidence}
-When observations underdetermine the formalization, systems that preserve multiple candidate anchors should be better calibrated than systems that force one ontology prematurely.
+\subsection{H5: ambiguity preservation reduces premature-commitment error under sparse evidence}
+When observations underdetermine the formalization and additional evidence is revealed later, systems that preserve multiple candidate anchors should show lower premature-selection regret, or better calibrated uncertainty over anchor choice, than systems that force one ontology immediately. The exact calibration and regret measures must be preregistered for each benchmark.
 
 \subsection{Evaluation dimensions}
 A research program should therefore measure:
@@ -482,29 +543,39 @@ The intellectual lineage above concerns the representation boundary. The computa
 \toprule
 Tradition & Relevant contribution & Boundary in this paper \\
 \midrule
+\endfirsthead
+\toprule
+Tradition & Relevant contribution & Boundary in this paper \\
+\midrule
+\endhead
+\midrule
+\multicolumn{3}{r}{\footnotesize Continued on next page} \\
+\endfoot
+\bottomrule
+\endlastfoot
 Information theory & Quantification of uncertainty, coding and distortion \cite{shannon1948,shannon1959,tishby2000} & Statistical information or task relevance does not by itself determine which domain ontology is authorized. \\
 Error-correcting codes & Finite symbolic structure and Hamming geometry \cite{hamming1950} & Used as computational mathematics, not as a theory of meaning. \\
 Automata theory & Finite states and transitions \cite{hopcroft2006} & The focus here is the upstream authorization of a state representation, not language recognition. \\
 Statecharts / timed automata & Structured state-transition modeling \cite{harel1987,alur1994} & Mathematical anchoring concerns how domain observations become formal states before transition logic is applied. \\
-AI knowledge representation & Explicit representation, ontological commitment and inference \cite{davis1993,russell2021} & The present emphasis is the registration boundary between plural semantic candidates and authoritative mathematical models. \\
+Model-driven semantic anchoring & Formal transformations into reusable semantic units \cite{chen2005infra,chen2005transform,lindecker2015} & The present boundary begins with admitted evidence and governs competing formalizations plus downstream authority, rather than assigning semantics to a DSML. \\
+AI knowledge representation & Explicit representation, ontological commitment and inference \cite{davis1993,russell2021,jarrarMeersman2002} & The present emphasis is the registration boundary between plural semantic candidates and authoritative mathematical models. \\
 Formal context / institutions & Context-indexed truth and abstraction across logical systems \cite{mccarthy1993,goguenBurstall1992} & The framework does not supply a universal context logic or metatheory; it records the local formalism actually licensed for a computation. \\
-Provenance systems & Derivation, activity and responsibility lineage \cite{w3cProv2013} & Representational provenance adds the chain of assumptions and formal mappings that authorize a computational state. \\
+Provenance systems & Derivation, assumptions, decisions, activity and responsibility lineage \cite{w3cProv2013,wilkins2017} & Representational provenance adds the fine-grained chain of formal mappings and projection predicates that authorize a computational state. \\
 Non-ergodic / regime-switching models & Path and regime dependence \cite{peters2019,hamilton1989} & These are possible domain formalisms; they do not define the anchoring framework itself. \\
-\bottomrule
 \end{longtable}
 
-This separation is important for evaluating novelty. The proposal is not a new finite automaton, a new ontology language, a new provenance standard or a new information measure. Its claim is that agentic computational knowledge systems need an explicit governance layer connecting these traditions: a semantic candidate does not acquire computational authority until its formal structure, evidence bindings and validity conditions have been declared and registered.
+This separation is important for evaluating novelty. The proposal is not a new finite automaton, a new ontology language, a new provenance standard, a new information measure, or the first semantic-anchoring transformation framework. Its claim is narrower: the mathematical formalization and projection used by an agentic computational knowledge system can themselves be treated as governed, provenance-bearing authority objects. A semantic candidate acquires representational authority only for the declared task and only after its mathematical structure, evidence bindings, validity conditions and projection contract have been registered. Whether this architecture improves reliability is an empirical question addressed by the evaluation program rather than assumed by definition.
 
 \section{Conclusion}
-The central problem addressed here is not computational scarcity but representational authority. Natural language is semantically mobile, and that mobility is productive for discovery. Deterministic computation requires a different property: locally fixed meaning under an explicit formal contract.
+The central problem addressed here is representational authority in computational knowledge systems, not computational performance as such. Natural language is semantically mobile, and that mobility is productive for discovery. Deterministic computation requires a different property: locally fixed meaning under an explicit formal contract.
 
-Mathematical anchoring provides such a boundary. An observation domain $X_d$ is mapped into a declared mathematical structure $M_d$ by a versioned formalization $\phi_d$. A registered projection may then map that structure into a computational state. The mathematical model is neither hidden nor universalized: assumptions, validity scope, evidence and provenance remain part of the authority chain.
+Mathematical anchoring is proposed as one such boundary, distinct from the established perceptual-anchoring use of the term in robotics and narrower than semantic governance frameworks that already separate authoritative from advisory reasoning. An observation domain $X_d$ is mapped into a declared mathematical structure $M_d$ by a versioned formalization $\phi_d$. A registered projection may then map that structure into a computational state. The mathematical model is neither hidden nor universalized: assumptions, validity scope, evidence and provenance remain part of the authority chain.
 
-This architecture permits a useful division of labour. Humans and language models may generate analogies and competing ontologies freely. Authoritative computation begins only after a representation has been made explicit enough to be tested, versioned and replayed. The resulting system can therefore be semantically flexible upstream and computationally rigid downstream.
+This architecture is intended to permit a useful division of labour. Humans and language models may generate analogies and competing ontologies freely. Authoritative computation begins only after a representation has been made explicit enough to be tested, versioned and replayed. The resulting system can therefore be semantically flexible upstream and computationally rigid downstream.
 
-SemaGraph-64 demonstrates one extreme case: a six-bit terminal whose state-transition operations are fully deterministic while the richer domain meaning remains outside the kernel. Its significance is not that the world can be reduced to 64 states, but that severe compression can remain epistemically honest when the transformations that produced it are visible.
+SemaGraph-64 provides one extreme reference case: a six-bit terminal whose state-transition operations are fully deterministic while the richer domain meaning remains outside the kernel. Its significance is not that the world can be reduced to 64 states, but that severe compression can remain epistemically honest when the transformations that produced it are visible.
 
-The broader research program is consequently larger than SemaGraph itself. It concerns the engineering of systems capable of moving from ambiguous language to explicit mathematical structure to deterministic action without confusing a useful representation with reality. That problem sits at the intersection of knowledge engineering, information theory, AI systems, decision science and the philosophy of scientific modeling, and may become increasingly central as computational reasoning ceases to be the scarce resource.
+The broader research program is consequently larger than SemaGraph itself. It concerns the engineering of systems capable of moving from ambiguous language to explicit mathematical structure to deterministic action without confusing a useful representation with reality. That problem sits at the intersection of knowledge engineering, information theory, AI systems, decision science and the philosophy of scientific modeling, and motivates further work as automated reasoning becomes cheaper and more deeply embedded in knowledge workflows.
 
 \appendix
 \section{Reference implementation: computational notes}
@@ -515,7 +586,7 @@ A six-bit state occupies the low six bits of a byte. The ordered transition inde
 \begin{equation}
 I(s,t)=64s+t\in[0,4096).
 \end{equation}
-Per-transition metadata can be derived from the mutation mask and stored in compile-time lookup tables. The current implementation uses approximately 4.4 KiB for its principal classification surface, allowing the hot path to remain cache-resident on conventional CPUs.
+Per-transition metadata can be derived from the mutation mask and stored in compile-time lookup tables. The current implementation uses approximately 4.4 KiB for its principal classification tables, a footprint small enough to fit within a typical L1 data cache; actual residency remains workload- and architecture-dependent.
 
 \subsection{Branchless batch processing}
 The implementation provides a scalar table path and a struct-of-arrays batch API designed for vectorization. An optional explicit SIMD path is required to reproduce the scalar result exactly. These are engineering properties, not theoretical claims about the representation framework.
@@ -529,6 +600,7 @@ For trajectories over the eight-symbol alphabet $Q_3=\{0,\ldots,7\}$, SemaGraph 
 This rule embodies the general epistemic principle developed in the paper: a lossy projection must not silently become an identity criterion.
 
 
+\small
 \begin{thebibliography}{99}
 \bibitem{scottSuppes1958}
 D. Scott and P. Suppes, ``Foundational Aspects of Theories of Measurement,'' \emph{The Journal of Symbolic Logic}, vol. 23, no. 2, pp. 113--128, 1958. doi:10.2307/2964389.
@@ -580,6 +652,54 @@ H. Lee et al., ``When Summaries Distort Decisions: Information Fidelity in LLM-C
 
 \bibitem{trukhina2026}
 N. Trukhina and V. Vashkelis, ``Compress the Context, Keep the Commitments: A Formal Framework for Verifiable LLM Context Compression,'' arXiv:2605.17304, 2026. Preprint.
+
+\bibitem{carnap1950}
+R. Carnap, ``Empiricism, Semantics, and Ontology,'' \emph{Revue Internationale de Philosophie}, vol. 4, no. 11, pp. 20--40, 1950.
+
+\bibitem{barHillelCarnap1953}
+Y. Bar-Hillel and R. Carnap, ``Semantic Information,'' \emph{The British Journal for the Philosophy of Science}, vol. 4, no. 14, pp. 147--157, 1953. doi:10.1093/bjps/IV.14.147.
+
+\bibitem{chen2005infra}
+K. Chen, J. Sztipanovits, S. Neema, M. Emerson, and S. Abdelwahed, ``Toward a Semantic Anchoring Infrastructure for Domain-Specific Modeling Languages,'' in \emph{Proceedings of the 5th ACM International Conference on Embedded Software (EMSOFT'05)}, 2005, pp. 35--43. doi:10.1145/1086228.1086236.
+
+\bibitem{chen2005transform}
+K. Chen, J. Sztipanovits, S. Abdelwahed, and E. K. Jackson, ``Semantic Anchoring with Model Transformations,'' in \emph{Model Driven Architecture -- Foundations and Applications, ECMDA-FA 2005}, LNCS 3748. Berlin: Springer, 2005, pp. 115--129. doi:10.1007/11581741\_10.
+
+\bibitem{balasubramanianJackson2009}
+D. Balasubramanian and E. K. Jackson, ``Lost in Translation: Forgetful Semantic Anchoring,'' in \emph{Proceedings of the 24th IEEE/ACM International Conference on Automated Software Engineering (ASE)}, 2009, pp. 645--649. doi:10.1109/ASE.2009.83.
+
+\bibitem{lindecker2015}
+D. Lindecker, G. Simko, T. Levendovszky, I. Madari, and J. Sztipanovits, ``Validating Transformations for Semantic Anchoring,'' \emph{Journal of Object Technology}, vol. 14, no. 3, art. 2, pp. 1--25, 2015. doi:10.5381/jot.2015.14.3.a2.
+
+\bibitem{jarrarMeersman2002}
+M. Jarrar and R. Meersman, ``Formal Ontology Engineering in the DOGMA Approach,'' in \emph{On the Move to Meaningful Internet Systems 2002: CoopIS, DOA, and ODBASE}, LNCS 2519. Berlin: Springer, 2002, pp. 1238--1254. doi:10.1007/3-540-36124-3\_78.
+
+\bibitem{harnad1990}
+S. Harnad, ``The Symbol Grounding Problem,'' \emph{Physica D: Nonlinear Phenomena}, vol. 42, nos. 1--3, pp. 335--346, 1990. doi:10.1016/0167-2789(90)90087-6.
+
+\bibitem{coradeschiSaffiotti2003}
+S. Coradeschi and A. Saffiotti, ``An Introduction to the Anchoring Problem,'' \emph{Robotics and Autonomous Systems}, vol. 43, nos. 2--3, pp. 85--96, 2003. doi:10.1016/S0921-8890(03)00021-6.
+
+\bibitem{barwiseSeligman1997}
+J. Barwise and J. Seligman, \emph{Information Flow: The Logic of Distributed Systems}. Cambridge: Cambridge University Press, 1997.
+
+\bibitem{ludascher2008}
+B. Lud{\"a}scher, N. Podhorszki, I. Altintas, S. Bowers, and T. McPhillips, ``From Computation Models to Models of Provenance: The RWS Approach,'' \emph{Concurrency and Computation: Practice and Experience}, vol. 20, no. 5, pp. 507--518, 2008. doi:10.1002/cpe.1234.
+
+\bibitem{budde2021}
+K. Budde, J. Smith, P. Wilsdorf, F. Haack, and A. M. Uhrmacher, ``Relating Simulation Studies by Provenance---Developing a Family of Wnt Signaling Models,'' \emph{PLOS Computational Biology}, vol. 17, no. 8, e1009227, 2021. doi:10.1371/journal.pcbi.1009227.
+
+\bibitem{wilkins2017}
+J. J. Wilkins et al., ``Thoughtflow: Standards and Tools for Provenance Capture and Workflow Definition to Support Model-Informed Drug Discovery and Development,'' \emph{CPT: Pharmacometrics \& Systems Pharmacology}, vol. 6, no. 5, pp. 285--292, 2017. doi:10.1002/psp4.12171.
+
+\bibitem{meyman2026}
+E. Meyman, ``Versioned Meaning: How to Make Ontologies Audit-Stable,'' working paper, first posted 2025, revised July 2026. SSRN 5918182; doi:10.2139/ssrn.5918182. Contemporary preprint cited as convergence, not as a foundational source.
+
+\bibitem{fu2026}
+W. Fu, Z. Wang, M. Shao, J. Knechtel, O. Sinanoglu, R. Karri, M. Shafique, and X. Guo, ``From Natural Language to Silicon: The Representation Bottleneck in LLM Hardware Design,'' arXiv:2604.17097, 2026. Preprint.
+
+\bibitem{wen2026}
+S.-F. Wen, ``Ontological Foundations for Deterministic Assurance Context Construction and Governed AI Reasoning,'' \emph{Applied Sciences}, vol. 16, no. 4, art. 1984, 2026. doi:10.3390/app16041984.
 
 \bibitem{hamming1950}
 R. W. Hamming, ``Error Detecting and Error Correcting Codes,'' \emph{Bell System Technical Journal}, vol. 29, no. 2, pp. 147--160, 1950.

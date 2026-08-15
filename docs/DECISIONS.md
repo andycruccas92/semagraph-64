@@ -23,10 +23,8 @@ transition matrix; ordered chain compression; and deterministic anchoring. No
 symbolic catalogue is authoritative.
 
 **Consequences.** Domain meaning must come from declared anchor rules, validated
-data and policy mappings — never from inherited symbolism. The combinatorial
-origin of the alphabet (the I Ching hexagram system, used solely because it is the
-oldest natively-binary 6-position 3+3 system) is acknowledged in the paper as
-historical motivation, not as semantics.
+data and policy mappings. The six-bit alphabet and its 3+3 decomposition are
+stipulated finite Boolean design choices and carry no inherited semantics.
 
 ## D2 — Deterministic observed-state anchoring
 **Status:** Accepted. *(was ADR 11)*
@@ -146,14 +144,14 @@ with SHA-256 checksums attached to the GitHub release.
 **Consequences.** `cargo install` and direct binary download both work; CI runs
 the whole workspace (`clippy --workspace`, `test --workspace`).
 
-## D11 — Bilingual explanatory paper
-**Status:** Accepted (v0.7). *(supersedes ADR 15)*
+## D11 — Explanatory research paper
+**Status:** Accepted (v0.8). *(supersedes ADR 15 and the earlier bilingual layout)*
 
-**Decision.** `paper/overleaf/main.tex` is rewritten as an explanatory English
-paper with an extended Italian *sommario*, rigorous enough for evaluation by
-mathematicians, engineers and physicists, and covering the formal model,
-computational architecture, parity methodology, validation hypotheses, limits and
-explicit non-claims.
+**Decision.**
+`paper/overleaf/from_semantic_mobility_to_formal_representation_en.tex` is the
+canonical paper source. It presents mathematical anchoring and representational
+provenance as the general framework, with SemaGraph-64 explicitly limited to a
+six-bit reference architecture and computational appendix.
 
 **Non-claims (binding on all prose).** SemaGraph is not a physics engine, a general
 programming language, a universal simulator, a replacement for numerical/statistical

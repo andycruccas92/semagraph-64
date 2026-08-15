@@ -1,5 +1,15 @@
 # Changelog
 
+## Unreleased
+
+- Made the revised mathematical-anchoring paper the canonical source and aligned
+  the root README and live architecture documentation with its evidence-to-
+  authority pipeline, limits and research status.
+- Removed remaining historical-origin language so State64/Q6 is described only
+  as stipulated finite Boolean mathematics.
+- Removed a compiled paper artifact that no longer matched the revised source;
+  the source remains canonical until a new PDF is generated from it.
+
 ## v0.8.0
 
 - Added dependency-free `@semagraph/math-anchors` with typed mathematical-domain

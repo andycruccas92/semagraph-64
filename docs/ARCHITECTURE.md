@@ -1,8 +1,7 @@
 # SemaGraph computational architecture
 
-> A deterministic compression layer for state-transition trajectories in complex
-> stochastic systems, where sampling cost is the bottleneck and path-dependence
-> is structural.
+> A deterministic finite-state terminal for registered mathematical
+> representations, with auditable transition and trajectory compression.
 
 This document gives the engineering vocabulary for the SemaGraph core: what it
 is, why it is built the way it is, and where the deterministic kernel ends and a
@@ -52,7 +51,7 @@ historical direct predicate mode. `deterministic_mathematical_anchor` requires a
 registered mathematical definition and complete trace. The former is preserved
 for compatibility and is never silently upgraded to the latter.
 
-## 1. Origin and motivation
+## 1. Engineering motivation
 
 This tool was built to solve a specific problem: a simulation kernel whose
 rollout cost made it non-portable on consumer hardware. Achieving statistical
@@ -63,11 +62,11 @@ rollouts needed (a statistical problem), compress the trajectories already
 available into canonical forms, and measure the distribution over forms instead
 of raw path convergence. Deterministic classification of stochastic output.
 
-The state alphabet is derived from the I Ching hexagram system — not for symbolic
-reasons, but because it is the oldest known combinatorial system that is natively
-binary: six positions, two values each, modular 3+3 structure. The cosmology was
-removed; the combinatorial structure was kept. What remained is Q6: 64 states,
-4096 transitions, a complete basis for a six-dimensional boolean space.
+The finite terminal is stipulated directly as `Q6 = B^6`: six Boolean
+coordinates, a 3+3 modular decomposition, 64 states and a complete basis of 4096
+ordered transitions. This is a deliberately small computational design. It does
+not imply that six bits are sufficient for arbitrary domains, nor does its 3+3
+decomposition carry meaning unless a registered projection declares it.
 
 ## 2. What this is, in one paragraph
 
