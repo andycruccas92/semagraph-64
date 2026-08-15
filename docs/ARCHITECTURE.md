@@ -8,6 +8,50 @@ This document gives the engineering vocabulary for the SemaGraph core: what it
 is, why it is built the way it is, and where the deterministic kernel ends and a
 language model begins. Plain language first in each section, precise terms after.
 
+## 0. Position in the epistemic pipeline
+
+The complete pipeline has deliberately unequal layers:
+
+```text
+phenomenon
+  → observation/evidence
+  → semantic interpretation
+  → mathematical anchoring (X_d → M_d)
+  → six-predicate projection (M_d → B^6)
+  → State64/Q6
+  → transition and trajectory compression
+  → downstream inference/decision
+```
+
+SemaGraph is the deterministic terminal of the upstream formalization process,
+not an interpreter of reality. Semantics remains upstream because the same word
+can denote different mathematical objects and the same mathematical structure
+can be used in unrelated domains. Mathematics stabilizes an operational mapping
+only after a contract declares its structure, assumptions, validity scope,
+variables, relations, units, evidence bindings, and version.
+
+The dependency direction is:
+
+```text
+domain/evidence
+  → packages/math-anchors
+  → packages/state64-adapter
+  → packages/kernel
+  → packages/core-rs and CLI
+  → AI tools and policy synthesis
+```
+
+`packages/math-anchors` defines and validates formalization contracts and an
+immutable in-memory registry. It is not a numerical mathematics library. The
+adapter projects a validated formal snapshot to State64. The kernel and Rust
+core receive only the resulting finite states and therefore remain free of
+domain semantics.
+
+Two authoritative modes coexist. `deterministic_observed_parameters` is the
+historical direct predicate mode. `deterministic_mathematical_anchor` requires a
+registered mathematical definition and complete trace. The former is preserved
+for compatibility and is never silently upgraded to the latter.
+
 ## 1. Origin and motivation
 
 This tool was built to solve a specific problem: a simulation kernel whose

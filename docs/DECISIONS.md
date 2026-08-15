@@ -184,6 +184,74 @@ the renderer, and the generic kernel contracts; reserved components may include
 domain anchor rules, validated trajectory datasets, policy mappings and benchmark
 results. The code is licensed Apache-2.0.
 
+## D14 — Mathematical anchors are the formalization boundary
+**Status:** Accepted (v0.8).
+
+**Context.** D2 records a deterministic map from observations to Q6, but a direct
+parameter predicate does not state which mathematical structure licenses that
+map. The missing layer makes similarly named domain concepts easy to conflate.
+
+**Decision.** Introduce a TypeScript mathematical-anchor layer upstream of
+`state64-adapter`. For a domain `d`, it declares `X_d`, an operational
+mathematical structure `M_d`, a versioned formalization map `φ_d`, and a
+six-predicate projection `P_R`, so the authoritative map is
+`A_{d,R} = P_R ∘ φ_d`. Existing direct observed-parameter anchoring remains a
+separate compatibility mode and is not silently reinterpreted.
+
+**Consequences.** Authoritative mathematical anchoring requires explicit
+assumptions, validity scope, variables, relations, bindings, units, projection,
+and provenance. This is a representation under declared assumptions, not an
+ontological claim about the phenomenon.
+
+## D15 — Semantic labels are non-authoritative
+**Status:** Accepted (v0.8).
+
+**Context.** Terms such as “distance”, “value”, “state”, and “uncertainty” are
+semantically mobile across domains.
+
+**Decision.** Lexical labels are descriptive metadata only. Mathematical
+identity is determined by immutable structure descriptors and operational
+contracts. Lexical equality does not establish anchor equality; structural
+similarity does not establish semantic identity.
+
+**Consequences.** A metric distance, graph shortest path, and decision cost stay
+distinct even when all are labelled “distance”. Comparable structures may be
+reported as structurally comparable without claiming their domains mean the same
+thing.
+
+## D16 — Candidate and registered anchors are distinct authorities
+**Status:** Accepted (v0.8).
+
+**Context.** Humans, language models, and automated discovery may all propose a
+plausible mathematical representation, sometimes with unresolved alternatives.
+
+**Decision.** Candidate anchors are non-authoritative hypotheses. Only an
+explicit, versioned, structurally validated anchor accepted into an immutable
+registry may produce an authoritative State64 record. Registration never selects
+among ambiguous candidates automatically.
+
+**Consequences.** Model-generated anchor proposals cannot assign State64. A
+registry rejects identifier/version collisions with different definitions, and
+historical replay resolves the historical immutable version rather than the
+latest one.
+
+## D17 — Domain mathematics stays outside the Rust transition kernel
+**Status:** Accepted (v0.8).
+
+**Context.** The Rust hot path derives its value from a complete, tiny, domain-
+neutral finite transition basis. Domain formalization has different evolution,
+validation, and evidence requirements.
+
+**Decision.** Mathematical-domain metadata, formalization maps, units,
+assumptions, evidence, and projection contracts remain in the TypeScript
+formalization/integration layers. `packages/core-rs` continues to accept only
+validated finite states and trajectories.
+
+**Consequences.** The 64×64 basis, packed word, branchless tables, CLI transition
+JSON, and TypeScript/Rust parity fixtures do not change. New AI operations for
+mathematical anchoring are deterministic integration tools, not Rust-kernel
+semantics.
+
 ---
 
 ## Appendix — open research questions and backlog

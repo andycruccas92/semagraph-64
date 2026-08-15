@@ -8,6 +8,91 @@ companion is [`ARCHITECTURE.md`](ARCHITECTURE.md); the decision history is
 Notation: `B = {0,1}`, `⊕` is bitwise XOR, `popcount(x)` is the Hamming weight
 (number of set bits) of `x`, and `[a..b)` is the half-open integer interval.
 
+## 0. Upstream mathematical anchoring
+
+The finite State64 kernel does not interpret phenomena. For a declared domain
+`d`, let
+
+```text
+X_d = the admissible observational/semantic domain,
+M_d = a declared mathematical structure used as an operational model,
+φ_d : X_d → M_d = the versioned formalization map.
+```
+
+`M_d` is not asserted to be the true ontology of the phenomenon. An anchor
+contract records only that, under explicit assumptions and within an explicit
+validity scope, observations in `X_d` are represented through `M_d` by `φ_d`.
+Natural-language labels such as “distance”, “value”, or “uncertainty” have no
+authority: the registered structure kind, variables, relations, units, mapping,
+and version are the operative contract.
+
+For a registered projection version `R`, define six deterministic predicates
+
+```text
+P_R = (p_1, …, p_6) : M_d → B^6.
+```
+
+The authoritative composite anchor is therefore
+
+```text
+A_{d,R} = P_R ∘ φ_d : X_d → B^6.
+```
+
+SemaGraph begins its finite-state work only after `A_{d,R}` has produced the
+six-bit word. Domain mathematics remains outside the transition kernel.
+
+### 0.1 Contract identity and registration
+
+A mathematical domain is identified by `(mathematicalDomainId,
+mathematicalDomainVersion)`. An anchor is identified by `(anchorDefinitionId,
+anchorVersion)`, and its six predicates by `projectionVersion`. Definitions are
+immutable once registered. Reusing an identifier/version pair for different
+content is invalid.
+
+A **candidate anchor** is a hypothesis proposed by a human, model, or discovery
+process. It may be inspected and validated, but it cannot produce an
+authoritative State64 record. A **registered anchor** is explicit, versioned,
+structurally valid, accepted into a registry, and replayable. Only a registered
+deterministic anchor may invoke the authoritative projection.
+
+Structural comparability of two mathematical definitions does not imply
+semantic identity. Conversely, lexical equality does not imply mathematical
+equality. Ambiguity among plausible candidate anchors remains upstream; no
+selection is inferred by this model.
+
+### 0.2 Formalized snapshots and missing data
+
+A formalized snapshot is the deterministic output of `φ_d` and contains the
+values of the declared formal variables together with the observation bindings
+and evidence references that licensed each value. Every required binding must be
+present, type-correct, and dimensionally compatible. Missing input is an error
+unless the registered contract explicitly declares a deterministic missing-data
+rule. No default may be invented at evaluation time.
+
+Given identical evidence and the same immutable anchor version, formalization
+must return the same formal object. Given the same formal object and projection
+version, projection must return the same element of `B^6`.
+
+### 0.3 Provenance relation
+
+For every authoritative bit `b_i`, the anchor trace must make the following
+finite relation inspectable without a language model:
+
+```text
+State64 bit b_i
+  → predicate p_i and its result
+  → referenced formal variable(s)/relation(s)
+  → registered mathematical anchor and version
+  → observation binding(s)
+  → measurement(s)
+  → evidence/source reference(s).
+```
+
+Assumptions and validity scope are part of the trace context. State records may
+refer to immutable definitions by stable identifiers rather than duplicating the
+full definitions, but the registry and evidence retained for replay must be
+sufficient to reconstruct every edge in this relation.
+
 ## 1. The composite state space Q6
 
 The composite state space is
@@ -213,6 +298,12 @@ floating point, no randomness, no clock or address dependence. Given the same
 inputs, every implementation must produce identical outputs — this is enforced
 exhaustively (all 4096 transitions; a seeded trajectory fixture) against the
 TypeScript reference.
+
+This kernel determinism is distinct from the declared domain mathematics in
+section 0. A formalization map may use numbers and domain-specific relations, but
+it must still be deterministic, versioned, validated, and replayable before its
+output can enter the kernel. Kernel parity does not validate the truth of a
+domain representation; it validates only the finite operations after projection.
 
 ## 7. Visual grammar (non-normative)
 
