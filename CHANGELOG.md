@@ -2,13 +2,22 @@
 
 ## Unreleased
 
+- Repositioned SemaGraph-64 as a controlled experimental platform for studying
+  formally anchored knowledge under a fixed six-bit representational budget,
+  while keeping the paper, general architecture and Q6 implementation distinct.
+- Added a deterministic epistemic-compression benchmark covering semantic
+  collisions, anchor comparison, projection distortion, decision/ranking
+  preservation, provenance completeness and trajectory equivalence.
 - Made the revised mathematical-anchoring paper the canonical source and aligned
   the root README and live architecture documentation with its evidence-to-
   authority pipeline, limits and research status.
 - Removed remaining historical-origin language so State64/Q6 is described only
   as stipulated finite Boolean mathematics.
-- Removed a compiled paper artifact that no longer matched the revised source;
-  the source remains canonical until a new PDF is generated from it.
+- Replaced the stale compiled paper artifact with the current 22-page revision
+  and verified its textual and visual correspondence to the canonical source.
+- Aligned the documentation with the paper's partial formalization map and its
+  general computational codomain, while keeping `C_R = B^6` explicit as the
+  implemented SemaGraph specialization.
 
 ## v0.8.0
 

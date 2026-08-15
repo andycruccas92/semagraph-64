@@ -2,12 +2,13 @@
   "name": "semagraph",
   "private": true,
   "version": "0.8.0",
-  "description": "A typed mathematical-formalization boundary and deterministic State64 transition-chain compression terminal.",
+  "description": "A controlled experimental platform for formally anchored knowledge under deterministic six-bit compression.",
   "type": "module",
   "packageManager": "pnpm@9.15.0",
   "scripts": {
     "build": "pnpm -r build",
     "test": "pnpm -r test",
+    "test:epistemic-compression": "pnpm -r build && node experiments/run-epistemic-compression.mjs",
     "typecheck": "pnpm -r typecheck",
     "lint": "pnpm -r lint"
   },

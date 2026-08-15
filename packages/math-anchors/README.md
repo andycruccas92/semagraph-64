@@ -3,10 +3,17 @@
 Typed, versioned contracts for the deterministic formalization layer upstream of
 State64.
 
-This package models `φ_d : X_d → M_d`, validates the declared structure used as
-`M_d`, registers immutable anchor versions, formalizes supplied observations,
-and evaluates a registered six-predicate projection. It does not choose a
-mathematical ontology, infer observations, or create State64 identifiers.
+This package models the partial formalization `φ_d : D_d → M_d`, where
+`D_d = dom(φ_d) ⊆ X_d`; inputs outside the registered admissibility contract are
+rejected. It validates the declared structure used as `M_d`, registers immutable
+anchor versions, formalizes supplied observations, and evaluates the SemaGraph
+specialization `P_R : M_d → B^6`. It does not choose a mathematical ontology,
+infer observations, or create State64 identifiers.
+
+This package is an implementation of the contract required to register a
+mathematical representation and project it deterministically toward State64. It
+is not the mathematical-anchoring theory and is intentionally not a universal
+ontology or general-purpose mathematics engine.
 
 The authoritative flow is:
 

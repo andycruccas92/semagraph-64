@@ -15,18 +15,29 @@ The finite State64 kernel does not interpret phenomena. For a declared domain
 
 ```text
 X_d = the admissible observational/semantic domain,
+D_d = dom(φ_d) ⊆ X_d = observations admitted by the registered contract,
 M_d = a declared mathematical structure used as an operational model,
-φ_d : X_d → M_d = the versioned formalization map.
+φ_d : D_d → M_d = the versioned formalization map.
 ```
 
 `M_d` is not asserted to be the true ontology of the phenomenon. An anchor
 contract records only that, under explicit assumptions and within an explicit
-validity scope, observations in `X_d` are represented through `M_d` by `φ_d`.
+validity scope, observations in `D_d` are represented through `M_d` by `φ_d`.
+Equivalently, `φ_d` is a partial map from `X_d`; observations outside `D_d` do
+not produce a formalized object or a computational state.
 Natural-language labels such as “distance”, “value”, or “uncertainty” have no
 authority: the registered structure kind, variables, relations, units, mapping,
 and version are the operative contract.
 
-For a registered projection version `R`, define six deterministic predicates
+At the paper-framework level, a registered projection maps the formal object to
+a declared computational codomain:
+
+```text
+P_R : M_d → C_R.
+```
+
+SemaGraph implements the special case `C_R = B^6` through six deterministic
+predicates
 
 ```text
 P_R = (p_1, …, p_6) : M_d → B^6.
@@ -35,7 +46,7 @@ P_R = (p_1, …, p_6) : M_d → B^6.
 The authoritative composite anchor is therefore
 
 ```text
-A_{d,R} = P_R ∘ φ_d : X_d → B^6.
+A_{d,R} = P_R ∘ φ_d : D_d → B^6.
 ```
 
 SemaGraph begins its finite-state work only after `A_{d,R}` has produced the
@@ -62,7 +73,8 @@ selection is inferred by this model.
 
 ### 0.2 Formalized snapshots and missing data
 
-A formalized snapshot is the deterministic output of `φ_d` and contains the
+A formalized snapshot is the deterministic output of `φ_d` for an admitted
+observation in `D_d` and contains the
 values of the declared formal variables together with the observation bindings
 and evidence references that licensed each value. Every required binding must be
 present, type-correct, and dimensionally compatible. Missing input is an error

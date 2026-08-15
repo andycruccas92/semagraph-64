@@ -190,11 +190,14 @@ parameter predicate does not state which mathematical structure licenses that
 map. The missing layer makes similarly named domain concepts easy to conflate.
 
 **Decision.** Introduce a TypeScript mathematical-anchor layer upstream of
-`state64-adapter`. For a domain `d`, it declares `X_d`, an operational
-mathematical structure `M_d`, a versioned formalization map `φ_d`, and a
-six-predicate projection `P_R`, so the authoritative map is
-`A_{d,R} = P_R ∘ φ_d`. Existing direct observed-parameter anchoring remains a
-separate compatibility mode and is not silently reinterpreted.
+`state64-adapter`. For a domain `d`, it declares `X_d`, an admitted subset
+`D_d = dom(φ_d)`, an operational mathematical structure `M_d`, a versioned
+formalization map `φ_d : D_d → M_d`, and a six-predicate projection
+`P_R : M_d → B^6`, so the SemaGraph authoritative map is
+`A_{d,R} = P_R ∘ φ_d : D_d → B^6`. This is the `C_R = B^6` specialization of the
+paper's general computational codomain. Existing direct observed-parameter
+anchoring remains a separate compatibility mode and is not silently
+reinterpreted.
 
 **Consequences.** Authoritative mathematical anchoring requires explicit
 assumptions, validity scope, variables, relations, bindings, units, projection,
@@ -250,6 +253,27 @@ JSON, and TypeScript/Rust parity fixtures do not change. New AI operations for
 mathematical anchoring are deterministic integration tools, not Rust-kernel
 semantics.
 
+## D18 — SemaGraph is the Q6 experimental instrument, not the theory
+**Status:** Accepted (v0.8).
+
+**Context.** The mathematical-anchoring framework permits general computational
+codomains and has substantial antecedents in measurement, semantic anchoring,
+ontology governance, provenance and task-relative compression. SemaGraph
+implements only the finite `C_R = Q6` terminal and its downstream algebra.
+
+**Decision.** Position SemaGraph-64 as a controlled platform for studying
+structural computation over epistemically anchored states under a fixed six-bit
+representational budget. Keep `packages/math-anchors` limited to registration,
+validation, formalization and provenance contracts. Make executable experiments
+first-class repository surfaces without moving experimental metrics into the
+authoritative kernel.
+
+**Consequences.** The public question becomes what happens when an explicit
+mathematical representation is compressed into a deterministic six-bit
+terminal. Collision, entropy, decision/ranking preservation and trajectory
+equivalence are measured outside the kernel. Experimental results remain
+fixture-relative and cannot establish ontological truth or general adequacy.
+
 ---
 
 ## Appendix — open research questions and backlog
@@ -264,7 +288,10 @@ intentions, not commitments:
    false-equivalence cases arise (distinct chains, identical net mutation)?
 4. Which domains permit deterministic anchoring directly from measurements, and
    which require an uncertainty envelope first?
-5. Open work items: compression-benchmark fixtures and metrics; uncertainty-
+5. Should registered anchors encode a separate task and authorized-computation
+   scope, plus governance evidence beyond the current `acceptedBy` identity and
+   validity scope?
+6. Open work items: compression-benchmark fixtures and metrics; uncertainty-
    envelope support; chain-equivalence classes and false-equivalence tests;
    policy/signature matching examples; learned anchoring (deliberately out of
    scope); FPGA/lookup-ROM single-cycle classifier (speculative).

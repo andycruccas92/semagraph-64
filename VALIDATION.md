@@ -12,6 +12,7 @@ pnpm -r typecheck
 pnpm -r --workspace-concurrency=1 test
 npx tsc -p tsconfig.validation.json --noEmit
 cargo test --manifest-path packages/Cargo.toml --workspace
+pnpm test:epistemic-compression
 ```
 
 Results:
@@ -22,17 +23,29 @@ Results:
   adapter 13, AI tools 3, renderer 2);
 - all Rust workspace tests passed, including exhaustive parity over the 4096
   direct transitions and the seeded trajectory-shape fixture;
-- the LaTeX source has 24 cited bibliography entries, no missing or unused
-  entries, and balanced braces;
+- the epistemic-compression synthetic baseline passed all 8 self-checks and
+  produced non-zero semantic, projection, decision and trajectory-collapse
+  signals while retaining 100% bit-trace provenance completeness;
+- the LaTeX source has 39 cited bibliography entries, no missing citation keys,
+  balanced braces, and one uncited bibliography entry
+  (`barHillelCarnap1953`);
 - a repository-wide text scan found no remaining references to the removed
   historical source system;
-- the existing 14-page PDF was visually and textually inspected and found to be
-  an older revision without the paper's expanded intellectual-lineage section.
-  It was removed rather than presented as equivalent to the canonical source.
+- the current 22-page PDF was inspected textually and page by page. It contains
+  the expanded intellectual-lineage and claim-discipline sections, all 40
+  bibliography entries, and no visible clipping, overlap or broken tables;
+- the new 2026 arXiv references, the SACO journal article and the audit-stable
+  meaning working paper were checked against their primary publication records.
 
-A local LaTeX compiler is not installed, so this audit does not produce a
-replacement PDF. The canonical `.tex` source should be compiled in Overleaf or a
-TeX environment before the next PDF release.
+Two non-blocking editorial residues were intentionally left unchanged so the
+canonical source and supplied PDF remain synchronized: the measurement-theory
+lineage sentence and one equivalence-class diagram still write `X_d → M_d` as a
+total map even though the governing definition correctly uses the partial domain
+`D_d = dom(φ_d)`; `barHillelCarnap1953` is present in the bibliography but not
+cited in the text.
+
+A local LaTeX compiler is not installed, so the supplied compiled PDF was
+verified but not regenerated during this audit.
 
 ## v0.8 generated validation
 

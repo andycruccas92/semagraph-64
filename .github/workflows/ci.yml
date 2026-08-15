@@ -23,6 +23,8 @@ jobs:
       - run: pnpm build
       - run: pnpm typecheck
       - run: pnpm test
+      - name: Epistemic-compression metrology self-check
+        run: node experiments/run-epistemic-compression.mjs
       # Regenerate the parity fixture from the TypeScript reference and fail if it
       # differs from the committed copy. This guarantees the golden file the Rust
       # core is tested against can never silently drift from the reference.

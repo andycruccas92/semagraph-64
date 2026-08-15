@@ -1,7 +1,8 @@
 # SemaGraph computational architecture
 
 > A deterministic finite-state terminal for registered mathematical
-> representations, with auditable transition and trajectory compression.
+> representations, and a controlled experimental platform for studying
+> auditable compression and structural computation over anchored states.
 
 This document gives the engineering vocabulary for the SemaGraph core: what it
 is, why it is built the way it is, and where the deterministic kernel ends and a
@@ -15,8 +16,10 @@ The complete pipeline has deliberately unequal layers:
 phenomenon
   → observation/evidence
   → semantic interpretation
-  → mathematical anchoring (X_d → M_d)
-  → six-predicate projection (M_d → B^6)
+  → admissibility boundary (D_d ⊆ X_d)
+  → mathematical anchoring (D_d → M_d)
+  → registered computational projection (M_d → C_R)
+  → State64 specialization (C_R = B^6)
   → State64/Q6
   → transition and trajectory compression
   → downstream inference/decision
@@ -42,9 +45,10 @@ domain/evidence
 
 `packages/math-anchors` defines and validates formalization contracts and an
 immutable in-memory registry. It is not a numerical mathematics library. The
-adapter projects a validated formal snapshot to State64. The kernel and Rust
-core receive only the resulting finite states and therefore remain free of
-domain semantics.
+general framework permits a declared computational codomain `C_R`; this
+repository implements the `C_R = B^6` specialization. The adapter projects a
+validated formal snapshot to State64. The kernel and Rust core receive only the
+resulting finite states and therefore remain free of domain semantics.
 
 Two authoritative modes coexist. `deterministic_observed_parameters` is the
 historical direct predicate mode. `deterministic_mathematical_anchor` requires a
@@ -218,3 +222,19 @@ All of the following are speculative and out of present scope:
 - **Learned anchoring** — deciding the axes of the state space from data, rather
   than stipulating them, is the hard problem. It is deliberately left out of scope
   here.
+
+## 10. Experimental role
+
+SemaGraph is not the mathematical-anchoring theory. It implements one governed
+contract boundary and fixes the computational codomain to `Q6`. That constraint
+makes the repository useful as an experimental instrument: a richer formalized
+object is deliberately reduced to at most six bits, after which collision,
+distortion and trajectory identity can be measured exactly.
+
+The first research harness under `experiments/` reports semantic-contract
+collisions, cross-anchor state agreement, state entropy, rich-input collision
+rates, bit-to-evidence trace completeness, decision/ranking preservation and
+the collapse induced by endpoint, net-mutation and shape projections. These
+metrics characterize a declared fixture only. They do not establish that one
+anchor is empirically adequate or that provenance compensates for information
+loss.

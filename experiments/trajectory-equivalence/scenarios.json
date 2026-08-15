@@ -1,0 +1,14 @@
+{
+  "experimentVersion": "1.0.0",
+  "paths": [
+    { "id": "direct-a", "states": [0, 1, 3] },
+    { "id": "direct-b", "states": [0, 2, 3] },
+    { "id": "dwell-a", "states": [0, 1, 1, 3] },
+    { "id": "duplicate-a", "states": [0, 1, 3] },
+    { "id": "shortcut-a", "states": [0, 3] },
+    { "id": "return-a", "states": [1, 0, 1] },
+    { "id": "return-b", "states": [1, 2, 1] },
+    { "id": "dwell-only", "states": [1, 1] },
+    { "id": "single", "states": [1] }
+  ]
+}

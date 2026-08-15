@@ -1,0 +1,45 @@
+{
+  "experimentVersion": "1.0.0",
+  "definitions": [
+    {
+      "id": "metric-distance",
+      "version": "1",
+      "label": "distance",
+      "kind": "metric",
+      "family": "metric_geometric",
+      "axioms": ["identity", "symmetry", "triangle inequality"]
+    },
+    {
+      "id": "decision-distance",
+      "version": "1",
+      "label": "distance",
+      "kind": "cost",
+      "family": "decision_value",
+      "axioms": ["lower cost is preferred"]
+    },
+    {
+      "id": "distribution-distance",
+      "version": "1",
+      "label": "distance",
+      "kind": "divergence",
+      "family": "probability_information",
+      "axioms": ["directed comparison is permitted"]
+    },
+    {
+      "id": "precedence-order",
+      "version": "1",
+      "label": "precedence",
+      "kind": "partial_order",
+      "family": "order",
+      "axioms": ["reflexive", "antisymmetric", "transitive"]
+    },
+    {
+      "id": "dependency-order",
+      "version": "1",
+      "label": "dependency order",
+      "kind": "partial_order",
+      "family": "order",
+      "axioms": ["reflexive", "antisymmetric", "transitive"]
+    }
+  ]
+}
