@@ -13,7 +13,7 @@ use semagraph_core_rs::{compress_chain64, lookup_transition64, pack_transition64
 
 const VERSION: &str = env!("CARGO_PKG_VERSION");
 const SERVER_NAME: &str = "semagraph-rs-mcp";
-const INSTRUCTIONS: &str = "SemaGraph MCP exposes deterministic State64/Q6 anchoring and transition-chain compression. Do not infer observations or modify State64 ids, mutation masks, or deterministic signatures.";
+const INSTRUCTIONS: &str = "SemaGraph Rust MCP exposes the finite State64/Q6 terminal plus the historical deterministic direct-parameter anchor mode. Registered mathematical-domain formalization remains in the TypeScript integration layer. Do not infer observations or modify State64 ids, mutation masks, or deterministic signatures.";
 
 const MODULE_SCOPE_NAMES: [&str; 4] = ["none", "lower_only", "upper_only", "both_modules"];
 const REGIME_CLASS_NAMES: [&str; 6] = [
@@ -1321,7 +1321,7 @@ fn tool_definitions() -> Vec<Json> {
     vec![
         tool_definition(
             "semagraph_anchor_state64",
-            "Deterministically anchor exactly six observed or known parameters into a State64 six-bit state. This tool must not infer missing observations.",
+            "Deterministically anchor exactly six observed or known parameters in the historical direct-parameter mode. This is not a registered mathematical anchor and must not infer missing observations.",
             anchor_schema(),
         ),
         tool_definition(

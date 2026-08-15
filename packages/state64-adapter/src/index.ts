@@ -23,6 +23,7 @@ export type { State64ModuleScope, State64RegimeClass, State64RegimeClassificatio
 export { STATE64_MODULE_SCOPE_CODE, STATE64_REGIME_CLASS_CODE } from "./regimes.js";
 export type { State64TransitionMatrixEntry } from "./matrix.js";
 export type { State64ChainCompression } from "./chains.js";
+export type { MathematicallyAnchoredState64 } from "./mathematical-anchors.js";
 
 export { assertBitPosition, assertBitValue, binaryStringToBits, bitsToBinaryString, flipBitValue } from "./bits.js";
 export { MODULE3_CATALOG, getModule3ByBinary, getModule3ById } from "./modules.js";
@@ -45,4 +46,5 @@ export { hammingDistance, sharedModuleScore, simpleStateSimilarity, state64BitDi
 export { classifyState64RegimePair, classifyState64RegimeTransition } from "./regimes.js";
 export { createState64TransitionMatrix, lookupState64Transition } from "./matrix.js";
 export { compressState64Chain } from "./chains.js";
+export { anchorMathematicalObservationsToState64, projectFormalizedSnapshotToState64 } from "./mathematical-anchors.js";
 export { binaryToState64Number, createMutationMask64FromNumber, createState64FromNumber, mutationMask64NumberToId, mutationMask64ToNumber, state64IdToNumber, state64NumberToBinary, state64NumberToId, transitionIndex64Number } from "./numeric.js";

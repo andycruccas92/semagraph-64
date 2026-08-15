@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://semagraph.org/schemas/mathematical-anchor-registry.schema.json",
+  "title": "Mathematical Anchor Registry Bundle",
+  "description": "A replayable bundle of immutable mathematical-domain definitions and anchors already accepted by an external authority.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["domains", "registeredAnchors"],
+  "properties": {
+    "domains": {
+      "type": "array",
+      "items": { "$ref": "mathematical-domain-definition.schema.json" }
+    },
+    "registeredAnchors": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["authority", "acceptedBy", "definition"],
+        "properties": {
+          "authority": { "const": "registered" },
+          "acceptedBy": { "type": "string", "minLength": 1 },
+          "definition": { "$ref": "mathematical-anchor-definition.schema.json" }
+        }
+      }
+    }
+  }
+}

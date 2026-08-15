@@ -3,11 +3,13 @@
 Three documents, one concern each:
 
 - [`ARCHITECTURE.md`](ARCHITECTURE.md) — prose rationale: origin and motivation,
-  why six bits, the memory hierarchy, the kernel/LLM division of labour, the
-  four-level hierarchy, non-goals, and future directions.
+  the semantic/mathematical/finite dependency boundary, why six bits, the memory
+  hierarchy, the kernel/LLM division of labour, the four-level hierarchy,
+  non-goals, and future directions.
 - [`FORMAL-MODEL.md`](FORMAL-MODEL.md) — the precise mathematics: Q6 state space,
-  transitions and regimes, chain compression, the Q3/T64 trajectory hierarchy,
-  projections, and the invariants (with short proofs).
+  the composite mathematical anchor, transitions and regimes, chain compression,
+  the Q3/T64 trajectory hierarchy, projections, and the invariants (with short
+  proofs).
 - [`DECISIONS.md`](DECISIONS.md) — the consolidated architecture decision record
   (replaces the former numbered ADRs).
 

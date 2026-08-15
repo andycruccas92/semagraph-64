@@ -154,14 +154,17 @@ The deterministic kernel does the structural work, and only the structural work:
 All of this is exact, deterministic, and constant-time per item. It uses no
 floating point and no randomness in the classification path.
 
-What is left to a language model (LLM) is the semantic work: naming what a regime
-or a shape means in a domain, explaining a grouping to a person, proposing a
-policy once the kernel has produced an auditable signature. The boundary is firm
-and one-directional: the LLM never computes a state, a mutation mask, a distance,
-a shape key, or any signature. Those are produced only by the kernel. The LLM
-consumes the kernel's outputs; it does not manufacture them. This anti-inference
-boundary is what makes the structural results reproducible and checkable
-independently of any model.
+Semantic interpretation remains upstream and may involve a human analyst, a
+domain system, or a language model. An LLM may propose a candidate mathematical
+anchor, name what a regime or shape means, explain a grouping, or propose policy
+once the kernel has produced an auditable signature. Its candidate is not
+authoritative until an external authority accepts a structurally valid immutable
+definition into the registry. The boundary is firm and one-directional: the LLM
+never registers its own candidate, computes an authoritative state, changes a
+mutation mask, distance, shape key, or signature, or fills missing evidence. The
+deterministic layers produce those records; the LLM consumes them. This
+anti-inference boundary makes structural outputs reproducible and independently
+checkable.
 
 ## 7. The four-level hierarchy
 

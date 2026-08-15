@@ -1,0 +1,12 @@
+{
+  "outcomes": [
+    { "id": "distance-three-ontologies", "action": "keep_distinct", "selectedAnchor": null, "authoritativeState": null, "reasonCode": "lexical_equality_not_anchor_equality" },
+    { "id": "different-words-shared-structure", "action": "structurally_comparable", "selectedAnchor": null, "authoritativeState": null, "reasonCode": "shared_structure_not_semantic_identity" },
+    { "id": "value-collision", "action": "keep_distinct", "selectedAnchor": null, "authoritativeState": null, "reasonCode": "value_label_has_no_mathematical_authority" },
+    { "id": "unit-mismatch", "action": "reject", "selectedAnchor": "spatial-metric", "authoritativeState": null, "reasonCode": "dimensionally_incompatible_unit" },
+    { "id": "assumption-mismatch", "action": "keep_distinct", "selectedAnchor": null, "authoritativeState": null, "reasonCode": "incompatible_assumptions" },
+    { "id": "historical-version-replay", "action": "replay", "selectedAnchor": "risk-anchor@1.0.0", "authoritativeState": "S64-101001", "reasonCode": "historical_version_is_immutable" },
+    { "id": "missing-required-evidence", "action": "reject", "selectedAnchor": "audited-anchor", "authoritativeState": null, "reasonCode": "required_evidence_missing" },
+    { "id": "ambiguous-candidate-ontology", "action": "preserve_ambiguity", "selectedAnchor": null, "authoritativeState": null, "reasonCode": "no_registered_anchor" }
+  ]
+}

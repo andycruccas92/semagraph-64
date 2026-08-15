@@ -1,5 +1,40 @@
 # Validation
 
+## v0.8 generated validation
+
+Environment:
+
+- Node.js, pnpm, TypeScript, Vitest, and Rust/Cargo were available.
+- pdfLaTeX was not installed, so `paper/overleaf/main.tex` was updated and
+  cross-checked as source but no v0.8 compiled PDF was generated locally.
+
+Executed checks:
+
+```bash
+pnpm install
+pnpm -r build
+pnpm -r typecheck
+pnpm -r test
+npx tsc -p tsconfig.validation.json --noEmit
+node experiments/agentic-loop-benchmark/round-7-semantic-mobility/scripts/evaluate.mjs
+cd packages
+cargo fmt --all --check
+cargo clippy --workspace --all-targets -- -D warnings
+cargo test --workspace
+```
+
+Results:
+
+- 46 TypeScript tests passed: kernel 19, mathematical anchors 9, State64 adapter
+  13, renderer 2, and TypeScript AI tool 3.
+- The new semantic-mobility benchmark passed all 8 adversarial cases.
+- All 11 JSON schemas parsed, and the AI tool manifest exposed 8 unique tools,
+  including all 4 mathematical-anchor operations.
+- Rust formatting and Clippy passed. Rust unit, exhaustive 4096-transition parity,
+  and trajectory shape-parity tests all passed.
+- The Rust transition basis, packed transition contract, and parity fixtures were
+  not changed by v0.8.
+
 ## v0.6 generated validation
 
 Environment constraints:

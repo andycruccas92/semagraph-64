@@ -1,0 +1,164 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://semagraph.org/schemas/mathematical-anchor-definition.schema.json",
+  "title": "Registered Mathematical Anchor Definition",
+  "description": "A JSON-serializable contract for deterministic observation formalization and six-predicate projection. Registration authority is external to lexical labels.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["id", "version", "label", "mathematicalDomainId", "mathematicalDomainVersion", "structureKind", "formalizationDescription", "variables", "relations", "observationBindings", "assumptions", "validityScope", "projection", "evidenceProvenance"],
+  "properties": {
+    "id": { "type": "string", "minLength": 1 },
+    "version": { "type": "string", "minLength": 1 },
+    "label": { "type": "string", "minLength": 1 },
+    "mathematicalDomainId": { "type": "string", "minLength": 1 },
+    "mathematicalDomainVersion": { "type": "string", "minLength": 1 },
+    "structureKind": { "$ref": "#/$defs/structureKind" },
+    "formalizationDescription": { "type": "string", "minLength": 1 },
+    "variables": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/formalVariable" } },
+    "relations": { "type": "array", "items": { "$ref": "#/$defs/formalRelation" } },
+    "observationBindings": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/observationBinding" } },
+    "assumptions": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/assumption" } },
+    "validityScope": { "$ref": "#/$defs/validityScope" },
+    "projection": { "$ref": "#/$defs/projection" },
+    "evidenceProvenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["minimumReferencesPerObservation", "requireContentHash"],
+      "properties": {
+        "minimumReferencesPerObservation": { "type": "integer", "minimum": 0 },
+        "requireContentHash": { "type": "boolean" }
+      }
+    }
+  },
+  "$defs": {
+    "structureKind": {
+      "enum": ["metric", "pseudometric", "norm", "vector_space_relation", "partial_order", "total_order", "ranking_relation", "node", "edge", "directed_relation", "path", "connectivity", "dependency_graph", "probability_distribution", "conditional_probability", "entropy", "divergence", "mutual_information_relation", "state_space", "transition_relation", "discrete_dynamical_system", "feasibility_relation", "constraint_set", "boundary", "admissible_region", "utility", "cost", "objective", "preference_relation", "similarity_function", "kernel_relation", "equivalence_relation", "probability_uncertainty", "interval_uncertainty", "bounded_uncertainty"]
+    },
+    "unitConversion": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["fromUnit", "scale", "offset"],
+      "properties": {
+        "fromUnit": { "type": "string", "minLength": 1 },
+        "scale": { "type": "number" },
+        "offset": { "type": "number" }
+      }
+    },
+    "unitConstraint": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["dimension", "canonicalUnit", "conversions"],
+      "properties": {
+        "dimension": { "type": "string", "minLength": 1 },
+        "canonicalUnit": { "type": "string", "minLength": 1 },
+        "conversions": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/unitConversion" } }
+      }
+    },
+    "formalVariable": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "label", "valueType", "description"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "label": { "type": "string", "minLength": 1 },
+        "valueType": { "enum": ["boolean", "number", "string"] },
+        "description": { "type": "string", "minLength": 1 },
+        "unitConstraint": { "$ref": "#/$defs/unitConstraint" }
+      }
+    },
+    "formalRelation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "kind", "operandVariableIds", "description"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "kind": { "type": "string", "minLength": 1 },
+        "operandVariableIds": { "type": "array", "minItems": 1, "items": { "type": "string", "minLength": 1 } },
+        "description": { "type": "string", "minLength": 1 }
+      }
+    },
+    "observationBinding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "observationKey", "formalVariableId", "required", "transform"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "observationKey": { "type": "string", "minLength": 1 },
+        "formalVariableId": { "type": "string", "minLength": 1 },
+        "required": { "type": "boolean" },
+        "declaredDefault": { "type": ["boolean", "number", "string"] },
+        "transform": {
+          "oneOf": [
+            { "type": "object", "additionalProperties": false, "required": ["kind"], "properties": { "kind": { "const": "identity" } } },
+            { "type": "object", "additionalProperties": false, "required": ["kind"], "properties": { "kind": { "const": "absolute" } } },
+            { "type": "object", "additionalProperties": false, "required": ["kind", "scale", "offset"], "properties": { "kind": { "const": "scale_offset" }, "scale": { "type": "number" }, "offset": { "type": "number" } } }
+          ]
+        }
+      }
+    },
+    "assumption": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "statement"],
+      "properties": { "id": { "type": "string", "minLength": 1 }, "statement": { "type": "string", "minLength": 1 } }
+    },
+    "validityScope": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["description", "appliesWhen", "excludes"],
+      "properties": {
+        "description": { "type": "string", "minLength": 1 },
+        "appliesWhen": { "type": "array", "items": { "type": "string" } },
+        "excludes": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "predicate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["formalVariableId", "formalRelationIds", "operator", "value"],
+      "properties": {
+        "formalVariableId": { "type": "string", "minLength": 1 },
+        "formalRelationIds": { "type": "array", "items": { "type": "string", "minLength": 1 } },
+        "operator": { "enum": ["eq", "neq", "gt", "gte", "lt", "lte", "in"] },
+        "value": { "oneOf": [{ "type": ["boolean", "number", "string"] }, { "type": "array", "items": { "type": ["boolean", "number", "string"] } }] }
+      }
+    },
+    "predicateExpression": {
+      "oneOf": [
+        { "$ref": "#/$defs/predicate" },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "all": { "type": "array", "items": { "$ref": "#/$defs/predicateExpression" } },
+            "any": { "type": "array", "items": { "$ref": "#/$defs/predicateExpression" } },
+            "none": { "type": "array", "items": { "$ref": "#/$defs/predicateExpression" } }
+          },
+          "minProperties": 1
+        }
+      ]
+    },
+    "predicateContract": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "position", "label", "expression"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "position": { "type": "integer", "minimum": 1, "maximum": 6 },
+        "label": { "type": "string", "minLength": 1 },
+        "expression": { "$ref": "#/$defs/predicateExpression" },
+        "trueValue": { "enum": [0, 1] },
+        "falseValue": { "enum": [0, 1] }
+      }
+    },
+    "projection": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["version", "predicates"],
+      "properties": {
+        "version": { "type": "string", "minLength": 1 },
+        "predicates": { "type": "array", "minItems": 6, "maxItems": 6, "items": { "$ref": "#/$defs/predicateContract" } }
+      }
+    }
+  }
+}

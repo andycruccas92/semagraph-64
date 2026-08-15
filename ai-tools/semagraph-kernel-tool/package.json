@@ -1,6 +1,6 @@
 {
   "name": "@semagraph/ai-kernel-tool",
-  "version": "0.7.0",
+  "version": "0.8.0",
   "private": true,
   "description": "OpenAI, Claude and MCP compatible tool adapter for the SemaGraph deterministic State64 kernel.",
   "type": "module",
@@ -12,13 +12,16 @@
   },
   "scripts": {
     "build": "tsc -p tsconfig.json",
-    "typecheck": "tsc -p tsconfig.json --noEmit"
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "vitest run"
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "1.29.0",
-    "@semagraph/state64-adapter": "workspace:*"
+    "@semagraph/state64-adapter": "workspace:*",
+    "@semagraph/math-anchors": "workspace:*"
   },
   "devDependencies": {
-    "typescript": "^5.7.2"
+    "typescript": "^5.7.2",
+    "vitest": "^2.1.8"
   }
 }

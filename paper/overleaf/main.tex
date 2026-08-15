@@ -29,10 +29,10 @@
 \newtheorem{definition}{Definition}
 
 \title{SemaGraph\\[2pt]
-\large A deterministic, cache-resident kernel for classifying and compressing
-state-transition trajectories over a six-bit alphabet}
-\author{Technical report --- version 0.7 (\texttt{semagraph-64})}
-\date{June 2026}
+\large A typed mathematical-anchoring boundary and deterministic cache-resident
+terminal for six-bit state-transition trajectories}
+\author{Technical report --- version 0.8 (\texttt{semagraph-64})}
+\date{August 2026}
 
 \begin{document}
 \maketitle
@@ -52,10 +52,14 @@ explicit-SIMD path that reproduces the scalar output bit-for-bit. Trajectories
 over the eight-symbol alphabet $Q_3$ form a four-level hierarchy whose
 run-collapsed \emph{shape} (with an aligned \emph{dwell} vector) is the canonical
 form, while coarser projections (net mutation, endpoint code) serve only as
-pre-filters and never as form identities. The kernel performs no inference: states
-are produced by an explicit, versioned anchoring map from observations, and a
-language model may only synthesize policy or explanation over signatures the
-kernel has already computed. We give the formal model with short proofs, the
+pre-filters and never as form identities. The kernel performs no inference. A
+versioned formalization map represents admissible observations in a declared
+mathematical structure, and six registered predicates project that representation
+to $Q_6$; assumptions, validity scope, units and evidence lineage remain upstream.
+This is an operational representation, not a claim about the phenomenon's true
+ontology. A language model may propose only non-authoritative candidates and may
+synthesize policy or explanation over registered deterministic outputs. We give
+the formal model with short proofs, the
 computational architecture and its memory rationale, an exhaustive
 cross-implementation parity methodology, the evaluation hypotheses, the limits,
 and explicit non-claims (in particular: no complexity-theory claim, and no model
@@ -78,15 +82,19 @@ ciclo caldo; l'insieme di lavoro ($\approx 4.4$~KiB) risiede in cache L1.
 La tesi è volutamente ristretta: la parte \emph{strutturale} del ragionamento
 sulle traiettorie è riconducibile a primitive elementari della CPU (XOR, popcount,
 lookup) e parallelizzabile su grandi insiemi (\emph{ensemble}) di traiettorie,
-lasciando al modello linguistico soltanto il lavoro \emph{semantico} (spiegazione,
-sintesi di policy). Il modello linguistico non calcola mai stati, maschere o
-firme. Le traiettorie sull'alfabeto a otto simboli $Q_3$ formano una gerarchia a
+separando l'interpretazione semantica, il contratto matematico dichiarato e il
+terminale finito. Un modello linguistico può proporre soltanto ancoraggi candidati
+non autorevoli e può svolgere spiegazione o sintesi di policy dopo la proiezione
+registrata; non calcola mai stati autorevoli, maschere o firme. Le traiettorie
+sull'alfabeto a otto simboli $Q_3$ formano una gerarchia a
 quattro livelli la cui \emph{forma} (lo \emph{shape} ottenuto collassando le
 ripetizioni adiacenti, con il vettore \emph{dwell} allineato) è l'identità di
 forma; le proiezioni più grossolane (mutazione netta, codice di endpoint) sono
 solo pre-filtri e non possono mai fungere da chiave di forma. Lo stato non viene
-inferito linguisticamente: è prodotto da una mappa di ancoraggio esplicita e
-versionata a partire dalle osservazioni.
+inferito linguisticamente: le osservazioni sono formalizzate in una struttura
+matematica dichiarata, sotto ipotesi e ambito di validità espliciti, e sei
+predicati versionati producono lo stato. Tale struttura è un modello operativo,
+non l'ontologia vera del fenomeno.
 
 Il documento fornisce il modello formale con brevi dimostrazioni, l'architettura
 computazionale e la sua motivazione rispetto alla gerarchia di memoria, la
@@ -282,18 +290,37 @@ result & condition \\
 \end{center}
 
 \section{Deterministic anchoring}
-States are not inferred by a model. They are produced by an explicit anchoring map
-under a versioned rule set $R=(r_1,\dots,r_6)$:
+States are not inferred by a model. For a domain $d$, let $X_d$ be the admissible
+observational/semantic domain and let $M_d$ be a declared mathematical structure
+used as an operational representation. A versioned formalization map is
 \begin{equation}
-A_R : X \to Q_6, \qquad b_i = r_i(x)\in\{0,1\},
+\phi_d:X_d\to M_d.
 \end{equation}
-where $X$ is the space of observed/parametric inputs and each $r_i$ is a declared
-threshold, Boolean condition or predicate. Given the same $x$ and the same $R$,
-$A_R(x)$ is identical (replayability). Measurement uncertainty is recorded at the
-measurement layer --- tolerance, unit, source, timestamp, rule version --- and does
-not enter the transition kernel. A language model may explain a signature, propose
-policy, or compare approved policies; it must never fabricate observations or alter
-states, masks or signatures. This is the anti-inference boundary.
+For registered projection version $R$, six predicates define
+\begin{equation}
+P_R:M_d\to\mathbb{B}^6,
+\qquad
+A_{d,R}=P_R\circ\phi_d:X_d\to\mathbb{B}^6.
+\end{equation}
+The structure $M_d$ is not asserted to be the true ontology of the phenomenon.
+The contract states only that the observations are represented through $M_d$
+under explicit assumptions, validity scope, variables, relations, units and
+evidence bindings. Lexical labels carry no authority: metric distance, graph path
+length and decision cost remain different contracts even when each is called
+``distance''.
+
+Definitions are immutable under the tuple (domain id, domain version, anchor id,
+anchor version, projection version). A candidate proposed by a human, model or
+discovery process is non-authoritative. Only a structurally validated definition
+accepted into the registry may produce an authoritative state. The retained trace
+links each bit to its predicate, formal variables and relations, observation
+bindings, measurements and evidence references. Missing required evidence rejects
+projection unless the registered contract contains an explicit deterministic
+default. Given the same evidence and exact versions, both formalization and
+projection are replayable. None of this domain metadata enters the Rust transition
+kernel. A language model may explain a signature or propose policy; it must not
+register its own candidate, fabricate evidence, or alter states, masks or
+signatures. This is the anti-inference boundary.
 
 \section{Computational architecture}
 \subsection{Branchless, cache-resident classification}
@@ -388,7 +415,11 @@ time average and the distribution over typical trajectories is what matters
 \cite{peters2019,hamilton1989}; (iii)~classical analysis of measurement-shot
 sequences from quantum hardware (see the non-claim in \S\ref{sec:not});
 (iv)~decision-making under deep uncertainty, where the anchoring map is the
-quantization of qualitative parameters. The testable hypotheses are: shape/signature
+quantization of qualitative parameters. Three deliberately distant formalization
+examples additionally cover a physical test rig (state space), an organizational
+release review (feasibility relation), and probabilistic monitoring (probability
+distribution with information relations). They test reuse of the finite terminal,
+not semantic universality. The testable hypotheses are: shape/signature
 processing reduces computation versus full-trajectory processing; signature-keyed
 policy reuse improves consistency; the information lost to compression is bounded
 and its false-equivalence cases are characterizable; and the set of domains
@@ -396,8 +427,10 @@ admitting direct deterministic anchoring (versus those requiring an uncertainty
 envelope first) can be delineated.
 
 \section{Limits and threats to validity}
-The system's quality depends on the anchoring rules: a poor $A_R$ yields
-meaningless states regardless of the kernel. Compression is lossy, and the most
+The system's quality depends on the declared formalization: an unjustified
+$\phi_d$, unsuitable $M_d$, or poor $P_R$ yields operationally misleading states
+regardless of the kernel. Registration establishes explicit authority and
+replayability; it does not establish ontological truth. Compression is lossy, and the most
 critical risk is \emph{false equivalence} --- distinct chains sharing a net mutation
 or even an endpoint. This is mitigated structurally (the form decision uses
 \texttt{shape\_key}, not a lossy projection) and operationally (the raw chain is
@@ -410,7 +443,9 @@ universal simulator, or a replacement for statistical/numerical models. It advan
 \emph{no} complexity-theory result and makes no claim about P versus NP; it is an
 engineering reduction of a narrow, structural task to native CPU primitives. It
 does not model how the state axes are learned --- they are stipulated by the
-anchoring map, not emergent. When applied to quantum hardware it does \textbf{not}
+registered anchoring map, not emergent. It is not a universal knowledge engine and
+does not resolve genuine ambiguity among plausible mathematical ontologies. When
+applied to quantum hardware it does \textbf{not}
 model quantum evolution (continuous unitary dynamics, complex amplitudes): it
 operates only on the classical sequences of measurement outcomes after collapse,
 as a classical signal-analysis layer.
@@ -418,17 +453,20 @@ as a classical signal-analysis layer.
 \section{Future directions (speculative)}
 Wider portable-SIMD and multi-lane implementations of the batch path; an
 FPGA/lookup-ROM realization of the classifier as a near single-cycle lookup over the
-12-bit transition index; and learned anchoring --- inferring the state axes from
-data rather than stipulating them --- which is the genuinely hard, deliberately
+12-bit transition index; uncertainty envelopes before formalization; and
+non-authoritative automated proposal of candidate anchors. Learning or selecting
+the state axes as authoritative from data remains a genuinely hard, deliberately
 out-of-scope problem.
 
 \section{Conclusion}
 SemaGraph formalizes a deterministic kernel that compresses observed change into
 reproducible structural signatures over a finite $64$-state Boolean space. Its
-contribution is architectural honesty about a narrow claim: the structural part of
-trajectory reasoning is branchless, cache-resident and vectorizable, and can be
-separated cleanly from the semantic work left to a language model. The mathematics,
-the memory rationale, and an exhaustive parity methodology are given so that
+contribution is architectural honesty about a narrow claim: semantic interpretation,
+declared domain mathematics and the finite terminal are separate contracts. After
+a registered projection, the structural part of trajectory processing is
+branchless, cache-resident and vectorizable. Candidate ontologies may remain
+ambiguous upstream, and the kernel makes no claim that a registered representation
+is universally true. The mathematics, the memory rationale, and an exhaustive parity methodology are given so that
 mathematicians, engineers and physicists can each evaluate the part that concerns
 them.
 

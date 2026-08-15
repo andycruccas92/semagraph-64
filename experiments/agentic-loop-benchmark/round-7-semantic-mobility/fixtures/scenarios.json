@@ -1,0 +1,65 @@
+{
+  "benchmarkVersion": "round-7-v1",
+  "scenarios": [
+    {
+      "id": "distance-three-ontologies",
+      "lexicalLabel": "distance",
+      "candidates": [
+        { "anchorId": "euclidean-distance", "structureKind": "metric" },
+        { "anchorId": "network-distance", "structureKind": "path" },
+        { "anchorId": "decision-distance", "structureKind": "cost" }
+      ]
+    },
+    {
+      "id": "different-words-shared-structure",
+      "expressions": ["latency separation", "geometric gap"],
+      "anchors": [
+        { "anchorId": "latency-metric", "structureKind": "metric", "declaredAxioms": ["metric axioms"] },
+        { "anchorId": "gap-metric", "structureKind": "metric", "declaredAxioms": ["metric axioms"] }
+      ]
+    },
+    {
+      "id": "value-collision",
+      "lexicalLabel": "value",
+      "candidates": [
+        { "anchorId": "scalar-reading", "structureKind": "vector_space_relation" },
+        { "anchorId": "economic-value", "structureKind": "cost" },
+        { "anchorId": "decision-utility", "structureKind": "utility" },
+        { "anchorId": "ranked-preference", "structureKind": "ranking_relation" }
+      ]
+    },
+    {
+      "id": "unit-mismatch",
+      "anchorId": "spatial-metric",
+      "expectedDimension": "length",
+      "expectedUnit": "m",
+      "observationUnit": "s"
+    },
+    {
+      "id": "assumption-mismatch",
+      "anchors": [
+        { "anchorId": "independent-failures", "structureKind": "probability_distribution", "assumptions": ["events independent"] },
+        { "anchorId": "dependent-failures", "structureKind": "probability_distribution", "assumptions": ["shared latent cause"] }
+      ]
+    },
+    {
+      "id": "historical-version-replay",
+      "anchorId": "risk-anchor",
+      "historicalVersion": "1.0.0",
+      "latestVersion": "2.0.0",
+      "historicalState": "S64-101001",
+      "latestState": "S64-001001"
+    },
+    {
+      "id": "missing-required-evidence",
+      "anchorId": "audited-anchor",
+      "minimumEvidenceReferences": 1,
+      "suppliedEvidenceReferences": 0
+    },
+    {
+      "id": "ambiguous-candidate-ontology",
+      "registeredAnchorIds": [],
+      "candidateAnchorIds": ["interval-uncertainty", "probability-uncertainty", "bounded-uncertainty"]
+    }
+  ]
+}

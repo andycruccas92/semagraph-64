@@ -85,5 +85,131 @@
         }
       }
     }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "semagraph_validate_math_anchor",
+      "description": "Structurally validate a candidate mathematical domain and anchor contract. Validation is deterministic but does not register the candidate or make it authoritative.",
+      "parameters": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["domain", "anchor"],
+        "properties": {
+          "domain": { "type": "object" },
+          "anchor": { "type": "object" }
+        }
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "semagraph_formalize_observations",
+      "description": "Apply one explicitly selected, previously registered mathematical anchor version to supplied evidence. It never chooses an anchor or fills missing observations.",
+      "parameters": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["registryBundle", "anchorDefinitionId", "anchorVersion", "observations"],
+        "properties": {
+          "registryBundle": { "$ref": "#/$defs/registryBundle" },
+          "anchorDefinitionId": { "type": "string", "minLength": 1 },
+          "anchorVersion": { "type": "string", "minLength": 1 },
+          "observations": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["key", "value", "evidenceReferences"],
+              "properties": {
+                "key": { "type": "string", "minLength": 1 },
+                "value": { "type": ["boolean", "number", "string"] },
+                "unit": { "type": "string" },
+                "evidenceReferences": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "required": ["id", "source"],
+                    "properties": {
+                      "id": { "type": "string", "minLength": 1 },
+                      "source": { "type": "string", "minLength": 1 },
+                      "uri": { "type": "string" },
+                      "observedAt": { "type": "string" },
+                      "contentHash": { "type": "string" }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "$defs": {
+          "registryBundle": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["domains", "registeredAnchors"],
+            "properties": {
+              "domains": { "type": "array", "items": { "type": "object" } },
+              "registeredAnchors": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": ["authority", "acceptedBy", "definition"],
+                  "properties": {
+                    "authority": { "const": "registered" },
+                    "acceptedBy": { "type": "string", "minLength": 1 },
+                    "definition": { "type": "object" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "semagraph_anchor_formalized_state64",
+      "description": "Project a replay-key-verified formalized snapshot through its exact registered projection version into canonical State64, with per-bit lineage.",
+      "parameters": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["registryBundle", "formalizedSnapshot"],
+        "properties": {
+          "registryBundle": {
+            "type": "object",
+            "required": ["domains", "registeredAnchors"],
+            "properties": {
+              "domains": { "type": "array", "items": { "type": "object" } },
+              "registeredAnchors": { "type": "array", "items": { "type": "object" } }
+            }
+          },
+          "formalizedSnapshot": {
+            "type": "object",
+            "required": ["mathematicalDomainId", "mathematicalDomainVersion", "anchorDefinitionId", "anchorVersion", "projectionVersion", "formalVariables", "formalizedObservations", "assumptions", "validityScope", "replayKey"]
+          }
+        }
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "semagraph_inspect_anchor_trace",
+      "description": "Return the deterministic predicate, formal-variable/relation, observation-binding and evidence lineage for one State64 bit.",
+      "parameters": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["trace", "position"],
+        "properties": {
+          "trace": { "type": "object", "required": ["stateId", "bits", "replayKey"] },
+          "position": { "type": "integer", "minimum": 1, "maximum": 6 }
+        }
+      }
+    }
   }
 ]

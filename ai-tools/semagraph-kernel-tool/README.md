@@ -1,10 +1,12 @@
 # SemaGraph AI Kernel Tool
 
-This package exposes SemaGraph v0.7 as a tool layer usable by GPT-style function tools, Claude skills, MCP hosts or a local CLI adapter.
+This package exposes SemaGraph v0.8 as a tool layer usable by GPT-style function tools, Claude skills, MCP hosts or a local CLI adapter.
 
 The tool boundary is intentionally strict:
 
-- the kernel performs deterministic anchoring, transition lookup and chain compression;
+- candidate mathematical anchors can be validated but never promoted by a tool;
+- registered mathematical anchors formalize observations and project State64 deterministically;
+- the finite kernel performs transition lookup and chain compression;
 - the LLM does not infer observations or mutate states;
 - the LLM may synthesize policy only after the deterministic signature exists.
 
@@ -35,3 +37,17 @@ The repository root `.mcp.json` registers this server as `semagraph` for MCP-awa
 ## Integration stance
 
 The tool is not an autonomous analyst. It is a deterministic transition processor plus a policy-context builder. It can be safely used by an LLM only if the host system preserves this boundary.
+
+The mathematical operations are:
+
+- `semagraph_validate_math_anchor` — non-authoritative structural validation;
+- `semagraph_formalize_observations` — apply an explicitly selected anchor from
+  a supplied registry bundle;
+- `semagraph_anchor_formalized_state64` — replay-check and project a formalized
+  snapshot;
+- `semagraph_inspect_anchor_trace` — explain one bit from retained deterministic
+  lineage.
+
+A registry bundle may contain only records whose authority is already
+`registered`. The tool offers no operation that selects an anchor, resolves an
+ambiguous ontology, or turns a candidate into a registered definition.

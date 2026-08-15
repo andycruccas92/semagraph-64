@@ -1,0 +1,91 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://semagraph.org/schemas/mathematical-anchored-state64.schema.json",
+  "title": "Mathematically Anchored State64",
+  "description": "Traceable output of a registered deterministic mathematical anchor. Definitions are resolved by immutable identifiers and versions.",
+  "type": "object",
+  "additionalProperties": true,
+  "required": ["anchorMode", "mathematicalDomainId", "mathematicalDomainVersion", "anchorDefinitionId", "anchorVersion", "projectionVersion", "formalizedSnapshot", "state", "decisions", "trace"],
+  "properties": {
+    "anchorMode": { "const": "deterministic_mathematical_anchor" },
+    "mathematicalDomainId": { "type": "string", "minLength": 1 },
+    "mathematicalDomainVersion": { "type": "string", "minLength": 1 },
+    "anchorDefinitionId": { "type": "string", "minLength": 1 },
+    "anchorVersion": { "type": "string", "minLength": 1 },
+    "projectionVersion": { "type": "string", "minLength": 1 },
+    "formalizedSnapshot": {
+      "type": "object",
+      "required": ["formalVariables", "formalizedObservations", "assumptions", "validityScope", "replayKey"],
+      "properties": {
+        "formalVariables": { "type": "object", "additionalProperties": { "type": ["boolean", "number", "string"] } },
+        "formalizedObservations": { "type": "array", "items": { "$ref": "#/$defs/formalizedObservation" } },
+        "assumptions": { "type": "array", "items": { "$ref": "#/$defs/assumption" } },
+        "validityScope": { "$ref": "#/$defs/validityScope" },
+        "replayKey": { "type": "string", "minLength": 1 }
+      }
+    },
+    "state": { "type": "object", "required": ["id"], "properties": { "id": { "type": "string", "pattern": "^S64-[01]{6}$" } } },
+    "decisions": { "type": "array", "minItems": 6, "maxItems": 6, "items": { "$ref": "#/$defs/decision" } },
+    "trace": {
+      "type": "object",
+      "required": ["stateId", "mathematicalDomainId", "mathematicalDomainVersion", "anchorDefinitionId", "anchorVersion", "projectionVersion", "assumptions", "validityScope", "bits", "replayKey"],
+      "properties": {
+        "stateId": { "type": "string", "pattern": "^S64-[01]{6}$" },
+        "mathematicalDomainId": { "type": "string" },
+        "mathematicalDomainVersion": { "type": "string" },
+        "anchorDefinitionId": { "type": "string" },
+        "anchorVersion": { "type": "string" },
+        "projectionVersion": { "type": "string" },
+        "assumptions": { "type": "array", "items": { "$ref": "#/$defs/assumption" } },
+        "validityScope": { "$ref": "#/$defs/validityScope" },
+        "bits": { "type": "array", "minItems": 6, "maxItems": 6, "items": { "$ref": "#/$defs/decision" } },
+        "replayKey": { "type": "string", "minLength": 1 }
+      }
+    }
+  },
+  "$defs": {
+    "evidenceReference": {
+      "type": "object",
+      "required": ["id", "source"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "source": { "type": "string", "minLength": 1 },
+        "uri": { "type": "string" },
+        "observedAt": { "type": "string" },
+        "contentHash": { "type": "string" }
+      }
+    },
+    "assumption": { "type": "object", "required": ["id", "statement"], "properties": { "id": { "type": "string" }, "statement": { "type": "string" } } },
+    "validityScope": { "type": "object", "required": ["description", "appliesWhen", "excludes"], "properties": { "description": { "type": "string" }, "appliesWhen": { "type": "array", "items": { "type": "string" } }, "excludes": { "type": "array", "items": { "type": "string" } } } },
+    "formalizedObservation": {
+      "type": "object",
+      "required": ["bindingId", "observationKey", "formalVariableId", "formalValue", "origin", "evidenceReferences"],
+      "properties": {
+        "bindingId": { "type": "string" },
+        "observationKey": { "type": "string" },
+        "formalVariableId": { "type": "string" },
+        "observedValue": { "type": ["boolean", "number", "string"] },
+        "observedUnit": { "type": "string" },
+        "formalValue": { "type": ["boolean", "number", "string"] },
+        "canonicalUnit": { "type": "string" },
+        "origin": { "enum": ["observation", "declared_default"] },
+        "evidenceReferences": { "type": "array", "items": { "$ref": "#/$defs/evidenceReference" } }
+      }
+    },
+    "decision": {
+      "type": "object",
+      "required": ["predicateId", "position", "label", "result", "value", "formalVariableIds", "formalRelationIds", "observationBindingIds", "evidenceReferences"],
+      "properties": {
+        "predicateId": { "type": "string" },
+        "position": { "type": "integer", "minimum": 1, "maximum": 6 },
+        "label": { "type": "string" },
+        "result": { "type": "boolean" },
+        "value": { "enum": [0, 1] },
+        "formalVariableIds": { "type": "array", "items": { "type": "string" } },
+        "formalRelationIds": { "type": "array", "items": { "type": "string" } },
+        "observationBindingIds": { "type": "array", "items": { "type": "string" } },
+        "evidenceReferences": { "type": "array", "items": { "$ref": "#/$defs/evidenceReference" } }
+      }
+    }
+  }
+}

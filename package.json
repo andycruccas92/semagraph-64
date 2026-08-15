@@ -1,8 +1,8 @@
 {
   "name": "semagraph",
   "private": true,
-  "version": "0.7.0",
-  "description": "A deterministic observed-state anchoring and transition-chain compression kernel with TypeScript reference implementation and Rust core feasibility layer.",
+  "version": "0.8.0",
+  "description": "A typed mathematical-formalization boundary and deterministic State64 transition-chain compression terminal.",
   "type": "module",
   "packageManager": "pnpm@9.15.0",
   "scripts": {

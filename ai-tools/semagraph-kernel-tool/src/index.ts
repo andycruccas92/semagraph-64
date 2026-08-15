@@ -1,4 +1,5 @@
 import {
+  projectFormalizedSnapshotToState64,
   compressState64Chain,
   createMutationMask64FromNumber,
   lookupState64Transition,
@@ -7,6 +8,20 @@ import {
   state64NumberToId,
   type State64Id
 } from "@semagraph/state64-adapter";
+import {
+  MathematicalAnchorRegistry,
+  applyMathematicalAnchor,
+  createCandidateAnchor,
+  inspectAnchorTrace,
+  validateMathematicalAnchorDefinition,
+  validateMathematicalDomainDefinition,
+  type AnchorTrace,
+  type FormalizedSnapshot,
+  type MathematicalAnchorDefinition,
+  type MathematicalAnchorObservation,
+  type MathematicalDomainDefinition,
+  type RegisteredAnchor
+} from "@semagraph/math-anchors";
 
 export type NumericAnchorObservation = {
   key: string;
@@ -25,6 +40,59 @@ export type SemagraphToolResult = {
   result?: unknown;
   error?: string;
 };
+
+export type MathematicalRegistryBundle = {
+  domains: readonly MathematicalDomainDefinition[];
+  registeredAnchors: readonly RegisteredAnchor[];
+};
+
+function hydrateMathematicalRegistry(bundle: MathematicalRegistryBundle): MathematicalAnchorRegistry {
+  const registry = new MathematicalAnchorRegistry();
+  for (const domain of bundle.domains) registry.registerDomain(domain);
+  for (const registered of bundle.registeredAnchors) {
+    if (registered.authority !== "registered") throw new Error("Mathematical registry bundle may contain only registered anchors.");
+    registry.registerAnchor(createCandidateAnchor(registered.definition, "human"), registered.acceptedBy);
+  }
+  return registry;
+}
+
+export function semagraphValidateMathAnchor(domain: MathematicalDomainDefinition, anchor: MathematicalAnchorDefinition) {
+  const domainIssues = validateMathematicalDomainDefinition(domain);
+  const anchorIssues = validateMathematicalAnchorDefinition(anchor, domain);
+  return {
+    authority: "candidate",
+    authoritative: false,
+    valid: domainIssues.length === 0 && anchorIssues.length === 0,
+    domainIssues,
+    anchorIssues,
+    inferenceUsed: false
+  };
+}
+
+export function semagraphFormalizeObservations(args: {
+  registryBundle: MathematicalRegistryBundle;
+  anchorDefinitionId: string;
+  anchorVersion: string;
+  observations: readonly MathematicalAnchorObservation[];
+}) {
+  const registry = hydrateMathematicalRegistry(args.registryBundle);
+  return {
+    formalizedSnapshot: applyMathematicalAnchor(registry, args.anchorDefinitionId, args.anchorVersion, args.observations),
+    inferenceUsed: false
+  };
+}
+
+export function semagraphAnchorFormalizedState64(args: {
+  registryBundle: MathematicalRegistryBundle;
+  formalizedSnapshot: FormalizedSnapshot;
+}) {
+  const registry = hydrateMathematicalRegistry(args.registryBundle);
+  return { ...projectFormalizedSnapshotToState64(registry, args.formalizedSnapshot), inferenceUsed: false };
+}
+
+export function semagraphInspectAnchorTrace(trace: AnchorTrace, position: 1 | 2 | 3 | 4 | 5 | 6) {
+  return { stateId: trace.stateId, decision: inspectAnchorTrace(trace, position), inferenceUsed: false };
+}
 
 function compare(value: number | boolean | string, operator: NumericAnchorObservation["operator"], threshold: number | boolean | string): boolean {
   if (operator === "eq") return value === threshold;
@@ -132,6 +200,14 @@ export function dispatchSemagraphTool(toolName: string, args: Record<string, unk
         return { tool: toolName, status: "ok", result: semagraphCompressChain64(args.states as string[]) };
       case "semagraph_policy_context64":
         return { tool: toolName, status: "ok", result: semagraphPolicyContext64(args as { states: string[]; objective?: string; constraints?: string[]; evidenceRefs?: string[] }) };
+      case "semagraph_validate_math_anchor":
+        return { tool: toolName, status: "ok", result: semagraphValidateMathAnchor(args.domain as MathematicalDomainDefinition, args.anchor as MathematicalAnchorDefinition) };
+      case "semagraph_formalize_observations":
+        return { tool: toolName, status: "ok", result: semagraphFormalizeObservations(args as unknown as Parameters<typeof semagraphFormalizeObservations>[0]) };
+      case "semagraph_anchor_formalized_state64":
+        return { tool: toolName, status: "ok", result: semagraphAnchorFormalizedState64(args as unknown as Parameters<typeof semagraphAnchorFormalizedState64>[0]) };
+      case "semagraph_inspect_anchor_trace":
+        return { tool: toolName, status: "ok", result: semagraphInspectAnchorTrace(args.trace as AnchorTrace, args.position as 1 | 2 | 3 | 4 | 5 | 6) };
       default:
         return { tool: toolName, status: "rejected", error: `Unknown SemaGraph tool: ${toolName}` };
     }

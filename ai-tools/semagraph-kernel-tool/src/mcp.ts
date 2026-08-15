@@ -43,14 +43,14 @@ function jsonContent(value: unknown): CallToolResult["content"] {
 const server = new Server(
   {
     name: "semagraph-mcp",
-    version: "0.7.0"
+    version: "0.8.0"
   },
   {
     capabilities: {
       tools: {}
     },
     instructions:
-      "SemaGraph MCP exposes deterministic State64/Q6 anchoring and transition-chain compression. Do not infer observations or modify State64 ids, mutation masks, or deterministic signatures."
+      "SemaGraph MCP exposes deterministic direct and registered mathematical State64 anchoring plus transition-chain compression. Candidate anchors remain non-authoritative. Do not infer observations or modify State64 ids, mutation masks, or deterministic signatures."
   }
 );
 

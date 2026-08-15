@@ -1,14 +1,27 @@
 # semagraph
 
-A deterministic compression layer for state-transition trajectories in complex
-stochastic systems, where sampling cost is the bottleneck and path-dependence is
-structural.
+The deterministic finite-state and trajectory-compression terminal of an
+explicit formalization pipeline:
 
-A domain-specific instruction set for state-transition trajectories.
-Deterministic, branchless, cache-resident. Built to be called by AI agents as a
-symbolic compression layer over a six-bit state alphabet (64 states, 4096
-transitions). It computes structural facts and prints them; it does not
-interpret them.
+```text
+phenomenon → observation → semantic interpretation
+  → mathematical anchoring → predicate projection
+  → State64 → trajectory → downstream inference/decision
+```
+
+SemaGraph does not interpret reality or discover the correct ontology for a
+domain. It records a declared, versioned mathematical representation and then
+operates on the resulting six-bit state alphabet (64 states, 4096 direct
+transitions). The Rust hot path remains branchless, cache-resident, and free of
+domain semantics.
+
+The repository now contains two deliberately separate layers:
+
+- `@semagraph/math-anchors` validates `X_d → M_d` formalization contracts,
+  assumptions, scope, units, evidence, immutable registration, and replay;
+- `@semagraph/state64-adapter` applies the registered six-predicate projection
+  and creates canonical `S64-[01]{6}` states before the unchanged kernel takes
+  over.
 
 ## Install
 
@@ -53,7 +66,7 @@ Compress a trajectory into its canonical signature:
 $ semagraph compress 0 1 1 3
 path:           0 → 1 → 1 → 3
 length:         4 states, 3 transitions
-net_mutation:   2  (010)
+net_mutation:   3  (011)
 cumulative_d:   2
 endpoint:       0 → 3  (code 3)
 shape:          0 1 3
@@ -80,12 +93,16 @@ errors to stderr, exit code 0 on success.
 
 It is:
 
+- an explicit boundary between semantic interpretation, declared mathematics,
+  and finite State64 processing;
 - a deterministic classifier and compressor for trajectories over 64 states;
 - branchless and cache-resident in its hot path;
 - offline, with no runtime dependencies and no telemetry.
 
 It is not:
 
+- a universal knowledge engine or a universal ontology;
+- a mechanism for selecting a mathematical anchor from ambiguous candidates;
 - an inference engine — it never interprets what a regime or shape means;
 - a statistical solver, a physics engine, or a general programming language;
 - a reconstructor of trajectories from endpoints (endpoints are lossy).
@@ -116,6 +133,9 @@ Worked examples translate the tool into the language of specific fields. See the
   analysis of measurement-shot sequences from quantum hardware.
 - [`decision-making-deep-uncertainty.md`](examples/decision-making-deep-uncertainty.md)
   — quantized organizational decision trajectories.
+- [`math-anchors/cross-domain-proof.md`](examples/math-anchors/cross-domain-proof.md)
+  — engineering, organizational, and information/probabilistic formalizations
+  sharing the same deterministic terminal without sharing an ontology.
 
 ## License
 

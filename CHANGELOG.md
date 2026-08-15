@@ -1,5 +1,32 @@
 # Changelog
 
+## v0.8.0
+
+- Added dependency-free `@semagraph/math-anchors` with typed mathematical-domain
+  and anchor contracts, an extensible structure-kind vocabulary, structural
+  validation, deterministic unit normalization, evidence requirements, immutable
+  versioned registration, replay keys, and projection lineage.
+- Added the authoritative `deterministic_mathematical_anchor` path upstream of
+  the unchanged State64 adapter and preserved
+  `deterministic_observed_parameters` as the historical compatibility mode.
+- Added candidate-versus-registered authority: candidates proposed by humans,
+  LLMs, or discovery processes cannot produce authoritative State64 until an
+  external authority accepts an immutable validated definition.
+- Added mathematical domain, anchor, registry, and anchored-state JSON schemas,
+  plus deterministic TypeScript MCP tools for candidate validation,
+  formalization, projection, and bit-trace inspection.
+- Added property/adversarial tests for deterministic formalization/projection,
+  version replay, unit/evidence/missing-data rejection, identity collisions,
+  lexical collisions, and structural comparability without semantic identity.
+- Added the round-7 semantic-mobility agentic benchmark and a three-domain proof
+  of concept spanning an engineering state space, organizational feasibility,
+  and probabilistic/information monitoring.
+- Added ADRs D14–D17 and updated the formal model, architecture, tool contract,
+  README, and paper with `φ_d : X_d → M_d`, `P_R : M_d → B^6`, and
+  `A_{d,R} = P_R ∘ φ_d` without ontological or universality claims.
+- Kept the Rust transition kernel, 64×64 basis, packed transition word, stable CLI
+  JSON, and TypeScript/Rust parity fixtures unchanged.
+
 ## v0.7.0
 
 - Added `packages/core-rs/src/tables.rs`: branchless, cache-resident classification.

@@ -10,6 +10,9 @@
       "@semagraph/state64-adapter": [
         "packages/state64-adapter/src/index.ts"
       ],
+      "@semagraph/math-anchors": [
+        "packages/math-anchors/src/index.ts"
+      ],
       "@semagraph/renderer-svg": [
         "packages/renderer-svg/src/index.ts"
       ]

@@ -1,7 +1,7 @@
 {
   "name": "@semagraph/state64-adapter",
-  "version": "0.6.0",
-  "description": "Pure mathematical six-bit State64 / Q6 transition adapter for SemaGraph.",
+  "version": "0.8.0",
+  "description": "Canonical State64/Q6 projection adapter for direct and registered mathematical anchor modes.",
   "type": "module",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -20,7 +20,8 @@
     "generate:shape-parity-fixture": "node scripts/generate-shape-parity-fixture.mjs"
   },
   "dependencies": {
-    "@semagraph-64/kernel": "workspace:*"
+    "@semagraph-64/kernel": "workspace:*",
+    "@semagraph/math-anchors": "workspace:*"
   },
   "devDependencies": {
     "typescript": "^5.7.2",

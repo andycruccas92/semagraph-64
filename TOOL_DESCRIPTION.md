@@ -50,6 +50,26 @@ Always pass `--json` when you will parse the output.
   for form identity and `exact_key` for full trajectory identity.
 - Do not expect any network, storage, or stateful behaviour. Every call is pure.
 
+## TypeScript mathematical-anchor tool surface
+
+The stable Rust CLI described below remains the domain-neutral finite terminal.
+The TypeScript MCP/function-tool adapter additionally exposes the upstream
+registered mathematical-anchor layer:
+
+| operation | deterministic role |
+|---|---|
+| `semagraph_validate_math_anchor` | validate a candidate domain/anchor contract; never register it |
+| `semagraph_formalize_observations` | apply one exact registered anchor version to supplied evidence |
+| `semagraph_anchor_formalized_state64` | verify replay lineage and apply the registered six-predicate projection |
+| `semagraph_inspect_anchor_trace` | return predicate → formal variable/relation → binding → evidence for one bit |
+
+These operations never choose an anchor. Registry bundles contain immutable
+definitions already marked `registered` by an external authority. Candidate
+generation and ambiguity resolution stay outside the deterministic tool. The
+historical `semagraph_anchor_state64` operation remains available as
+`deterministic_observed_parameters`; it is not silently reclassified as a
+registered mathematical anchor.
+
 ## Input constraints
 
 - **Q6 states** (for `classify`) are integers `0..=63`.
